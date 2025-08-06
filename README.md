@@ -30,7 +30,8 @@ options:
   -p, --plain         disable ANSI colors
   -c, --classical     exclude Uranus through Pluto
   -a, --approximate   given a date but no time, use UTC noon and don't print angles
-  --node {true,mean}  choose lunar node calculation method```
+  --node {true,mean}  choose lunar node calculation method
+```
 
 <a name="installation"></a>
 ## installation
