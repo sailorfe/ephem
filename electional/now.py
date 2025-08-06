@@ -22,4 +22,8 @@ def get_locale(args):
         return (0, 0)
     else:
         ip = geocoder.ip("me")
-        return ip.latlng if ip.ok else print (f"Cannot fetch location from IP. Input coordinates manually.")
+        if ip.ok:
+            return ip.latlng
+        else:
+            raise RuntimeError("Cannot fetch location from IP. Please input coordinates manually.")
+

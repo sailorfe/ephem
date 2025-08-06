@@ -4,9 +4,12 @@ def print_chart(args, date_str, time_str, horoscope, planets):
     colors = Colors(use_color=not args.plain)
 
     if args.name:
-        title = f"{args.name}, {date_str} {time_str} UTC"
+        title = f"{args.name}\n{date_str} {time_str} UTC"
     else:
         title = f"{date_str} {time_str} UTC"
+
+    if args.date is not None and args.time is None and args.approximate:
+        title += f" hyp."
 
     print(colors.colorize(title, "bold"))
 
