@@ -1,1 +1,6 @@
+asc.spec
+chart.spec
+build
+dist
+venv
 __pycache__
