@@ -1,12 +1,12 @@
-from constants import GLYPHS, Colors, FLAGS
+from constants import GLYPHS, Colors
 
 def print_chart(args, date_str, time_str, horoscope, planets):
-    colors = Colors(use_color=not args.no_color)
+    colors = Colors(use_color=not args.plain)
 
     if args.name:
         title = f"{args.name}, {date_str} {time_str} UTC"
     else:
-        title = f"Chart for {date_str} {time_str} UTC"
+        title = f"{date_str} {time_str} UTC"
 
     print(colors.colorize(title, "bold"))
 
@@ -30,7 +30,7 @@ def print_chart(args, date_str, time_str, horoscope, planets):
     if args.classical:
         order = [item for item in order if item[0] not in ("ura", "nep", "plu")]
 
-    if args.no_angles:
+    if args.approximate:
         order = [item for item in order if item[0] not in ("asc", "mc")]
 
     if args.node == "true":
@@ -43,8 +43,11 @@ def print_chart(args, date_str, time_str, horoscope, planets):
         # fetch and format glyph
         glyph = GLYPHS.get(key, key.upper())
 
-        # fetch string from horoscope
-        placement = horoscope.get(key, {}).get("full", "??")
+        # fetch strings from horoscope
+        if args.short:
+            placement = horoscope.get(key, {}).get("short", "??")
+        else:
+            placement = horoscope.get(key, {}).get("full", "??")
 
         # hg sect color
         if key == "hg":
@@ -60,13 +63,3 @@ def print_chart(args, date_str, time_str, horoscope, planets):
             line = colors.colorize(line, color)
 
         print(line)
-
-def print_raw_placements(args, horoscope):
-    for key in FLAGS:
-        if getattr(args, key):
-            glyph = GLYPHS.get(key, key.upper()).ljust(2)
-            placement = horoscope.get(key, {}).get("short")
-            if placement:
-                print(f"{glyph} {placement}")
-            else:
-                print(f"{glyph}: Not found.")
