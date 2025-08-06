@@ -73,7 +73,7 @@ def build_horoscope(planets, angles):
         rx = planet ['rx']
 
         formatted = f"{deg} {sign} {mnt} {sec}{' r' if rx else ''}"
-        truncated = f"{deg} {short} {mnt} {' r' if rx else ''}"
+        truncated = f"{deg} {short} {mnt}{' r' if rx else ''}"
 
         horoscope[key] = {
                 "full": formatted,

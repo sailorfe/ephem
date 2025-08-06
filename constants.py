@@ -2,25 +2,10 @@ SIGNS = ["Aries", "Taurus", "Gemini", "Cancer",
          "Leo", "Virgo", "Libra", "Scorpio",
          "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
 
+
 SHORT = ["Ari", "Tau", "Gem", "Can", "Leo", "Vir",
          "Lib", "Sco", "Sag", "Cap", "Aqu", "Pis"]
 
-FLAGS = {
-        "ae": "Sun",
-        "ag": "Moon",
-        "hg": "Mercury",
-        "cu": "Venus",
-        "fe": "Mars",
-        "sn": "Jupiter",
-        "pb": "Saturn",
-        "ura": "Uranus",
-        "nep": "Neptune",
-        "plu": "Pluto",
-        "mn": "Mean Lunar Node",
-        "tn": "True Lunar Node",
-        "asc": "Ascendant",
-        "mc": "Midheaven"
-        }
 
 GLYPHS = {
         "ae": "☉",
@@ -38,6 +23,7 @@ GLYPHS = {
         "asc": "AC",
         "mc": "MC"
         }
+
 
 class Colors:
     def __init__(self, use_color=True):
