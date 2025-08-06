@@ -16,10 +16,6 @@ def get_moment(args):
 def get_locale(args):
     if args.lat is not None and args.lng is not None:
         return args.lat, args.lng
-    # if given -a and a date but no latitude, use Null Island
-    # i really don't know how necessary this is when -a hides angles entirely
-    elif args.date is not None and args.lat is None and args.approximate:
-        return (0, 0)
     else:
         ip = geocoder.ip("me")
         if ip.ok:
