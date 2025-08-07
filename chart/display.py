@@ -11,7 +11,7 @@ def print_chart(args, lat, lng, dt, horoscope, planets):
     if args.command == "chart" and (args.time is None):
         title += f" hyp."
 
-    if not args.no_geo:
+    if not args.no_coordinates:
         geo_str = str(lat) + ", " + str(lng)
         title += f"\n@ {geo_str}"
 

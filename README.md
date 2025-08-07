@@ -4,6 +4,8 @@
 
 by "opinionated," i mean i wrote it with methodological and traditional biases, not that it offers any sort of interpretation or judgment. the ANSI colors divide the seven visible planets by sect, including mercury; the unicode planetary glyphs lack labels; and the flags for the seven visible planets are their metals in medieval alchemy.
 
+pair with [ascendant](https://codeberg.org/sailorfe/ascendant) for an efficient scriptable clock :)
+
 - [usage](#usage)
 - [installation](#installation)
 - [contributing](#contributing)
@@ -13,48 +15,45 @@ by "opinionated," i mean i wrote it with methodological and traditional biases, 
 ## usage
 
 ```sh
-$ electional -h
-usage: electional [-h] {chart,asc} ...
-
-A horoscope CLI for electional astrology.
-
-positional arguments:
-  {chart,asc}  subcommand help
-    chart      calculate the chart of the moment or an event/birth chart
-    asc        calculate current local ascendant with IP geolocation or given coordinates
+$ electional now -h
+usage: electional now [-h] [-y LAT] [-x LNG] [-s SHIFT] [--node {true,mean}] [-c] [-b] [-v] [-m] [-p]
 
 options:
-  -h, --help   show this help message and exit
+  -h, --help            show this help message and exit
+  -y, --lat LAT         latitude
+  -x, --lng LNG         longitude
+  -s, --shift SHIFT     shift time forward or backward, e.g. 2h, -30m, 1.5d (default is hours)
+
+display options:
+  --node {true,mean}    choose lunar node calculation method
+  -c, --classical       exclude Uranus through Pluto
+  -b, --brief           print truncated placements, e.g. 21 Sco 2
+  -v, --verbose         print planet names instead of glyphs
+  -m, --no-color        disable ANSI colors
+  -p, --no-coordinates  don't print coordinates
 ```
 
 ```sh
 $ electional chart -h
-usage: electional chart [-h] [-e DATE TIME LAT LNG] [-t TITLE] [-s] [-p] [-c] [-a] [--node {true,mean}] [LAT [LNG ...]]
-
-positional arguments:
-  LAT LNG               optional coordinates for chart of the moment
+usage: electional chart [-h] [--title TITLE] [-y LAT] [-x LNG] [-d DATE] [-t TIME] [--noon] [--zero] [--node {true,mean}] [-c] [-b] [-v] [-m] [-p]
 
 options:
   -h, --help            show this help message and exit
-  -e, --event DATE TIME LAT LNG
-                        calculate chart for specific date/time/place (YYYY-MM-DD HH:MM y x)
-  -t, --title TITLE     e.g. <Your Name>, "Now", "Full Moon"
-  -s, --short           print truncated placements, e.g. 21 Sco 2
-  -p, --plain           disable ANSI colors
-  -c, --classical       exclude Uranus through Pluto
-  -a, --approximate     given a date but no time and/or place, use UTC noon and don't print angles
+  --title TITLE         e.g. <Your Name>, "Now", "Full Moon"
+  -y, --lat LAT         latitude
+  -x, --lng LNG         longitude
+  -d, --date DATE       date of event, format: YYYY-MM-DD
+  -t, --time TIME       time of event (24h), format: HH:MM
+  --noon                use 12:00 UTC and print no angles
+  --zero                use Null Island (0, 0) and print no angles
+
+display options:
   --node {true,mean}    choose lunar node calculation method
-```
-
-```sh
-$ electional asc -h
-usage: electional asc [-h] [LAT [LNG ...]]
-
-positional arguments:
-  LAT LNG     optionally provide coordinates
-
-options:
-  -h, --help  show this help message and exit
+  -c, --classical       exclude Uranus through Pluto
+  -b, --brief           print truncated placements, e.g. 21 Sco 2
+  -v, --verbose         print planet names instead of glyphs
+  -m, --no-color        disable ANSI colors
+  -p, --no-coordinates  don't print coordinates
 ```
 
 <a name="installation"></a>
@@ -71,7 +70,7 @@ i welcome contributions!! this is my biggest python project so far. please help,
 
 - [ ] conversion from local time to UTC and vice versa
 - [ ] alternate ANSI color schemes by sign triplicity or quadruplicity
-- [ ] option to print coordinates
+~~- [x ] option to print coordinates~~
 - [ ] pseudo "wheel" text output option in the style of Astrolog
 
 <a name="license"></a>
