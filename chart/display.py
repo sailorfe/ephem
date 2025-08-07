@@ -4,13 +4,13 @@ def print_chart(args, lat, lng, dt, horoscope, planets):
     colors = Colors(use_color=not args.no_color)
 
     if args.command == "now" and not args.shift:
-        title = f"Chart of the Moment\n{dt} UTC"
-    elif args.command == "chart" and args.title:
+        title = f"Chart for {dt} UTC"
+    elif args.command == "cast" and args.title:
         title = f"{args.title}\n{dt} UTC"
     else:
         title = f"{dt} UTC"
 
-    if args.command == "chart" and (args.time is None):
+    if args.command == "cast" and (args.time is None):
         title += f" hyp."
 
     if not args.no_coordinates:
@@ -39,7 +39,7 @@ def print_chart(args, lat, lng, dt, horoscope, planets):
     if args.classical:
         spheres = [item for item in spheres if item[0] not in ("ura", "nep", "plu")]
 
-    if args.command == "chart" and (args.noon or args.zero):
+    if args.command == "cast" and (args.noon or args.zero):
         spheres = [item for item in spheres if item[0] not in ("asc", "mc")]
 
     if args.node == "true":
