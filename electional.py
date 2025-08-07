@@ -24,20 +24,14 @@ def main():
     if not vars(args):
         args.print_help()
         args.exit(1)
-    if args.command == "chart":
+    if args.command == "chart" or args.command == "now":
         date_str, time_str = get_moment(args)[0], get_moment(args)[1]
         lat, lng = get_locale(args)
         jd_now, jd_then = get_julian_days(date_str, time_str)
         planets = get_planets(jd_now, jd_then)
         angles = get_angles(jd_now, lat, lng)
         horoscope = build_horoscope(planets, angles)
-        print_chart(args, date_str, time_str, horoscope, planets)
-    elif args.command == "asc":
-        date_str, time_str = get_now()
-        lat, lng = get_here(args)
-        jd_now = get_julian_days(date_str, time_str)[0]
-        angles = get_angles(jd_now, lat, lng)
-        print_asc(angles)
+        print_chart(args, lat, lng, date_str, time_str, horoscope, planets)
 
 if __name__ == '__main__':
     main()

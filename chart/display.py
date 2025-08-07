@@ -1,15 +1,19 @@
 from constants import GLYPHS, VERBOSE, Colors
 
-def print_chart(args, date_str, time_str, horoscope, planets):
+def print_chart(args, lat, lng, date_str, time_str, horoscope, planets):
     colors = Colors(use_color=not args.no_color)
 
-    if args.title:
+    if args.command == "chart" and args.title:
         title = f"{args.title}\n{date_str} {time_str} UTC"
     else:
         title = f"{date_str} {time_str} UTC"
 
-    if args.noon or args.zero:
+    if args.command == "chart" and (args.time is None):
         title += f" hyp."
+
+    if not args.no_geo:
+        geo_str = str(lat) + ", " + str(lng)
+        title += f"\n@ {geo_str}"
 
     print(colors.colorize(title, "bold"))
 
@@ -33,7 +37,7 @@ def print_chart(args, date_str, time_str, horoscope, planets):
     if args.classical:
         spheres = [item for item in spheres if item[0] not in ("ura", "nep", "plu")]
 
-    if args.noon or args.zero:
+    if args.command == "chart" and (args.noon or args.zero):
         spheres = [item for item in spheres if item[0] not in ("asc", "mc")]
 
     if args.node == "true":
