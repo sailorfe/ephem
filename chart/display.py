@@ -1,4 +1,4 @@
-from constants import GLYPHS, Colors
+from constants import GLYPHS, VERBOSE, Colors
 
 def print_chart(args, date_str, time_str, horoscope, planets):
     colors = Colors(use_color=not args.no_color)
@@ -8,7 +8,7 @@ def print_chart(args, date_str, time_str, horoscope, planets):
     else:
         title = f"{date_str} {time_str} UTC"
 
-    if args.command == "chart" and args.event and args.approximate:
+    if args.noon or args.zero:
         title += f" hyp."
 
     print(colors.colorize(title, "bold"))
@@ -33,7 +33,7 @@ def print_chart(args, date_str, time_str, horoscope, planets):
     if args.classical:
         spheres = [item for item in spheres if item[0] not in ("ura", "nep", "plu")]
 
-    if args.command == "chart" and args.event and args.approximate:
+    if args.noon or args.zero:
         spheres = [item for item in spheres if item[0] not in ("asc", "mc")]
 
     if args.node == "true":
@@ -44,7 +44,10 @@ def print_chart(args, date_str, time_str, horoscope, planets):
 
     for key, default_color in spheres:
         # fetch and format glyph
-        glyph = GLYPHS.get(key, key.upper())
+        if args.verbose:
+            glyph = VERBOSE.get(key).ljust(12)
+        else:
+            glyph = GLYPHS.get(key, key.upper()).ljust(4)
 
         # fetch strings from horoscope
         if args.short:
@@ -60,7 +63,7 @@ def print_chart(args, date_str, time_str, horoscope, planets):
         else:
             color = default_color
 
-        line = f"{glyph:<4} {placement}"
+        line = f"{glyph} {placement}"
 
         if colors and color:
             line = colors.colorize(line, color)

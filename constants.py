@@ -25,6 +25,24 @@ GLYPHS = {
         }
 
 
+VERBOSE = {
+        "ae": "Sun",
+        "ag": "Moon",
+        "hg": "Mercury",
+        "cu": "Venus",
+        "fe": "Mars",
+        "sn": "Jupiter",
+        "pb": "Saturn",
+        "ura": "Uranus",
+        "nep": "Neptune",
+        "plu": "Pluto",
+        "mean_node": "Mean Node",
+        "true_node": "True Node",
+        "asc": "Ascendant",
+        "mc": "Midheaven"
+        }
+
+
 class Colors:
     def __init__(self, use_color=True):
         self.use_color = use_color
