@@ -1,8 +1,6 @@
-# electional
+# chart
 
-**electional** is an opinionated horoscope CLI designed with electional astrology in mind. `electional now` calculates the chart of the moment relative to your geolocated IP coordinates while `electional chart` accepts input for specific dates like nativities and other past and future events.  
-
-by "opinionated," i mean i wrote it with methodological and traditional biases, not that it offers any sort of interpretation or judgment. the ANSI colors divide the seven visible planets by sect, including mercury; the unicode planetary glyphs lack labels by default; i use Null Island as a placeholder location instead of the more conventional Greenwich, England.
+**chart** is a minimal, opinionated horoscope CLI designed with electional astrology and premodern revivalism in mind. `chart now` calculates the chart of the moment relative for your locale, while `chart cast` accepts input for specific dates like nativities and other past and future events.
 
 pair with [ascendant](https://codeberg.org/sailorfe/ascendant) for an efficient scriptable clock 🤓
 
@@ -16,8 +14,8 @@ pair with [ascendant](https://codeberg.org/sailorfe/ascendant) for an efficient 
 ## usage
 
 ```sh
-$ electional now -h
-usage: electional now [-h] [-y LAT] [-x LNG] [-s SHIFT] [--node {true,mean}] [-c] [-b] [-v] [-m] [-p]
+$ chart now -h
+usage: chart now [-h] [-y LAT] [-x LNG] [-s SHIFT] [--node {true,mean}] [-c] [-b] [-v] [-m] [-p]
 
 options:
   -h, --help            show this help message and exit
@@ -35,8 +33,8 @@ display options:
 ```
 
 ```sh
-$ electional chart -h
-usage: electional chart [-h] [--title TITLE] [-y LAT] [-x LNG] [-d DATE] [-t TIME] [--noon] [--zero] [--node {true,mean}] [-c] [-b] [-v] [-m] [-p]
+$ chart cast -h
+usage: chart cast [-h] [--title TITLE] [-y LAT] [-x LNG] [-d DATE] [-t TIME] [--noon] [--zero] [--node {true,mean}] [-c] [-b] [-v] [-m] [-p]
 
 options:
   -h, --help            show this help message and exit

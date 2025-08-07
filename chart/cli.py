@@ -1,3 +1,4 @@
+from .config import load_config_defaults
 import argparse
 import sys
 
@@ -11,9 +12,11 @@ def add_display_options(parser):
     display.add_argument('-p', '--no-coordinates', action='store_true', help="don't print coordinates")
 
 def parse_arguments():
+    config_defaults = load_config_defaults()
+
     parser = argparse.ArgumentParser(
-        prog='electional',
-        description="A horoscope CLI for electional astrology",
+        prog='chart',
+        description="A minimal horoscope CLI",
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
@@ -21,20 +24,24 @@ def parse_arguments():
 
     # -*- now -*-
     now = subparsers.add_parser('now', help='calculate the chart of the moment')
+    now.set_defaults(**config_defaults)
+
     now.add_argument('-y', '--lat', type=float, help="latitude")
     now.add_argument('-x', '--lng', type=float, help="longitude")
     now.add_argument('-s', '--shift', type=str, help="shift time forward or backward, e.g. 2h, -30m, 1.5d (default is hours)")
+    now.add_argument('--save-config', action='store_true', help='save coordinates and display preferences to config')
     add_display_options(now)
 
-    # -*- chart -*-
-    chart = subparsers.add_parser('chart', help='calculate an event chart')
-    chart.add_argument('--title', help='e.g. <Your Name>, "Now", "Full Moon"')
-    chart.add_argument('-y', '--lat', type=float, help="latitude")
-    chart.add_argument('-x', '--lng', type=float, help="longitude")
-    chart.add_argument('-d', '--date', help='date of event, format: YYYY-MM-DD')
-    chart.add_argument('-t', '--time', help='time of event (24h), format: HH:MM')
-    chart.add_argument('--noon', action='store_true', help='use 12:00 UTC and print no angles')
-    chart.add_argument('--zero', action='store_true', help='use Null Island (0, 0) and print no angles')
-    add_display_options(chart)
+    # -*- cast -*-
+    cast = subparsers.add_parser('cast', help='calculate an event chart')
+    cast.add_argument('--save-config', action='store_true', help='save coordinates and display preferences to config')
+    cast.add_argument('--title', help='e.g. <Your Name>, "Now", "Full Moon"')
+    cast.add_argument('-y', '--lat', type=float, help="latitude")
+    cast.add_argument('-x', '--lng', type=float, help="longitude")
+    cast.add_argument('-d', '--date', help='date of event, format: YYYY-MM-DD')
+    cast.add_argument('-t', '--time', help='time of event (24h), format: HH:MM')
+    cast.add_argument('--noon', action='store_true', help='use 12:00 UTC and print no angles')
+    cast.add_argument('--zero', action='store_true', help='use Null Island (0, 0) and print no angles')
+    add_display_options(cast)
 
     return parser.parse_args(args=None if sys.argv[1:] else ['--help'])

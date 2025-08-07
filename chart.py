@@ -1,9 +1,11 @@
 from chart import (
+    save_config,
     get_moment,
     get_locale,
     parse_arguments,
     get_julian_days,
     jd_to_datetime,
+    parse_shift_to_julian_delta,
     get_planets,
     get_angles,
     build_horoscope,
@@ -17,7 +19,11 @@ def main():
         args.print_help()
         args.exit(1)
 
-    if args.command in ["chart", "now"]:
+    if args.save_config:
+        save_config(args)
+        return
+
+    if args.command in ["cast", "now"]:
         date_str, time_str = get_moment(args)
         lat, lng = get_locale(args)
         jd_now, jd_then = get_julian_days(date_str, time_str, args)
