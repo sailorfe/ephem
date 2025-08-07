@@ -1,6 +1,6 @@
 # chart
 
-**chart** is a minimal, opinionated horoscope CLI designed with electional astrology and premodern revivalism in mind. `chart now` calculates the chart of the moment relative for your locale, while `chart cast` accepts input for specific dates like nativities and other past and future events.
+**chart** is a minimal, opinionated, and configurable horoscope CLI designed with electional astrology and premodern revivalism in mind. `chart now` calculates the chart of the moment relative for your locale, while `chart cast` accepts input for specific dates like nativities and other past and future events.
 
 pair with [ascendant](https://codeberg.org/sailorfe/ascendant) for an efficient scriptable clock 🤓
 
@@ -55,6 +55,25 @@ display options:
   -p, --no-coordinates  don't print coordinates
 ```
 
+### configuration
+
+you can generate this with either `chart now --save-config` or `chart cast --save-config`:
+
+```ini
+[location]
+# floats in decimal degrees for precision
+lat = 36                # N is positive, S is negative
+lng = -86               # E is positive, W is negative
+
+[display]
+classical = False       # set with --classical or -c
+brief = False           # set with --brief or -b
+verbose = False         # set with --verbose or -v
+no-color = False        # set with --no-color or -m
+no-coordinates = False  # set with --no-coordinates or -p
+node = true             # not a boolean! this is a string; other option is 'mean'
+```
+
 <a name="installation"></a>
 ## installation
 
@@ -67,17 +86,12 @@ i welcome contributions!! this is my biggest python project so far. please help,
 
 ### ideas
 
+- [-] `config.ini` with configparser!
+- [ ] save a database of `YAML` birth/event info
 - [ ] conversion from local time to UTC and vice versa
 - [ ] alternate ANSI color schemes by sign triplicity or quadruplicity
-- [x] ~~option to print coordinates~~
 - [ ] pseudo "wheel" text output option in the style of Astrolog
-
-<a name="screenshots"></a>
-## screenshots
-
-![chart of the moment](./electional-now.png)
-
-![debian birth chart](./electional-chart.png)
+- [x] ~~option to print or hide coordinates~~
 
 <a name="license"></a>
 ## license
