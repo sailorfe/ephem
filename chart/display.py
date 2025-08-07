@@ -1,7 +1,7 @@
 from constants import GLYPHS, Colors
 
 def print_chart(args, date_str, time_str, horoscope, planets):
-    colors = Colors(use_color=not args.plain)
+    colors = Colors(use_color=not args.no_color)
 
     if args.title:
         title = f"{args.title}\n{date_str} {time_str} UTC"
