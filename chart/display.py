@@ -3,7 +3,9 @@ from .constants import GLYPHS, VERBOSE, Colors
 def print_chart(args, lat, lng, dt, horoscope, planets):
     colors = Colors(use_color=not args.no_color)
 
-    if args.command == "chart" and args.title:
+    if args.command == "now" and not args.shift:
+        title = f"Chart of the Moment\n{dt} UTC"
+    elif args.command == "chart" and args.title:
         title = f"{args.title}\n{dt} UTC"
     else:
         title = f"{dt} UTC"
@@ -13,7 +15,7 @@ def print_chart(args, lat, lng, dt, horoscope, planets):
 
     if not args.no_coordinates:
         geo_str = str(lat) + ", " + str(lng)
-        title += f"\n@ {geo_str}"
+        title += f" @ {geo_str}"
 
     print(colors.colorize(title, "bold"))
 
