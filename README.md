@@ -1,10 +1,10 @@
 # electional
 
-**electional** is an opinionated horoscope CLI designed with electional astrology in mind. by default, it calculates the chart of the moment relative to your geolocated IP coordinates, but also accepts input for specific dates like nativities and other past and future events.
+**electional** is an opinionated horoscope CLI designed with electional astrology in mind. `electional now` calculates the chart of the moment relative to your geolocated IP coordinates while `electional chart` accepts input for specific dates like nativities and other past and future events.  
 
-by "opinionated," i mean i wrote it with methodological and traditional biases, not that it offers any sort of interpretation or judgment. the ANSI colors divide the seven visible planets by sect, including mercury; the unicode planetary glyphs lack labels by default; i use Null Island as a placeholder location instead of the more traditional Greenwich, England.
+by "opinionated," i mean i wrote it with methodological and traditional biases, not that it offers any sort of interpretation or judgment. the ANSI colors divide the seven visible planets by sect, including mercury; the unicode planetary glyphs lack labels by default; i use Null Island as a placeholder location instead of the more conventional Greenwich, England.
 
-pair with [ascendant](https://codeberg.org/sailorfe/ascendant) for an efficient scriptable clock :)
+pair with [ascendant](https://codeberg.org/sailorfe/ascendant) for an efficient scriptable clock 🤓
 
 - [usage](#usage)
 - [installation](#installation)
