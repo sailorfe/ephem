@@ -9,6 +9,7 @@ pair with [ascendant](https://codeberg.org/sailorfe/ascendant) for an efficient 
 - [usage](#usage)
 - [installation](#installation)
 - [contributing](#contributing)
+- [screenshots](#screenshots)
 - [license](#license)
 
 <a name="usage"></a>
@@ -72,6 +73,13 @@ i welcome contributions!! this is my biggest python project so far. please help,
 - [ ] alternate ANSI color schemes by sign triplicity or quadruplicity
 - [x] ~~option to print coordinates~~
 - [ ] pseudo "wheel" text output option in the style of Astrolog
+
+<a name="screenshots"></a>
+## screenshots
+
+![chart of the moment](./electional-now.png)
+
+![debian birth chart](./electional-chart.png)
 
 <a name="license"></a>
 ## license
