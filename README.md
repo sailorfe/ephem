@@ -13,24 +13,45 @@ by "opinionated," i mean i wrote it with methodological and traditional biases, 
 ## usage
 
 ```sh
-$ chart -h
-usage: chart [-h] [-d DATE] [-t TIME] [-y LAT] [-x LNG] [-n NAME] [-s] [-p] [-c] [-a]
-                [--node {true,mean}]
+$ electional -h
+usage: electional [-h] {chart,asc} ...
 
-A horoscope CLI that prints the chart of the moment or a given date, time, and coordinates.
+A horoscope CLI for electional astrology.
+
+positional arguments:
+  {chart,asc}  subcommand help
+    chart      calculate the chart of the moment or an event/birth chart
+    asc        calculate current local ascendant with IP geolocation or given coordinates
 
 options:
-  -h, --help          show this help message and exit
-  -d, --date DATE     date YYYY-MM-DD; defaults to today
-  -t, --time TIME     UTC time as HH:MM; defaults to right now
-  -y, --lat LAT       latitude; defaults to geolocated public IP coordinates
-  -x, --lng LNG       longitude; defaults to geolocated public IP coordinates
-  -n, --name NAME     e.g. <Your Name>, 'Now', 'Full Moon'
-  -s, --short         print truncated placements, e.g. 21 Sco 2
-  -p, --plain         disable ANSI colors
-  -c, --classical     exclude Uranus through Pluto
-  -a, --approximate   given a date but no time, use UTC noon and don't print angles
-  --node {true,mean}  choose lunar node calculation method
+  -h, --help   show this help message and exit
+```
+
+```sh
+$ electional chart -h
+usage: electional chart [-h] (-n [LAT [LNG ...]] | -e DATE TIME LAT LNG) [-t TITLE] [-s] [-p] [-c] [-a] [--node {true,mean}]
+
+options:
+  -h, --help            show this help message and exit
+  -n, --now [LAT [LNG ...]]
+                        use current time and location via IP or manualy given coordinates
+  -e, --event DATE TIME LAT LNG
+                        calculate chart for specific date/time/place (YYYY-MM-DD HH:MM y x)
+  -t, --title TITLE     e.g. <Your Name>, "Now", "Full Moon"
+  -s, --short           print truncated placements, e.g. 21 Sco 2
+  -p, --plain           disable ANSI colors
+  -c, --classical       exclude Uranus through Pluto
+  -a, --approximate     given a date but no time and/or place, use UTC noon and don't print angles
+  --node {true,mean}    choose lunar node calculation method
+```
+
+```sh
+$ electional asc -h
+usage: electional asc [-h] [-f LAT LNG]
+
+options:
+  -h, --help           show this help message and exit
+  -f, --fixed LAT LNG  manually provide coordinates
 ```
 
 <a name="installation"></a>

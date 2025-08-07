@@ -3,17 +3,17 @@ from constants import GLYPHS, Colors
 def print_chart(args, date_str, time_str, horoscope, planets):
     colors = Colors(use_color=not args.plain)
 
-    if args.name:
-        title = f"{args.name}\n{date_str} {time_str} UTC"
+    if args.title:
+        title = f"{args.title}\n{date_str} {time_str} UTC"
     else:
         title = f"{date_str} {time_str} UTC"
 
-    if args.date is not None and args.time is None and args.approximate:
+    if args.command == "chart" and args.event and args.approximate:
         title += f" hyp."
 
     print(colors.colorize(title, "bold"))
 
-    order = [
+    spheres = [
         ("ae", "bright_red"),
         ("ag", "bright_blue"),
         ("hg", None),
@@ -31,18 +31,18 @@ def print_chart(args, date_str, time_str, horoscope, planets):
     ]
 
     if args.classical:
-        order = [item for item in order if item[0] not in ("ura", "nep", "plu")]
+        spheres = [item for item in spheres if item[0] not in ("ura", "nep", "plu")]
 
-    if args.approximate:
-        order = [item for item in order if item[0] not in ("asc", "mc")]
+    if args.command == "chart" and args.event and args.approximate:
+        spheres = [item for item in spheres if item[0] not in ("asc", "mc")]
 
     if args.node == "true":
-        order = [item for item in order if item[0] != "mean_node"]
+        spheres = [item for item in spheres if item[0] != "mean_node"]
     else:
-        order = [item for item in order if item[0] != "true_node"]
+        spheres = [item for item in spheres if item[0] != "true_node"]
 
 
-    for key, default_color in order:
+    for key, default_color in spheres:
         # fetch and format glyph
         glyph = GLYPHS.get(key, key.upper())
 
