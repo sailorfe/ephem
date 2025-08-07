@@ -10,14 +10,9 @@ from horoscope import (
 from chart import (
     get_moment,
     get_locale,
+    jd_to_datetime,
     print_chart
     )
-
-from clock import (
-        get_now,
-        get_here,
-        print_asc
-        )
 
 def main():
     args = parse_arguments()
@@ -27,11 +22,12 @@ def main():
     if args.command == "chart" or args.command == "now":
         date_str, time_str = get_moment(args)[0], get_moment(args)[1]
         lat, lng = get_locale(args)
-        jd_now, jd_then = get_julian_days(date_str, time_str)
+        jd_now, jd_then = get_julian_days(date_str, time_str, args)
         planets = get_planets(jd_now, jd_then)
         angles = get_angles(jd_now, lat, lng)
         horoscope = build_horoscope(planets, angles)
-        print_chart(args, lat, lng, date_str, time_str, horoscope, planets)
+        dt = jd_to_datetime(jd_now)
+        print_chart(args, lat, lng, dt, horoscope, planets)
 
 if __name__ == '__main__':
     main()
