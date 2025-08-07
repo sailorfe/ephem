@@ -29,12 +29,13 @@ options:
 
 ```sh
 $ electional chart -h
-usage: electional chart [-h] (-n [LAT [LNG ...]] | -e DATE TIME LAT LNG) [-t TITLE] [-s] [-p] [-c] [-a] [--node {true,mean}]
+usage: electional chart [-h] [-e DATE TIME LAT LNG] [-t TITLE] [-s] [-p] [-c] [-a] [--node {true,mean}] [LAT [LNG ...]]
+
+positional arguments:
+  LAT LNG               optional coordinates for chart of the moment
 
 options:
   -h, --help            show this help message and exit
-  -n, --now [LAT [LNG ...]]
-                        use current time and location via IP or manualy given coordinates
   -e, --event DATE TIME LAT LNG
                         calculate chart for specific date/time/place (YYYY-MM-DD HH:MM y x)
   -t, --title TITLE     e.g. <Your Name>, "Now", "Full Moon"
@@ -47,11 +48,13 @@ options:
 
 ```sh
 $ electional asc -h
-usage: electional asc [-h] [-f LAT LNG]
+usage: electional asc [-h] [LAT [LNG ...]]
+
+positional arguments:
+  LAT LNG     optionally provide coordinates
 
 options:
-  -h, --help           show this help message and exit
-  -f, --fixed LAT LNG  manually provide coordinates
+  -h, --help  show this help message and exit
 ```
 
 <a name="installation"></a>
