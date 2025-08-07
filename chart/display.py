@@ -1,14 +1,4 @@
-from datetime import datetime,timezone
-import swisseph as swe
-from constants import GLYPHS, VERBOSE, Colors
-
-def jd_to_datetime(jd_now):
-    y, m, d, h = swe.revjul(jd_now)
-    hours = int(h)
-    minutes = int((h - hours) * 60)
-    seconds = int(((h - hours) * 60 - minutes) * 60)
-    dt = datetime(y, m, d, hours, minutes, seconds, tzinfo=timezone.utc)
-    return datetime.strftime(dt, "%Y-%m-d %H:%M")
+from .constants import GLYPHS, VERBOSE, Colors
 
 def print_chart(args, lat, lng, dt, horoscope, planets):
     colors = Colors(use_color=not args.no_color)
@@ -64,7 +54,7 @@ def print_chart(args, lat, lng, dt, horoscope, planets):
             glyph = GLYPHS.get(key, key.upper()).ljust(4)
 
         # fetch strings from horoscope
-        if args.short:
+        if args.brief:
             placement = horoscope.get(key, {}).get("short", "??")
         else:
             placement = horoscope.get(key, {}).get("full", "??")

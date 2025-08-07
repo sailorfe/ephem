@@ -1,19 +1,5 @@
-from datetime import datetime
 import swisseph as swe
-from constants import SIGNS, SHORT
-
-def get_julian_days(date_str, time_str, args):
-    dt = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
-    jd_now = swe.julday(dt.year, dt.month, dt.day, dt.hour + dt.minute / 60)
-    # one julian minute per https://ssd.jpl.nasa.gov/tools/jdc/#/cd
-    jd_then = jd_now - (1 / 1440)
-    if args.command == "now":
-        if args.fw:
-            jd_now += (1 / 24) * args.fw
-        elif args.bw:
-            jd_now -= (1 / 24) * args.fw
-    return jd_now, jd_then
-
+from .constants import SIGNS, SHORT
 
 def get_planets(jd_now, jd_then):
     planets = []
