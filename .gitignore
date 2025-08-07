@@ -1,5 +1,4 @@
-asc.spec
-chart.spec
+*.spec
 build
 dist
 venv
