@@ -2,7 +2,7 @@
 
 **electional** is an opinionated horoscope CLI designed with electional astrology in mind. by default, it calculates the chart of the moment relative to your geolocated IP coordinates, but also accepts input for specific dates like nativities and other past and future events.
 
-by "opinionated," i mean i wrote it with methodological and traditional biases, not that it offers any sort of interpretation or judgment. the ANSI colors divide the seven visible planets by sect, including mercury; the unicode planetary glyphs lack labels; and the flags for the seven visible planets are their metals in medieval alchemy.
+by "opinionated," i mean i wrote it with methodological and traditional biases, not that it offers any sort of interpretation or judgment. the ANSI colors divide the seven visible planets by sect, including mercury; the unicode planetary glyphs lack labels by default; i use Null Island as a placeholder location instead of the more traditional Greenwich, England.
 
 pair with [ascendant](https://codeberg.org/sailorfe/ascendant) for an efficient scriptable clock :)
 
@@ -70,7 +70,7 @@ i welcome contributions!! this is my biggest python project so far. please help,
 
 - [ ] conversion from local time to UTC and vice versa
 - [ ] alternate ANSI color schemes by sign triplicity or quadruplicity
-~~- [x ] option to print coordinates~~
+- [x] ~~option to print coordinates~~
 - [ ] pseudo "wheel" text output option in the style of Astrolog
 
 <a name="license"></a>
