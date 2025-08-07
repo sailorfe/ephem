@@ -10,8 +10,8 @@ Examples:
     electional chart                                            # chart of the current moment using IP geolocation
     electional chart 36 -86                                     # chart of the current moment with given coordinates
     electional chart -e 1998-08-26 8:20 37.49 127.08 -t "JSY"   # chart with complete information
-    electional chart -e 1993-08-16 13:05 -t "Debian Linux"      # hypothetical chart without known coordinates
-    electional chart -e 1845-05-19 -t "Franklin Expedition"     # hypothetical chart without known time
+    electional chart -e 1993-08-16 13:05 -a -t "Debian Linux"   # hypothetical chart without known coordinates
+    electional chart -e 1845-05-19 -a -t "Franklin Expedition"  # hypothetical chart without known time
     electional asc                                              # print the current ascendant
 """,
             formatter_class=argparse.RawDescriptionHelpFormatter
