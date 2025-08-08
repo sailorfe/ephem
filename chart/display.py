@@ -1,12 +1,12 @@
 from .constants import GLYPHS, VERBOSE, Colors
 
-def format_chart(args, lat, lng, dt, horoscope, planets, approx_time, approx_locale, config_locale):
+def format_chart(args, title, lat, lng, dt, horoscope, planets, approx_time, approx_locale, config_locale):
     colors = Colors(use_color=not args.no_color)
     lines = []
 
     # -*- warnings + title -*-
-    if args.command == "cast" and args.title:
-        title = f"{args.title}\n{dt} UTC"
+    if args.command == "cast":
+        title = f"{title}\n{dt} UTC"
     else:
         title = f"{dt} UTC"
 
