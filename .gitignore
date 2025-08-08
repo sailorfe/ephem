@@ -2,4 +2,6 @@
 build
 dist
 venv
+chart/__pycache__
+tests/__pycache__
 __pycache__
