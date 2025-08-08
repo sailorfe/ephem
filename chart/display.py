@@ -5,9 +5,7 @@ def format_chart(args, lat, lng, dt, horoscope, planets, approx_time, approx_loc
     lines = []
 
     # -*- title -*-
-    if args.command == "now" and not args.shift:
-        title = f"Chart for {dt} UTC"
-    elif args.command == "cast" and args.title:
+    if args.command == "cast" and args.title:
         title = f"{args.title}\n{dt} UTC"
     else:
         title = f"{dt} UTC"
