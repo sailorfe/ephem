@@ -16,7 +16,7 @@ def parse_arguments():
 
     parser = argparse.ArgumentParser(
         prog='chart',
-        description="A minimal horoscope CLI",
+        description="A minimal, opinionated and configurable horoscope CLI.",
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
@@ -40,8 +40,6 @@ def parse_arguments():
     cast.add_argument('-x', '--lng', type=float, help="longitude")
     cast.add_argument('-d', '--date', help='date of event, format: YYYY-MM-DD')
     cast.add_argument('-t', '--time', help='time of event (24h), format: HH:MM')
-    cast.add_argument('--noon', action='store_true', help='use 12:00 UTC and print no angles')
-    cast.add_argument('--zero', action='store_true', help='use Null Island (0, 0) and print no angles')
     add_display_options(cast)
 
     return parser.parse_args(args=None if sys.argv[1:] else ['--help'])

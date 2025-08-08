@@ -1,8 +1,10 @@
 from .constants import GLYPHS, VERBOSE, Colors
 
-def print_chart(args, lat, lng, dt, horoscope, planets):
+def format_chart(args, lat, lng, dt, horoscope, planets, approx_time, approx_locale):
     colors = Colors(use_color=not args.no_color)
+    lines = []
 
+    # -*- title -*-
     if args.command == "now" and not args.shift:
         title = f"Chart for {dt} UTC"
     elif args.command == "cast" and args.title:
@@ -10,15 +12,17 @@ def print_chart(args, lat, lng, dt, horoscope, planets):
     else:
         title = f"{dt} UTC"
 
-    if args.command == "cast" and (args.time is None):
+    if approx_time or approx_locale:
         title += f" hyp."
 
-    if not args.no_coordinates:
+    if not args.no_coordinates and not approx_locale:
         geo_str = str(lat) + ", " + str(lng)
         title += f" @ {geo_str}"
 
-    print(colors.colorize(title, "bold"))
+    lines.append(colors.colorize(title, "bold"))
 
+
+    # -*- filter objects -*-
     spheres = [
         ("ae", "bright_red"),
         ("ag", "bright_blue"),
@@ -39,7 +43,7 @@ def print_chart(args, lat, lng, dt, horoscope, planets):
     if args.classical:
         spheres = [item for item in spheres if item[0] not in ("ura", "nep", "plu")]
 
-    if args.command == "cast" and (args.noon or args.zero):
+    if approx_time or approx_locale:
         spheres = [item for item in spheres if item[0] not in ("asc", "mc")]
 
     if args.node == "true":
@@ -74,4 +78,6 @@ def print_chart(args, lat, lng, dt, horoscope, planets):
         if colors and color:
             line = colors.colorize(line, color)
 
-        print(line)
+        lines.append(line)
+
+    return lines
