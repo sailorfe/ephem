@@ -24,13 +24,13 @@ def main():
 
     if args.command in ["cast", "now"]:
         date_str, time_str, approx_time = get_moment(args)
-        lat, lng, approx_locale = get_locale(args)
+        lat, lng, approx_locale, config_locale = get_locale(args)
         jd_now, jd_then = get_julian_days(date_str, time_str, args)
         planets = get_planets(jd_now, jd_then)
         angles = get_angles(jd_now, lat, lng)
         horoscope = build_horoscope(planets, angles)
         dt = jd_to_datetime(jd_now)
-        output = format_chart(args, lat, lng, dt, horoscope, planets, approx_time, approx_locale)
+        output = format_chart(args, lat, lng, dt, horoscope, planets, approx_time, approx_locale, config_locale)
         for line in output:
             print(line)
 
