@@ -8,8 +8,8 @@ def add_display_options(parser):
     display.add_argument('-c', '--classical', action='store_true', help='exclude Uranus through Pluto')
     display.add_argument('-b', '--brief', action='store_true', help='print truncated placements, e.g. 21 Sco 2')
     display.add_argument('-v', '--verbose', action='store_true', help='print planet names instead of glyphs')
-    display.add_argument('-m', '--no-color', action='store_true', help='disable ANSI colors')
     display.add_argument('-p', '--no-coordinates', action='store_true', help="don't print coordinates")
+    display.add_argument('-m', '--no-color', action='store_true', help='disable ANSI colors')
 
 def parse_arguments():
     config_defaults = load_config_defaults()
