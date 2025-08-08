@@ -4,7 +4,7 @@
 
 pair with [ascendant](https://codeberg.org/sailorfe/ascendant) for an efficient scriptable clock 🤓
 
-![made with vhs by charm](./chart-luna.gif)
+![made with vhs by charm](./chart-moonqueen.gif)
 
 - [usage](#usage)
 - [installation](#installation)
