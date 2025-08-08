@@ -1,9 +1,14 @@
 import configparser
 import os
 
+# i <3 you xdg base dir specification
+def get_config_path():
+    config_home = os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
+    return os.path.join(config_home, "chart", "chart.ini")
+
 def load_config_defaults():
     config = configparser.ConfigParser()
-    path = os.path.expanduser("~/.config/chart/chart.ini")
+    path = get_config_path()
     if os.path.exists(path):
         config.read(path)
         defaults = {}
@@ -14,14 +19,12 @@ def load_config_defaults():
                 defaults['lng'] = float(config['location']['lng'])
         if 'display' in config:
             for key, value in config['display'].items():
-                # booleans being weird
                 if value.lower() in ['true', 'false']:
                     defaults[key.replace('-', '_')] = config['display'].getboolean(key)
                 else:
                     defaults[key.replace('-', '_')] = value
         return defaults
     return {}
-
 
 def save_config(args):
     config = configparser.ConfigParser()
@@ -33,13 +36,15 @@ def save_config(args):
         config['location']['lng'] = str(args.lng)
 
     config['display'] = {}
-    display_keys = ['classical', 'brief', 'verbose', 'no_color', 'node', 'no_coordinates']
+    display_keys = ['classical', 'brief', 'verbose', 'node', 'no_color', 'no_coordinates']
     for key in display_keys:
         value = getattr(args, key, None)
         if value is not None:
             config['display'][key.replace('_', '-')] = str(value)
 
-    path = os.path.expanduser("~/.config/chart/chart.ini")
+    path = get_config_path()
+    os.makedirs(os.path.dirname(path), exist_ok=True)  # check directory exists
+
     with open(path, 'w') as configfile:
         config.write(configfile)
 
