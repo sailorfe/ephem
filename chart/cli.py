@@ -12,7 +12,7 @@ def add_display_options(parser):
     display.add_argument('-p', '--no-coordinates', action='store_true', help="don't print coordinates")
     display.add_argument('-m', '--no-color', action='store_true', help="disable ANSI colors")
 
-def parse_arguments():
+def parse_arguments(args=None):
     config_defaults = load_config_defaults()
 
     parser = argparse.ArgumentParser(
@@ -41,7 +41,11 @@ def parse_arguments():
     cast.add_argument('-x', '--lng', type=float, help="longitude")
     add_display_options(cast)
 
-    return parser.parse_args(args=None if sys.argv[1:] else ['--help'])
+    if args == [] or args is None and len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(0)
+
+    return parser.parse_args(args)
 
 def parse_event(event_args):
     # date_str, time_str, title_str
