@@ -28,7 +28,7 @@ def parse_arguments():
 
     now.add_argument('-y', '--lat', type=float, help="latitude")
     now.add_argument('-x', '--lng', type=float, help="longitude")
-    now.add_argument('-s', '--shift', type=str, help="shift time forward or backward, e.g. 2h, -30m, 1.5d (default is hours)")
+    now.add_argument('-s', '--shift', type=str, help="shift time forward or backward, e.g. 2h, -30m, 1.5d, 4w (default is hours)")
     now.add_argument('--save-config', action='store_true', help='save coordinates and display preferences to config')
     add_display_options(now)
 
