@@ -17,7 +17,7 @@ def parse_arguments(args=None):
 
     parser = argparse.ArgumentParser(
         prog='chart',
-        description="chart is a minimal, opinionated and configurable horoscope CLI 🪐🌌",
+        description="chart is a minimal, opinionated and configurable horoscope CLI 🌌",
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
@@ -41,11 +41,20 @@ def parse_arguments(args=None):
     cast.add_argument('-x', '--lng', type=float, help="longitude")
     add_display_options(cast)
 
+    parsed = parser.parse_args(args)
+
     if args == [] or args is None and len(sys.argv) == 1:
         parser.print_help()
         sys.exit(0)
 
-    return parser.parse_args(args)
+    if parsed.command == "cast" and (not parsed.event or len(parsed.event) < 1):
+        parser.error(
+            "🪐 'chart cast' needs at minimum a DATE, and optionally a TIME and TITLE. for example:"
+            "\n    chart cast 1993-08-16 13:05 \"Debian Linux\""
+        )
+
+    return parsed
+
 
 def parse_event(event_args):
     # date_str, time_str, title_str
