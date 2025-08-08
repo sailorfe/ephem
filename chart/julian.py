@@ -7,7 +7,7 @@ def parse_shift_to_julian_delta(shift_str):
         return 0.0
 
     # default unit is hours
-    pattern = r"^\s*(-?\d*\.?\d*)([dhm]?)\s*$"
+    pattern = r"^\s*(-?\d*\.?\d*)([wdhm]?)\s*$"
     match = re.match(pattern, shift_str.lower())
 
     if not match:
@@ -16,11 +16,13 @@ def parse_shift_to_julian_delta(shift_str):
     value, unit = match.groups()
     value = float(value)
 
-    if unit == "d":    # days
+    if unit == "w":                     # weeks
+        return value * 7
+    elif unit == "d":                   # days
         return value
-    elif unit == "h" or unit == "":  # hours (or no unit)
+    elif unit == "h" or unit == "":     # hours
         return value / 24
-    elif unit == "m":  # minutes
+    elif unit == "m":                   # minutes
         return value / 1440
     else:
         raise ValueError(f"Unknown unit in shift: {unit}")
