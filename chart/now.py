@@ -27,7 +27,10 @@ def get_locale(args):
         lng = config["location"].get("lng")
 
     if lat and lng:
-        print(f"📍 Using location from config: {lat}, {lng}")
+        if args.no_coordinates:
+            print(f"📍 Using location from config")
+        else:
+            print(f"📍 Using location from config: {lat}, {lng}")
         try:
             return float(lat), float(lng), True  # approximate
         except ValueError:

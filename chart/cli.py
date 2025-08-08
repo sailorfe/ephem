@@ -16,7 +16,7 @@ def parse_arguments():
 
     parser = argparse.ArgumentParser(
         prog='chart',
-        description="A minimal, opinionated and configurable horoscope CLI.",
+        description="chart is a minimal, opinionated and configurable horoscope CLI 🪐🌌",
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
