@@ -23,15 +23,15 @@ class TestFormatChart(unittest.TestCase):
         self.dt = datetime(2025, 8, 7, 12, 0)
 
         self.planets = [
-            {"lng": 100.0},
-            {"lng": 120.0},
-            {"lng": 110.0}
+            {"lng": 335.0},
+            {"lng": 323.0},
+            {"lng": 178.0}
         ]
 
         self.horoscope = {
-            "ae": {"short": "10 Ari 0"},
-            "ag": {"short": "15 Tau 0"},
-            "hg": {"short": "20 Gem 0"}
+            "ae": {"short": "5 Pis 0"},
+            "ag": {"short": "28 Vir 0"},
+            "hg": {"short": "23 Aqu 0"}
         }
 
     def test_format_chart_returns_lines(self):
@@ -48,8 +48,9 @@ class TestFormatChart(unittest.TestCase):
 
         self.assertIsInstance(lines, list)
         self.assertTrue(any("Test Chart" in line for line in lines))
-        self.assertTrue(any("Ari" in line for line in lines))
-        self.assertTrue(any("Gem" in line for line in lines))
+        self.assertTrue(any("Pis" in line for line in lines))
+        self.assertTrue(any("Vir" in line for line in lines))
+        self.assertTrue(any("Aqu" in line for line in lines))
 
     def test_no_coordinates_flag(self):
         self.args.no_coordinates = True

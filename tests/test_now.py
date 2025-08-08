@@ -1,7 +1,6 @@
 import unittest
 from unittest.mock import patch, mock_open
 from chart import now
-from datetime import datetime
 
 class TestNow(unittest.TestCase):
     def test_get_moment_now(self):
