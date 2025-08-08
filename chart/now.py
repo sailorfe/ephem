@@ -21,17 +21,18 @@ def get_locale(args):
     config = configparser.ConfigParser()
     config.read(config_path)
 
-    lat = lng = None
-    if config.has_section("location"):
-        lat = config["location"].get("lat")
-        lng = config["location"].get("lng")
+    if args.lat is None and args.lng is None:
 
-    if lat and lng:
-        print(f"📍 Using location from config.")
-        try:
-            return float(lat), float(lng), True  # approximate
-        except ValueError:
-            print("⚠️ Invalid config location values; defaulting to 0,0.")
+        if config.has_section("location"):
+            lat = config["location"].get("lat")
+            lng = config["location"].get("lng")
+
+            if lat and lng:
+                print(f"📍 Using location from config.")
+                try:
+                    return float(lat), float(lng), False
+                except ValueError:
+                    print("⚠️ Invalid config location values; defaulting to 0,0.")
 
     print("🌐 No coordinates provided or found in config; not printing angles.")
     return 0.0, 0.0, True  # definitely approximate
