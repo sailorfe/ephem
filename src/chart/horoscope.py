@@ -1,91 +1,86 @@
 import swisseph as swe
-from .constants import SIGNS, SHORT
+from .constants import SIGNS, OBJECTS
+
+SIGN_ORDER = list(SIGNS.keys())
+
+def sign_from_index(index):
+    name = SIGN_ORDER[index % 12]
+    return name, SIGNS[name]
 
 def get_planets(jd_now, jd_then):
     planets = []
-    for planet in range(12):
-        dd_now = swe.calc_ut(jd_now, planet)[0][0]
-        dd_then = swe.calc_ut(jd_then, planet)[0][0]
+    planet_keys = [
+        "ae", "ag", "hg", "cu", "fe", "sn", "pb",
+        "ura", "nep", "plu", "mean_node", "true_node"
+    ]
+
+    for planet_id, obj_key in enumerate(planet_keys):
+        dd_now = swe.calc_ut(jd_now, planet_id)[0][0]
+        dd_then = swe.calc_ut(jd_then, planet_id)[0][0]
         dms = swe.split_deg(dd_now, 8)
+        sign_name, sign_data = sign_from_index(dms[4])
         planets.append({
+            'obj_key': obj_key,
             'deg': dms[0],
-            'sign': SIGNS[dms[4]],
-            'short': SHORT[dms[4]],
             'mnt': dms[1],
             'sec': dms[2],
-            'rx': dd_then > dd_now,
-            'lng': dd_now
-            })
+            'sign': sign_name,
+            'trunc': sign_data['trunc'],
+            'glyph': sign_data['glyph'],
+            'trip': sign_data['trip'],
+            'quad': sign_data['quad'],
+            'rx': dd_then > dd_now
+        })
     return planets
-
 
 def get_angles(jd_now, lat, lng):
     angles = []
+    angle_keys = ["asc", "mc"]
     asc_mc = swe.houses(jd_now, lat, lng, b'W')[1]
-    for angle in asc_mc[:2]:
-        dms = swe.split_deg(angle, 8)
+    for angle_val, obj_key in zip(asc_mc[:2], angle_keys):
+        dms = swe.split_deg(angle_val, 8)
+        sign_name, sign_data = sign_from_index(dms[4])
         angles.append({
+            'obj_key': obj_key,
             'deg': dms[0],
-            'sign': SIGNS[dms[4]],
-            'short': SHORT[dms[4]],
             'mnt': dms[1],
-            'sec': dms[2]
-            })
+            'sec': dms[2],
+            'sign': sign_name,
+            'trunc': sign_data['trunc'],
+            'glyph': sign_data['glyph'],
+            'trip': sign_data['trip'],
+            'quad': sign_data['quad']
+        })
     return angles
 
 
 def build_horoscope(planets, angles):
-    keys = [
-            "ae",
-            "ag",
-            "hg",
-            "cu",
-            "fe",
-            "sn",
-            "pb",
-            "ura",
-            "nep",
-            "plu",
-            "mean_node",
-            "true_node"
-            ]
-
     horoscope = {}
+    all_bodies = planets + angles
 
-    for i in range(len(keys)):
-        key = keys[i]
-        planet = planets [i]
+    for body in all_bodies:
+        obj_data = OBJECTS[body['obj_key']]
 
-        deg= planet['deg']
-        sign = planet['sign']
-        short = planet['short']
-        mnt = planet ['mnt']
-        sec = planet ['sec']
-        rx = planet ['rx']
+        # Core data
+        entry = {
+            "obj_name": obj_data['name'],
+            "obj_glyph": obj_data['glyph'],
+            "deg": body['deg'],
+            "mnt": body['mnt'],
+            "sec": body['sec'],
+            "sign": body['sign'],
+            "sign_trunc": body['trunc'],
+            "sign_glyph": body['glyph'],
+            "trip": body['trip'],
+            "quad": body['quad'],
+            "rx": body.get('rx', False),
+        }
 
-        formatted = f"{deg} {sign} {mnt} {sec}{' r' if rx else ''}"
-        truncated = f"{deg} {short} {mnt}{' r' if rx else ''}"
+        # Renderers called immediately to store strings:
+        entry["full"] = f"{entry['deg']} {entry['sign']} {entry['mnt']} {entry['sec']}{' r' if entry['rx'] else ''}"
+        entry["short"] = f"{entry['deg']} {entry['sign_trunc']} {entry['mnt']}{' r' if entry['rx'] else ''}"
+        entry["glyph"] = f"{entry['deg']} {entry['sign_glyph']} {entry['mnt']}{' r' if entry['rx'] else ''}"
 
-        horoscope[key] = {
-                "full": formatted,
-                "short": truncated
-                }
-
-    angle_keys = ["asc", "mc"]
-    for i, key in enumerate(angle_keys):
-        angle = angles[i]
-        deg = angle['deg']
-        sign = angle['sign']
-        short = angle['short']
-        mnt = angle['mnt']
-        sec = angle['sec']
-
-        formatted = f"{deg} {sign} {mnt} {sec}"
-        truncated = f"{deg} {short} {mnt}"
-
-        horoscope[key] = {
-                "full": formatted,
-                "short": truncated
-                }
+        horoscope[body['obj_key']] = entry
 
     return horoscope
