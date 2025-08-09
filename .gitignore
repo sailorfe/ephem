@@ -1,6 +1,6 @@
-*.spec
-build
-dist
+*.tape
+.coverage
+htmlcov
 venv
 src/chart/__pycache__
 src/*.egg-info

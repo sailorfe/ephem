@@ -3,7 +3,7 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "chart-cli"
+name = "ephem"
 dynamic = ["version"]
 dependencies = [
 	"pyswisseph"
@@ -26,7 +26,7 @@ classifiers = [
 ]
 
 [project.scripts]
-chart = "chart.__main__:main"
+ephem = "ephem.__main__:main"
 
 [project.urls]
 Repository = "https://codeberg.org/sailorfe/chart"

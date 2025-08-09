@@ -1,16 +1,16 @@
-# chart
+# ephem
 
-**chart** (tentative name) is a minimal, opinionated, and configurable horoscope CLI designed with electional astrology and premodern revivalism in mind.
+**ephem** (tentative name) is a minimal, opinionated, and configurable horoscope CLI designed with electional astrology and premodern revivalism in mind.
 
-![made with vhs by charm](./chart-moonqueen.gif)
+![made with vhs by charm](./ephem-moonqueen.gif)
 
 ### features
 
-- **`chart now`** shows the current chart for your location.
-- **`chart asc`** prints the ascendant for your location, for an efficient, scriptable clock.
-- **`chart cast DATE TIME TITLE`** casts a chart for a specific event, like a birth.
-- `--save-config` saves default place and display settings to `chart.ini`
-- accommodates hypothetical charts from incomplete information by defaulting to UTC noon or Null Island (0,0).
+- **`ephem now`** shows the current chart for your location.
+- **`ephem asc`** prints the ascendant for your location, for an efficient, scriptable clock.
+- **`ephem cast DATE TIME TITLE`** casts a chart for a specific event, like a birth.
+- `--save-config` saves default place and display settings to `ephem.ini`
+- accommodates hypothetical chart from incomplete information by defaulting to UTC noon or Null Island (0,0).
 - default ANSI coloring following hellenistic sect
 
 ### table of contents
@@ -27,24 +27,24 @@
 show chart of the moment for your location:
 
 ```sh
-chart now
+ephem now
 ```
 
 cast an event or birth chart:
 
 ```sh
-chart cast 1998-08-26 8:20 "Jeon Soyeon" --lat 37.49 --lng 127.0855
+ephem cast 1998-08-26 8:20 "Jeon Soyeon" --lat 37.49 --lng 127.0855
 ```
 
 ```sh
-chart cast 1993-08-16 13:05 "Debian Linux"
+ephem cast 1993-08-16 13:05 "Debian Linux"
 ```
 
 <a name="installation"></a>
 clone this repo:
 
 ```sh
-git clone https://codeberg.org/sailorfe/chart.git
+git clone https://codeberg.org/sailorfe/ephem.git
 ```
 
 create a venv (optional):
@@ -65,9 +65,9 @@ pip install -r requirements.txt
 
 - [ ] save a database of `YAML` chart data
 - [ ] follow [NO_COLOR](https://no-color.org)
-- [ ] alternate ANSI color schemes by sign triplicity or quadruplicity
 - [ ] conversion from local time to UTC and vice versa
 - [ ] pseudo "wheel" text output option in the style of Astrolog
+- [x] alternate ANSI color schemes by sign triplicity or quadruplicity
 - [x] integrate shell scriptable clock from [ascendant](https://codeberg.org/sailorfe/ascendant)
 - [x] `config.ini` with configparser!
 - [x] ~~option to print or hide coordinates~~
