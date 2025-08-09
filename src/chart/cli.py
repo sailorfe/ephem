@@ -1,5 +1,5 @@
 from .config import load_config_defaults
-from chart.commands import now, cast
+from chart.commands import now, cast, asc
 import argparse
 import sys
 
@@ -44,6 +44,15 @@ def parse_arguments(args=None):
     cast_parser.add_argument('-y', '--lat', type=float, help="latitude")
     cast_parser.add_argument('-x', '--lng', type=float, help="longitude")
     add_display_options(cast_parser)
+
+
+    # -*- asc -*-
+    asc_parser = subparsers.add_parser('asc', help="print the current local ascendant")
+    asc_parser.set_defaults(func=asc.run)
+    asc_parser.add_argument('-y', '--lat', type=float, help="latitude")
+    asc_parser.add_argument('-x', '--lng', type=float, help="longitude")
+    asc_parser.add_argument('--save-config', action='store_true', help="save coordinates to config")
+ 
 
     parsed = parser.parse_args(args)
 
