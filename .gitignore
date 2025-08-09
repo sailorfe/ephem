@@ -2,6 +2,7 @@
 build
 dist
 venv
-chart/__pycache__
+src/chart/__pycache__
+src/*.egg-info
 tests/__pycache__
 __pycache__

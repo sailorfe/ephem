@@ -5,10 +5,7 @@ def format_chart(args, title, lat, lng, dt, horoscope, planets, approx_time, app
     lines = []
 
     # -*- warnings + title -*-
-    if args.command == "cast":
-        title = f"{title}\n{dt} UTC"
-    else:
-        title = f"{dt} UTC"
+    title = f"{title}\n{dt} UTC"
 
     if approx_time or approx_locale:
         title += f" hyp."
