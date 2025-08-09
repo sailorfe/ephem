@@ -33,5 +33,5 @@ def run(args):
     if approx_locale:
         print("No location given or found in config; using Null Island (0,0).")
 
-    print(f"AC {dms[0]} {sign_display} {dms[1]}")
+    print(f"AC {dms[0]:>2} {sign_display} {dms[1]}")
 
