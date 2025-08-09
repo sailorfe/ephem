@@ -2,8 +2,6 @@
 
 **ephem** (tentative name) is a minimal, opinionated, and configurable horoscope CLI designed with electional astrology and premodern revivalism in mind.
 
-![made with vhs by charm](./ephem-moonqueen.gif)
-
 ### features
 
 - **`ephem now`** shows the current chart for your location.
