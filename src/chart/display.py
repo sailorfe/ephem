@@ -84,28 +84,22 @@ def get_spheres(horoscope, args, planets, approx_time, approx_locale):
     return spheres
 
 
-
 def render_sphere_lines(spheres, horoscope, args, colors):
     lines = []
     for key, color in spheres:
         data = horoscope.get(key, {})
 
-        # choose placement string based on verbosity flags
-        # if --verbose flag, print planet name instead of glyph; glyph is default
         if args.verbose:
-            # Full format, e.g. "15 Aries 23 10 r"
             placement = data.get("full", "??")
-            object = data.get("obj_key").ljust(4)
+            obj_name = data.get("obj_name", key).ljust(12)  # full object name padded
         elif args.glyphs:
-            # Glyph format, e.g. "15 ♈︎ 23 r"
             placement = data.get("glyph", "??")
-            object = data.get("obj_glyph", key.upper()).ljust(8)
+            obj_name = data.get("obj_glyph", key.upper()).ljust(8)  # glyph padded
         else:
-            # Short format, e.g. "15 Ari 23 r"
             placement = data.get("short", "??")
-            object = data.get("obj_glyph", key.upper()).ljust(8)
+            obj_name = data.get("obj_glyph", key.upper()).ljust(8)
 
-        line = f"{object} {placement}"
+        line = f"{obj_name} {placement}"
         if colors and color:
             line = colors.colorize(line, color)
         lines.append(line)
