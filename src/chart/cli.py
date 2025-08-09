@@ -6,9 +6,10 @@ import sys
 def add_display_options(parser):
     display = parser.add_argument_group('display options')
     display.add_argument('--node', choices=['true', 'mean'], default='true', help="choose lunar node calculation method")
+    display.add_argument('--theme', choices=['sect', 'element', 'mode'], default='sect', help="choose ANSI color theme")
     display.add_argument('-c', '--classical', action='store_true', help="exclude Uranus through Pluto")
-    display.add_argument('-b', '--brief', action='store_true', help="print truncated placements, e.g. 21 Sco 2")
-    display.add_argument('-v', '--verbose', action='store_true', help="print planet names instead of glyphs")
+    display.add_argument('-g', '--glyphs', action='store_true', help="print planet and sign glyphs")
+    display.add_argument('-v', '--verbose', action='store_true', help="print planet names and full sign names")
     display.add_argument('-z', '--no-angles', action='store_true', help="don't print Ascendant or Midheaven")
     display.add_argument('-p', '--no-coordinates', action='store_true', help="don't print coordinates")
     display.add_argument('-m', '--no-color', action='store_true', help="disable ANSI colors")
@@ -52,6 +53,7 @@ def parse_arguments(args=None):
     asc_parser.add_argument('-y', '--lat', type=float, help="latitude")
     asc_parser.add_argument('-x', '--lng', type=float, help="longitude")
     asc_parser.add_argument('--save-config', action='store_true', help="save coordinates to config")
+    asc_parser.add_argument('-g', '--glyphs', action='store_true', help='show glyphs instead of truncated sign names')
  
 
     parsed = parser.parse_args(args)
