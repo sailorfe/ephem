@@ -1,7 +1,7 @@
 from .constants import Colors
 
 def get_chart_title(title, dt, lat, lng, args, approx_time, approx_locale):
-    """Return formatted chart title string."""
+    # return formatted chart title string
     title_str = f"{title}\n{dt} UTC"
     if approx_time or approx_locale:
         title_str += " hyp."
@@ -11,7 +11,7 @@ def get_chart_title(title, dt, lat, lng, args, approx_time, approx_locale):
 
 
 def get_warnings(args, approx_time, approx_locale, config_locale):
-    """Return a list of warning messages to display above chart."""
+    # return a list of warning messages to display above chart
     warning_conditions = [
         (approx_time, "No time provided. Using UTC noon and not printing angles."),
         (approx_locale, "No valid location provided or found in config. No angles will be printed."),
@@ -64,6 +64,7 @@ def get_spheres(horoscope, args, planets, approx_time, approx_locale):
                 color = default_color
             final_spheres.append((key, color))
             spheres = final_spheres
+
     else:
         color_map = THEME_COLORS.get(args.theme)
         spheres = [
@@ -91,10 +92,10 @@ def render_sphere_lines(spheres, horoscope, args, colors):
 
         if args.verbose:
             placement = data.get("full", "??")
-            obj_name = data.get("obj_name", key).ljust(12)  # full object name padded
+            obj_name = data.get("obj_name", key).ljust(12)
         elif args.glyphs:
             placement = data.get("glyph", "??")
-            obj_name = data.get("obj_glyph", key.upper()).ljust(8)  # glyph padded
+            obj_name = data.get("obj_glyph", key.upper()).ljust(8)
         else:
             placement = data.get("short", "??")
             obj_name = data.get("obj_glyph", key.upper()).ljust(8)
