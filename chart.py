@@ -16,9 +16,13 @@ def main():
         save_config(args)
         return
 
-    if args.command in ["cast", "now"]:
+    if args.command == "cast":
         date, time, title = parse_event(args.event)
         date_str, time_str, approx_time = get_moment(args, date, time)
+    if args.command == "now":
+        date_str, time_str, approx_time = get_moment(args)
+        title = None
+    if args.command in ["cast", "now"]:
         lat, lng, approx_locale, config_locale = get_locale(args)
         jd_now, jd_then = get_julian_days(date_str, time_str, args)
         planets = get_planets(jd_now, jd_then)

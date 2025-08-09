@@ -1,16 +1,16 @@
 from datetime import datetime, timezone
 from .config import load_config_defaults
 
-def get_moment(args, date, time):
-    # date, time, approximate
+def get_moment(args, date=None, time=None):
     if args.command == "cast":
         if date and time:
             return date, time, False  # explicit time
         if date and not time:
             return date, "12:00", True # approximate time
         return None, None, True
-    now = datetime.now(timezone.utc)
-    return now.strftime("%Y-%m-%d"), now.strftime("%H:%M"), False
+    elif args.command == "now":
+        now = datetime.now(timezone.utc)
+        return now.strftime("%Y-%m-%d"), now.strftime("%H:%M"), False
 
 
 def get_locale(args):
