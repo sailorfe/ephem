@@ -3,7 +3,7 @@ import os
 
 def get_config_path():
     config_home = os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
-    return os.path.join(config_home, "chart", "chart.ini")
+    return os.path.join(config_home, "ephem", "ephem.ini")
 
 def load_config_defaults():
     config = configparser.ConfigParser()

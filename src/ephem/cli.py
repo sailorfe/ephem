@@ -18,8 +18,8 @@ def parse_arguments(args=None):
     config_defaults = load_config_defaults()
 
     parser = argparse.ArgumentParser(
-        prog='chart',
-        description="chart is a minimal, opinionated and configurable horoscope CLI",
+        prog='ephem',
+        description="ephem is a minimal, opinionated and configurable horoscope CLI",
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
@@ -63,7 +63,7 @@ def parse_arguments(args=None):
 
     if parsed.command == "cast" and (not parsed.event or len(parsed.event) < 1):
         parser.error(
-            "`chart cast` needs at minimum a DATE, and optionally a TIME and TITLE. For example:"
+            "`ephem cast` needs at minimum a DATE, and optionally a TIME and TITLE. For example:"
             "\n    chart cast 1993-08-16 13:05 \"Debian Linux\""
         )
 
