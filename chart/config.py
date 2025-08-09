@@ -47,4 +47,4 @@ def save_config(args):
     with open(path, 'w') as configfile:
         config.write(configfile)
 
-    print(f"✅ Saved config to {path}")
+    print(f"Saved config to {path}")

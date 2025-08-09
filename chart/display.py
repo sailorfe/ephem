@@ -15,11 +15,11 @@ def format_chart(args, title, lat, lng, dt, horoscope, planets, approx_time, app
 
     warnings = []
     if approx_time:
-        warnings.append("🕛 No time provided. Using UTC noon and not printing angles.\n")
+        warnings.append("No time provided. Using UTC noon and not printing angles.\n")
     if approx_locale:
-        warnings.append("🌐 No valid location provided or found in config. No angles will be printed.\n")
+        warnings.append("No valid location provided or found in config. No angles will be printed.\n")
     if config_locale:
-        warnings.append("📍 Using location from config file.")
+        warnings.append("Using location from config file.\n")
 
     for warning in warnings:
         lines.append(warning)  # or "italic", or however you're styling warnings
