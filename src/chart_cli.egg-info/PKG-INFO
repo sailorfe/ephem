@@ -1,3 +1,22 @@
+Metadata-Version: 2.4
+Name: chart-cli
+Version: 0.0.0
+Summary: a minimal and configurable astrology CLI
+Author-email: sailorfe <sailorf@proton.me>
+License-Expression: AGPL-3.0-or-later
+Project-URL: Repository, https://codeberg.org/sailorfe/chart
+Keywords: astrology,horoscope
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Religion
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Topic :: Religion
+Requires-Python: >=3.0
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pyswisseph
+Dynamic: license-file
+
 # chart
 
 **chart** is a minimal, opinionated, and configurable horoscope CLI designed with electional astrology and premodern revivalism in mind. `chart now` calculates the chart of the moment relative to your locale, while `chart cast` accepts input for specific dates like nativities and other past and future events.

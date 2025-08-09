@@ -1,9 +1,9 @@
-from chart.cli import parse_arguments, parse_event
-from chart.intake import get_moment, get_locale
-from chart.julian import get_julian_days, jd_to_datetime
-from chart.horoscope import get_planets, get_angles, build_horoscope
-from chart.display import format_chart
-from chart.config import save_config
+from .cli import parse_arguments, parse_event
+from .intake import get_moment, get_locale
+from .julian import get_julian_days, jd_to_datetime
+from .horoscope import get_planets, get_angles, build_horoscope
+from .display import format_chart
+from .config import save_config
 
 def main():
     args = parse_arguments()
