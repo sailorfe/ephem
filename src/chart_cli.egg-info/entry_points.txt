@@ -1,2 +1,0 @@
-[console_scripts]
-chart = chart.__main__:main

@@ -1,4 +1,5 @@
 from .config import load_config_defaults
+from chart.commands import now, cast
 import argparse
 import sys
 
@@ -12,6 +13,7 @@ def add_display_options(parser):
     display.add_argument('-p', '--no-coordinates', action='store_true', help="don't print coordinates")
     display.add_argument('-m', '--no-color', action='store_true', help="disable ANSI colors")
 
+
 def parse_arguments(args=None):
     config_defaults = load_config_defaults()
 
@@ -24,22 +26,24 @@ def parse_arguments(args=None):
     subparsers = parser.add_subparsers(dest="command", required=True, help="subcommand help")
 
     # -*- now -*-
-    now = subparsers.add_parser('now', help="calculate the chart of the moment")
-    now.set_defaults(**config_defaults)
+    now_parser = subparsers.add_parser('now', help="calculate the chart of the moment")
+    now_parser.set_defaults(func=now.run)
 
-    now.add_argument('-y', '--lat', type=float, help="latitude")
-    now.add_argument('-x', '--lng', type=float, help="longitude")
-    now.add_argument('-s', '--shift', type=str, help="shift time forward or backward, e.g. 2h, -30m, 1.5d, 4w (default is hours)")
-    now.add_argument('--save-config', action='store_true', help="save coordinates and display preferences to config")
-    add_display_options(now)
+    now_parser.add_argument('-y', '--lat', type=float, help="latitude")
+    now_parser.add_argument('-x', '--lng', type=float, help="longitude")
+    now_parser.add_argument('-s', '--shift', type=str, help="shift time forward or backward, e.g. 2h, -30m, 1.5d, 4w (default is hours)")
+    now_parser.add_argument('--save-config', action='store_true', help="save coordinates and display preferences to config")
+    add_display_options(now_parser)
 
     # -*- cast -*-
-    cast = subparsers.add_parser('cast', help="calculate an event chart")
-    cast.add_argument('--save-config', action='store_true', help="save coordinates and display preferences to config")
-    cast.add_argument('event', nargs="*", metavar="DATE [TIME] [TITLE]", help="date, optional time and title, e.g. '2025-08-09 7:54 Aquarius Full Moon'")
-    cast.add_argument('-y', '--lat', type=float, help="latitude")
-    cast.add_argument('-x', '--lng', type=float, help="longitude")
-    add_display_options(cast)
+    cast_parser = subparsers.add_parser('cast', help="calculate an event chart")
+    cast_parser.set_defaults(func=cast.run)
+
+    cast_parser.add_argument('--save-config', action='store_true', help="save coordinates and display preferences to config")
+    cast_parser.add_argument('event', nargs="*", metavar="DATE [TIME] [TITLE]", help="date, optional time and title, e.g. '2025-08-09 7:54 Aquarius Full Moon'")
+    cast_parser.add_argument('-y', '--lat', type=float, help="latitude")
+    cast_parser.add_argument('-x', '--lng', type=float, help="longitude")
+    add_display_options(cast_parser)
 
     parsed = parser.parse_args(args)
 
@@ -56,14 +60,4 @@ def parse_arguments(args=None):
     return parsed
 
 
-def parse_event(event_args):
-    # date_str, time_str, title_str
-    if len(event_args) == 0:
-        return None, None, None
-    elif len(event_args) == 1:
-        return event_args[0], None, None
-    elif len(event_args) == 2:
-        return event_args[0], event_args[1], None
-    else:
-        return event_args[0], event_args[1], " ".join(event_args[2:])
 
