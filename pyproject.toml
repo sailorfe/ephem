@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chart-cli"
+dynamic = ["version"]
+dependencies = [
+	"pyswisseph"
+]
+requires-python = ">=3.0"
+authors = [
+	{name = "sailorfe", email = "sailorf@proton.me"}
+]
+description = "a minimal and configurable astrology CLI"
+readme = "README.md"
+license = "AGPL-3.0-or-later"
+license-files = ["LICENSE"]
+keywords = ["astrology", "horoscope"]
+classifiers = [
+	"Development Status :: 3 - Alpha",
+	"Intended Audience :: Religion",
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python :: 3.13",
+	"Topic :: Religion"
+]
+
+[project.scripts]
+chart = "chart.__main__:main"
+
+[project.urls]
+Repository = "https://codeberg.org/sailorfe/chart"

@@ -1,40 +1,66 @@
 import unittest
-from unittest.mock import patch
-from chart import parse_arguments
+from chart.cli import parse_arguments
 
-class TestCLIArguments(unittest.TestCase):
+class test_cli(unittest.TestCase):
+
+    def test_now_with_defaults(self):
+        test_args = ["now"]
+        args = parse_arguments(test_args)
+        self.assertEqual(args.command, "now")
+        self.assertIsNotNone(args.lat)
+        self.assertIsNotNone(args.lng)
+
+
+    def test_now_with_coordinates(self):
+        test_args = ["now", "--lat", "37.49", "--lng", "127.0855"]
+        args = parse_arguments(test_args)
+        self.assertEqual(args.command, "now")
+        self.assertEqual(args.lat, 37.49)
+        self.assertEqual(args.lng, 127.0855)
+
 
     def test_cast_with_all_options(self):
         test_args = [
-                "chart", "cast",
-                "--date", "1998-08-26", "--time", "8:20",
+                "cast",
+                "1998-08-26", "8:20", "Jeon Soyeon",
                 "--lat", "37.49", "--lng", "127.0855",
-                "--title", "Jeon Soyeon",
                 "--node", "mean",
                 "--classical", "--brief", "--verbose",
-                "--no-coordinates", "--no-color"
+                "--no-angles", "--no-coordinates", "--no-color"
                 ]
-        with patch("sys.argv", test_args):
-            args = parse_arguments()
-            self.assertEqual(args.command, "cast")
-            self.assertEqual(args.date, "1998-08-26")
-            self.assertEqual(args.time, "8:20")
-            self.assertEqual(args.lat, 37.49)
-            self.assertEqual(args.lng, 127.0855)
-            self.assertEqual(args.title, "Jeon Soyeon")
-            self.assertEqual(args.node, "mean")
-            self.assertTrue(args.classical)
-            self.assertTrue(args.brief)
-            self.assertTrue(args.verbose)
-            self.assertTrue(args.no_coordinates)
-            self.assertTrue(args.no_color)
 
-    def test_now_with_defaults(self):
-        test_args = ["chart", "now"]
-        with patch("sys.argv", test_args):
-            args = parse_arguments()
-            self.assertEqual(args.command, "now")
-            self.assertFalse(args.no_color)
+        args = parse_arguments(test_args)
+
+        self.assertEqual(args.command, "cast")
+        self.assertEqual(args.event, ["1998-08-26", "8:20", "Jeon Soyeon"])
+        self.assertEqual(args.lat, 37.49)
+        self.assertEqual(args.lng, 127.0855)
+        self.assertEqual(args.node, "mean")
+        self.assertTrue(args.classical)
+        self.assertTrue(args.brief)
+        self.assertTrue(args.verbose)
+        self.assertTrue(args.no_angles)
+        self.assertTrue(args.no_coordinates)
+        self.assertTrue(args.no_color)
+
+
+    def test_cast_with_date_and_time(self):
+        test_args = ["cast", "1993-08-16", "13:05", "Debian Linux"]
+        args = parse_arguments(test_args)
+        self.assertEqual(args.command, "cast")
+        self.assertEqual(args.event, ["1993-08-16", "13:05", "Debian Linux"])
+        self.assertIsNone(args.lat)
+        self.assertIsNone(args.lng)
+
+
+    def test_cast_with_date_and_title(self):
+        test_args = ["cast", "1845-05-19", "Franklin Expedition"]
+        args = parse_arguments(test_args)
+        self.assertEqual(args.command, "cast")
+        self.assertEqual(args.event, ["1845-05-19", "Franklin Expedition"])
+        self.assertIsNone(args.lat)
+        self.assertIsNone(args.lng)
+
 
 if __name__ == "__main__":
     unittest.main()

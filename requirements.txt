@@ -6,7 +6,6 @@ decorator==5.2.1
 future==1.0.0
 idna==3.10
 packaging==25.0
-pyinstaller==6.15.0
 pyinstaller-hooks-contrib==2025.8
 pyswisseph==2.10.3.2
 ratelim==0.1.6

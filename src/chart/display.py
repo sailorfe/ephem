@@ -1,24 +1,34 @@
 from .constants import GLYPHS, VERBOSE, Colors
 
-def format_chart(args, lat, lng, dt, horoscope, planets, approx_time, approx_locale):
+def format_chart(args, title, lat, lng, dt, horoscope, planets, approx_time, approx_locale, config_locale):
     colors = Colors(use_color=not args.no_color)
     lines = []
 
-    # -*- title -*-
-    if args.command == "cast" and args.title:
-        title = f"{args.title}\n{dt} UTC"
+    # -*- warnings + title -*-
+    if args.command == "cast":
+        title = f"{title}\n{dt} UTC"
     else:
         title = f"{dt} UTC"
 
     if approx_time or approx_locale:
         title += f" hyp."
 
+    warnings = []
+    if approx_time:
+        warnings.append("No time provided. Using UTC noon and not printing angles.\n")
+    if approx_locale:
+        warnings.append("No valid location provided or found in config. No angles will be printed.\n")
+    if config_locale:
+        warnings.append("Using location from config file.\n")
+
+    for warning in warnings:
+        lines.append(warning)  # or "italic", or however you're styling warnings
+
     if not args.no_coordinates and not approx_locale:
         geo_str = str(lat) + ", " + str(lng)
         title += f" @ {geo_str}"
 
     lines.append(colors.colorize(title, "bold"))
-
 
     # -*- filter objects -*-
     spheres = [
@@ -41,7 +51,7 @@ def format_chart(args, lat, lng, dt, horoscope, planets, approx_time, approx_loc
     if args.classical:
         spheres = [item for item in spheres if item[0] not in ("ura", "nep", "plu")]
 
-    if approx_time or approx_locale:
+    if approx_time or approx_locale or args.no_angles:
         spheres = [item for item in spheres if item[0] not in ("asc", "mc")]
 
     if args.node == "true":

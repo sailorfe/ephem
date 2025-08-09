@@ -1,7 +1,6 @@
 import configparser
 import os
 
-# i <3 you xdg base dir specification
 def get_config_path():
     config_home = os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
     return os.path.join(config_home, "chart", "chart.ini")
@@ -48,4 +47,4 @@ def save_config(args):
     with open(path, 'w') as configfile:
         config.write(configfile)
 
-    print(f"✅ Saved config to {path}")
+    print(f"Saved config to {path}")
