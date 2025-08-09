@@ -29,7 +29,8 @@ def get_planets(jd_now, jd_then):
             'glyph': sign_data['glyph'],
             'trip': sign_data['trip'],
             'quad': sign_data['quad'],
-            'rx': dd_then > dd_now
+            'rx': dd_then > dd_now,
+            'lng': dd_now
         })
     return planets
 
