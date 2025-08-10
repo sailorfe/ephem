@@ -25,7 +25,7 @@ def get_moment(date=None, time=None):
 
 
 def run(args):
-    date, time, title = args.event if args.event else (None, None, None)
+    date, time, title = parse_event(args.event)
     date, time, approx_time = get_moment(date, time)
     lat, lng, approx_locale, config_locale = get_locale(args)
     jd_now, jd_then = get_julian_days(date, time, args)

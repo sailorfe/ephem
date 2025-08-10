@@ -2,6 +2,8 @@ from .constants import Colors
 
 def get_chart_title(title, dt, lat, lng, args, approx_time, approx_locale):
     # return formatted cargshart title string
+    if title is None:
+        title = ""
     title_str = f"{title}\n{dt} UTC"
     if approx_time or approx_locale:
         title_str += " hyp."
