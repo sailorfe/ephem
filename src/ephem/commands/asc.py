@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 SIGN_ORDER = list(SIGNS.keys())
 
 def sign_from_index(index):
-    name = SIGN_ORDER[index % 12]
+    name = SIGN_ORDER[index]
     return name, SIGNS[name]
 
 def run(args):
@@ -19,7 +19,7 @@ def run(args):
         now.day,
         now.hour + now.minute / 60 + now.second / 3600
     )
-
+    # houses() returns two tuples: house cusps and array ascmc; we only need asc index 0 of the 2nd
     houses = swe.houses(jd, lat, lng, b'W')
     asc_deg = houses[1][0]
     dms = swe.split_deg(asc_deg, 8)

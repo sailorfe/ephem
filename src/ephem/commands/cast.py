@@ -5,7 +5,7 @@ from ephem.display import format_chart
 
 
 def parse_event(event_args):
-    # date, time, title
+    """Reads event positional arg output based on length."""
     if len(event_args) == 0:
         return None, None, None
     elif len(event_args) == 1:
@@ -17,6 +17,7 @@ def parse_event(event_args):
 
 
 def get_moment(date=None, time=None):
+    """Falls back to hypothetical UTC noon if given no date."""
     if date and time:
         return date, time, False  # explicit time
     if date and not time:

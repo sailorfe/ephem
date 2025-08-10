@@ -3,10 +3,11 @@ import re
 import swisseph as swe
 
 def parse_shift_to_julian_delta(shift_str):
+    """Converts time shift string ('2h', '-3d') into astronomical Julian day offset."""
     if not shift_str:
         return 0.0
 
-    # default unit is hours
+    # regex to parse optional number + optional unit (w,d,h,m)
     pattern = r"^\s*(-?\d*\.?\d*)([wdhm]?)\s*$"
     match = re.match(pattern, shift_str.lower())
 
@@ -29,6 +30,7 @@ def parse_shift_to_julian_delta(shift_str):
 
 
 def get_julian_days(date_str, time_str, args):
+    """Returns current and previous astronomical and Julian day. Necessary for checking retrograde motion."""
     dt = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
     jd_now = swe.julday(dt.year, dt.month, dt.day, dt.hour + dt.minute / 60)
     jd_then = jd_now - (1 / 1440)
@@ -40,6 +42,7 @@ def get_julian_days(date_str, time_str, args):
 
 
 def jd_to_datetime(jd_now):
+    """Converts astronomical Julian day to a formatted UTC datetime string."""
     y, m, d, h = swe.revjul(jd_now)
     hours = int(h)
     minutes = int((h - hours) * 60)

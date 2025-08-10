@@ -6,7 +6,9 @@ from ephem.display import format_chart
 
 
 def get_moment():
+    """Get current date and time from datetime.now"""
     now = datetime.now(timezone.utc)
+    # boolean for time is not approximate
     return now.strftime("%Y-%m-%d"), now.strftime("%H:%M"), False
 
 
@@ -18,7 +20,7 @@ def run(args):
     angles = get_angles(jd_now, lat, lng)
     horoscope = build_horoscope(planets, angles)
     dt = jd_to_datetime(jd_now)
-    title = "Chart of the Moment"
+    title = ""
     output = format_chart(args, title, lat, lng, dt, horoscope, planets, approx_time, approx_locale, config_locale)
 
     if output is not None:
