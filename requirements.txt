@@ -1,15 +1,5 @@
-altgraph==0.17.4
-certifi==2025.8.3
-charset-normalizer==3.4.2
-coverage==7.10.2
-decorator==5.2.1
--e git+ssh://git@codeberg.org/sailorfe/chart.git@f839bb2a247c0504ab6c0c8e4554c3d897eb1889#egg=ephem
-future==1.0.0
-idna==3.10
-packaging==25.0
+markdown-it-py==3.0.0
+mdurl==0.1.2
+Pygments==2.19.2
 pyswisseph==2.10.3.2
-ratelim==0.1.6
-requests==2.32.4
-setuptools==80.9.0
-six==1.17.0
-urllib3==2.5.0
+rich==14.1.0
