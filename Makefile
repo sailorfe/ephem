@@ -1,7 +1,7 @@
 .PHONY: test coverage clean
 
 test:
-	PYTHONPATH=src python3 -m unittest discover -s tests
+	PYTHONPATH=test python3 -m unittest discover -s tests
 
 coverage:
 	PYTHONPATH=src coverage run -m unittest discover -s tests
