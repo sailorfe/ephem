@@ -5,4 +5,5 @@ venv
 src/chart/__pycache__
 src/*.egg-info
 tests/__pycache__
+tests/commands/__pycache__
 __pycache__

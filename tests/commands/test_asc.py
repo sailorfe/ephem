@@ -13,30 +13,24 @@ class TestAscCommand(unittest.TestCase):
     def test_run_glyphs_and_no_glyphs(self, mock_datetime, mock_get_locale, mock_julday,
                                      mock_houses, mock_split_deg, mock_print):
 
-        # Setup mocks
         mock_datetime.now.return_value = mock_datetime(2025, 8, 9, 12, 34, 56, tzinfo=None)
         mock_datetime.now.return_value = mock_datetime(2025, 8, 9, 12, 34, 56, tzinfo=mock_datetime.timezone.utc)
 
         mock_get_locale.return_value = (40.0, -75.0, False)
         mock_julday.return_value = 2460000.5
         mock_houses.return_value = ([0.0]*12, [180.0]*12)
-        # split_deg returns (deg, min, sec, millisec, sign_index)
-        mock_split_deg.return_value = (10, 20, 30, 0, 3)  # sign index 3, corresponds to 'Cancer' in SIGNS
+        mock_split_deg.return_value = (10, 20, 30, 0, 3)
 
         args = MagicMock()
         args.glyphs = True
 
-        # Run with glyphs = True
         asc.run(args)
 
-        # Expect print with glyph from SIGNS for 'Cancer'
         calls = mock_print.call_args_list
         self.assertTrue(any("AC" in str(c) and "♋︎" in str(c) for c in calls))
 
-        # Reset print mock
         mock_print.reset_mock()
 
-        # Run with glyphs = False
         args.glyphs = False
         asc.run(args)
 
@@ -53,17 +47,16 @@ class TestAscCommand(unittest.TestCase):
                                        mock_houses, mock_split_deg, mock_print):
 
         mock_datetime.now.return_value = mock_datetime(2025, 8, 9, 12, 0, 0, tzinfo=mock_datetime.timezone.utc)
-        mock_get_locale.return_value = (0.0, 0.0, True)  # approx_locale True to trigger warning
+        mock_get_locale.return_value = (0.0, 0.0, True)
         mock_julday.return_value = 2460000.5
         mock_houses.return_value = ([0.0]*12, [180.0]*12)
-        mock_split_deg.return_value = (10, 20, 30, 0, 3)  # sign index 3, Cancer
+        mock_split_deg.return_value = (10, 20, 30, 0, 3)
 
         args = MagicMock()
         args.glyphs = True
 
         asc.run(args)
 
-        # Should print warning about Null Island location
         calls = mock_print.call_args_list
         self.assertTrue(any("No location given or found" in str(c) for c in calls))
 
