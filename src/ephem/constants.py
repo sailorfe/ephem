@@ -133,24 +133,32 @@ OBJECTS = {
             }
         }
 
+
 class Colors:
     def __init__(self, use_color=True):
         self.use_color = use_color
-        self.codes = {
-                "bold": "\033[1m",
-                "red": "\033[31m",
-                "green": "\033[32m",
-                "yellow": "\033[33m",
-                "blue": "\033[34m",
-                "magenta": "\033[35m",
-                "cyan": "\033[36m",
-                "bright_red": "\033[91m",
-                "bright_green": "\033[92m",
-                "bright_blue": "\033[94m",
-                "clear": "\033[0m"
-            }
 
-    def colorize(self, text, color):
-        if self.use_color and color in self.codes:
-            return f"{self.codes[color]}{text}{self.codes['clear']}"
-        return text
+    COLOR_MAP = {
+        "red": "red",
+        "bright_red": "bright_red",
+        "blue": "blue",
+        "bright_blue": "bright_blue",
+        "green": "green",
+        "bright_green": "bright_green",
+        "yellow": "yellow",
+        "magenta": "magenta",
+        "bright_magenta": "bright_magenta",
+        "cyan": "cyan",
+        "bright_cyan": "bright_cyan",
+        "bold": "bold",
+    }
+
+    def colorize(self, text, color_name):
+        if not self.use_color or not color_name:
+            return text
+        rich_color = self.COLOR_MAP.get(color_name)
+        if not rich_color:
+            return text
+        # Wrap text in Rich markup tags
+        return f"[{rich_color}]{text}[/{rich_color}]"
+

@@ -20,5 +20,8 @@ def run(args):
     dt = jd_to_datetime(jd_now)
     title = "Chart of the Moment"
     output = format_chart(args, title, lat, lng, dt, horoscope, planets, approx_time, approx_locale, config_locale)
-    for line in output:
-        print(line)
+
+    if output is not None:
+        for line in output:
+            print(line)
+    # else: Rich already printed, so do nothing here

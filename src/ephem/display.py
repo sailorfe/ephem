@@ -1,16 +1,22 @@
+from rich.console import Console
+from rich.table import Table
+from rich.align import Align
+from rich.text import Text
 from .constants import Colors
 
-def get_chart_title(title, dt, lat, lng, args, approx_time, approx_locale):
-    # return formatted cargshart title string
+def get_chart_title(title, approx_time, approx_locale):
     if title is None:
         title = ""
-    title_str = f"{title}\n{dt} UTC"
+    title_str = f"{title}"
     if approx_time or approx_locale:
         title_str += " hyp."
-    if not args.no_coordinates and not approx_locale:
-        title_str += f" @ {lat}, {lng}"
     return title_str
 
+def get_chart_subtitle(dt, lat, lng, args, approx_locale):
+    subtitle_str = f"{dt} UTC"
+    if not args.no_coordinates and not approx_locale:
+        subtitle_str += f" @ {lat} {lng}"
+    return subtitle_str
 
 def get_warnings(args, approx_time, approx_locale, config_locale):
     # return a list of warning messages to display above chart
@@ -112,16 +118,71 @@ def render_sphere_lines(spheres, horoscope, args, colors):
     return lines
 
 
+console = Console()
+
 def format_chart(args, title, lat, lng, dt, horoscope, planets, approx_time, approx_locale, config_locale):
-    colors = Colors(use_color=not args.no_color)
-    lines = []
+    if args.no_color:
+        colors = Colors(False if args.no_color else True)
+        lines = []
 
-    # title + warnings
-    lines.extend(get_warnings(args, approx_time, approx_locale, config_locale))
-    lines.append(colors.colorize(get_chart_title(title, dt, lat, lng, args, approx_time, approx_locale), "bold"))
+        # title + warnings
+        lines.extend(get_warnings(args, approx_time, approx_locale, config_locale))
+        lines.append(get_chart_title(title, approx_time, approx_locale))
+        lines.append(get_chart_subtitle(dt, lat, lng, args, approx_locale))
 
-    # body
-    spheres = get_spheres(horoscope, args, planets, approx_time, approx_locale)
-    lines.extend(render_sphere_lines(spheres, horoscope, args, colors))
+        # body
+        spheres = get_spheres(horoscope, args, planets, approx_time, approx_locale)
+        lines.extend(render_sphere_lines(spheres, horoscope, args, colors))
 
-    return lines
+        return lines
+    else:
+        colors=Colors()
+        # Print warnings in yellow
+        warnings = get_warnings(args, approx_time, approx_locale, config_locale)
+        for warning in warnings:
+            console.print(Text(warning, style="yellow"))
+
+        # Centered bold title
+        chart_title = get_chart_title(title, approx_time, approx_locale)
+        chart_subtitle = get_chart_subtitle(dt, lat, lng, args, approx_locale)
+        console.print(Align.center(Text(chart_title, style="bold")))
+        console.print(Align.center(Text(chart_subtitle, style="bold")))
+        console.print()  # Blank line
+
+        # Prepare the table with no borders for a clean look
+        table = Table(show_header=False, box=None, pad_edge=True)
+        table.add_column("Object", justify="right", style="bold")
+        table.add_column("Placement", justify="left")
+
+        spheres = get_spheres(horoscope, args, planets, approx_time, approx_locale)
+        for key, color in spheres:
+            data = horoscope.get(key, {})
+
+            # Use safe fallback values for name and position
+            if args.format == "names":
+                obj_name = data.get("obj_name") or key
+                placement = data.get("full") or "??"
+            elif args.format == "glyphs":
+                obj_name = data.get("obj_glyph") or key.upper()
+                placement = data.get("glyph") or "??"
+            elif args.format == "short":
+                obj_name = data.get("obj_glyph") or key.upper()
+                placement = data.get("short") or "??"
+            elif args.format == "mixed":
+                obj_name = data.get("obj_glyph") or key.upper()
+                placement = data.get("full") or "??"
+            else:
+                obj_name = data.get("obj_name") or key
+                placement = data.get("full") or "??"
+
+            # Ensure these are strings (not None or other types)
+            obj_name = str(obj_name)
+            placement = str(placement)
+
+            # Colorize only if color is not None and colors are enabled
+            if colors and color:
+                obj_name = colors.colorize(obj_name, color)
+
+            table.add_row(obj_name, placement)
+
+        console.print(Align.center(table))

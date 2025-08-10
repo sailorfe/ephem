@@ -34,5 +34,8 @@ def run(args):
     horoscope = build_horoscope(planets, angles)
     dt = jd_to_datetime(jd_now)
     output = format_chart(args, title, lat, lng, dt, horoscope, planets, approx_time, approx_locale, config_locale)
-    for line in output:
-        print(line)
+
+    if output is not None:
+        for line in output:
+            print(line)
+    # else: Rich already printed, so do nothing here
