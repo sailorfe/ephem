@@ -79,8 +79,8 @@ pip install .
 ## Roadmap
 
 - [ ] Save, list, and view chart data from a SQLite database
-- [ ] Conversion from local time to UTC and vice versa
 - [ ] Pseudo "wheel" text output option in the style of Astrolog
+- [-] Conversion from local time to UTC and vice versa
 - [x] Alternate ANSI color schemes by sign triplicity or quadruplicity
 - [x] Integrate shell scriptable clock from [ascendant](https://codeberg.org/sailorfe/ascendant)
 - [x] `config.ini` with configparser!

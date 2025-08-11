@@ -12,7 +12,7 @@
 - Sensible fallbacks for hypothetical charts, e.g. those missing time and/or place.
 
 
-## 0.2.0
+## 0.2.0 2025-08-11
 
 ### Added
 
@@ -21,3 +21,10 @@
 ### Fixed
 
 - `--bare` flag UnboundLocalError
+
+
+## 0.3.0 2025-08-11
+
+### Added
+
+- Support for local time zone input using `zoneinfo`.
