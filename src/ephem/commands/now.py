@@ -1,29 +1,42 @@
-from datetime import datetime, timezone
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from ephem.utils.locale import get_locale
 from ephem.julian import get_julian_days, jd_to_datetime
 from ephem.horoscope import get_planets, get_angles, build_horoscope
 from ephem.display import format_chart
 
 
-def get_moment():
-    """Get current date and time from datetime.now"""
-    now = datetime.now(timezone.utc)
-    # boolean for time is not approximate
-    return now.strftime("%Y-%m-%d"), now.strftime("%H:%M"), False
+def get_moment(tz_str=None):
+    # current time in user's timezone or UTC
+    tz = ZoneInfo(tz_str) if tz_str else ZoneInfo("UTC")
+
+    dt_local = datetime.now(tz)
+    dt_utc = dt_local.astimezone(ZoneInfo("UTC"))
+
+    approx_time = False  # now is exact current time
+
+    return dt_local, dt_utc, approx_time
 
 
 def run(args):
-    date, time, approx_time = get_moment()
+    dt_local, dt_utc, approx_time = get_moment(args.timezone)
     lat, lng, approx_locale, config_locale = get_locale(args)
-    jd_now, jd_then = get_julian_days(date, time, args)
+    jd_now, jd_then = get_julian_days(dt_utc, args)
     planets = get_planets(jd_now, jd_then)
     angles = get_angles(jd_now, lat, lng)
     horoscope = build_horoscope(planets, angles)
     dt = jd_to_datetime(jd_now)
-    title = ""
-    output = format_chart(args, title, lat, lng, dt, horoscope, planets, approx_time, approx_locale, config_locale)
+    title = "Chart of the Moment"
+
+    output = format_chart(
+        args, title, lat, lng,
+        dt_local, dt_utc,
+        horoscope, planets,
+        approx_time, approx_locale, config_locale
+    )
 
     if output is not None:
         for line in output:
             print(line)
     # else: Rich already printed, so do nothing here
+

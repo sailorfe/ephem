@@ -29,9 +29,8 @@ def parse_shift_to_julian_delta(shift_str):
         raise ValueError(f"Unknown unit in shift: {unit}")
 
 
-def get_julian_days(date_str, time_str, args):
-    """Returns current and previous astronomical and Julian day. Necessary for checking retrograde motion."""
-    dt = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
+def get_julian_days(dt_utc, args):
+    dt = dt_utc
     jd_now = swe.julday(dt.year, dt.month, dt.day, dt.hour + dt.minute / 60)
     jd_then = jd_now - (1 / 1440)
 

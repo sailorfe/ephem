@@ -40,7 +40,7 @@ def add_display_options(parser):
                          help="choose display format: all glyphs, full planet and sign names, truncated signs with planetary glyphs. Default mixes planet glyphs with full sign names.")
     display.add_argument('-c', '--classical', action='store_true',
                          help="exclude Uranus through Pluto")
-    display.add_argument('-z', '--no-angles', action='store_true',
+    display.add_argument('-n', '--no-angles', action='store_true',
                          help="don't print Ascendant or Midheaven")
     display.add_argument('-a', '--anonymize', action='store_true',
                          help="don't print coordinates")
@@ -68,6 +68,7 @@ def parse_arguments(args=None):
     now_parser.add_argument('-x', '--lng', type=float, help="longitude")
     now_parser.add_argument('-s', '--shift', type=str,
                             help="shift time forward or backward, e.g. 2h, -30m, 1.5d, 4w (default is hours)")
+    now_parser.add_argument('-z', '--timezone', type=str, help="IANA time zone name, e.g. 'America/New_York'")
     add_display_options(now_parser)
 
     # cast
@@ -77,6 +78,7 @@ def parse_arguments(args=None):
                              help="date, optional time and chart title, e.g. '2025-08-09 7:54 Aquarius Full Moon'")
     cast_parser.add_argument('-y', '--lat', type=float, help="latitude")
     cast_parser.add_argument('-x', '--lng', type=float, help="longitude")
+    cast_parser.add_argument('-z', '--timezone', type=str, help="IANA time zone name, e.g. 'America/New_York'")
 
     add_display_options(cast_parser)
 
