@@ -3,8 +3,8 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ephem"
-dynamic = ["version"]
+name = "ephem-cli"
+version = "0.1.0"
 dependencies = [
 	"pyswisseph",
 	"rich"

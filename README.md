@@ -46,7 +46,7 @@ ephem cast 1993-08-16 13:05 "Debian Linux"
 ### PyPI
 
 ```sh
-pip install ephem
+pip install ephem-cli
 ```
 
 ### From source
