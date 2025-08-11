@@ -1,6 +1,6 @@
 import swisseph as swe
 from ephem.constants import SIGNS
-from ephem.utils import get_locale
+from ephem.utils.locale import get_locale
 from datetime import datetime, timezone
 
 SIGN_ORDER = list(SIGNS.keys())

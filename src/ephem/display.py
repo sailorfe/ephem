@@ -14,12 +14,18 @@ def get_chart_title(title, approx_time, approx_locale):
     return title_str
 
 
-def get_chart_subtitle(dt, lat, lng, args, approx_locale):
-    """Fetch subtitle from date and location."""
-    subtitle_str = f"{dt} UTC"
+def get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale):
+    local_str = dt_local.strftime("%Y-%m-%d %H:%M %Z")  # e.g. 2025-08-09 07:54 EDT
+    utc_str = dt_utc.strftime("%Y-%m-%d %H:%M UTC")
+
+    time_part = f"{local_str} ({utc_str})"
+
     if not args.anonymize and not approx_locale:
-        subtitle_str += f" @ {lat} {lng}"
-    return subtitle_str
+        location_part = f"@ {lat} {lng}"
+    else:
+        location_part = ""
+
+    return time_part, location_part
 
 
 def get_warnings(args, approx_time, approx_locale, config_locale):
@@ -114,7 +120,7 @@ def render_sphere_lines(spheres, horoscope, args, colors):
         elif args.format == "short":
             obj_name = data.get("obj_glyph", key.upper()).ljust(6)
             placement = data.get("short", "??")
-        elif args.format == "mixed":
+        else:
             obj_name = data.get("obj_glyph", key.upper()).ljust(6)
             placement = data.get("full", "??")
 
@@ -127,26 +133,32 @@ def render_sphere_lines(spheres, horoscope, args, colors):
 
 console = Console()
 
-def format_chart(args, title, lat, lng, dt, horoscope, planets, approx_time, approx_locale, config_locale):
+def format_chart(args, title, lat, lng, dt_local, dt_utc, horoscope, planets, approx_time, approx_locale, config_locale):
     """If --no-color, print bare chart; otherwise print Rich table."""
+
     if args.bare:
-        # i'm not convinced i need this but there is a loose function somehwere that expects 4 arguments
         colors = Colors(False if args.bare else True)
         lines = []
 
         # title + warnings
         lines.extend(get_warnings(args, approx_time, approx_locale, config_locale))
         lines.append(get_chart_title(title, approx_time, approx_locale))
-        lines.append(get_chart_subtitle(dt, lat, lng, args, approx_locale))
+
+        # For bare mode, join subtitle parts into one line for simplicity
+        time_str, location_str = get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale)
+        subtitle_line = time_str
+        if location_str:
+            subtitle_line += " " + location_str
+        lines.append(subtitle_line)
 
         # body
         spheres = get_spheres(horoscope, args, planets, approx_time, approx_locale)
-                                                                   # what is this colors doing here!!
         lines.extend(render_sphere_lines(spheres, horoscope, args, colors))
 
         return lines
+
     else:
-        colors=Colors()
+        colors = Colors()
         # print warnings in yellow
         warnings = get_warnings(args, approx_time, approx_locale, config_locale)
         for warning in warnings:
@@ -154,9 +166,11 @@ def format_chart(args, title, lat, lng, dt, horoscope, planets, approx_time, app
 
         # centered bold title
         chart_title = get_chart_title(title, approx_time, approx_locale)
-        chart_subtitle = get_chart_subtitle(dt, lat, lng, args, approx_locale)
+        time_str, location_str = get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale)
         console.print(Align.center(Text(chart_title, style="bold")))
-        console.print(Align.center(Text(chart_subtitle, style="bold")))
+        console.print(Align.center(Text(time_str, style="bold")))
+        if location_str:
+            console.print(Align.center(Text(location_str, style="bold")))
         console.print()  # Blank line
 
         # prepare the table with no header or borders
@@ -168,7 +182,6 @@ def format_chart(args, title, lat, lng, dt, horoscope, planets, approx_time, app
         for key, color in spheres:
             data = horoscope.get(key, {})
 
-            # Use safe fallback values for name and position
             if args.format == "names":
                 obj_name = data.get("obj_name") or key
                 placement = data.get("full") or "??"
@@ -182,14 +195,13 @@ def format_chart(args, title, lat, lng, dt, horoscope, planets, approx_time, app
                 obj_name = data.get("obj_glyph") or key.upper()
                 placement = data.get("full") or "??"
 
-            # ensure these are strings (not None or other types)
             obj_name = str(obj_name)
             placement = str(placement)
 
-            # colorize only if color is not None and colors are enabled
             if colors and color:
                 obj_name = colors.colorize(obj_name, color)
 
             table.add_row(obj_name, placement)
 
         console.print(Align.center(table))
+
