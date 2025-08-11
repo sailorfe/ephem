@@ -23,10 +23,12 @@ def splash_text():
           I8                                                
 """
 
+
 class EphemParser(argparse.ArgumentParser):
     def error(self, message):
         self.print_usage(sys.stderr)
         self.exit(2, f"\nError: {message}\n\nUse -h or --help for more information.\n")
+
 
 def add_display_options(parser):
     display = parser.add_argument_group('display options')
@@ -44,6 +46,7 @@ def add_display_options(parser):
                          help="don't print coordinates")
     display.add_argument('-b', '--bare', action='store_true',
                          help="disable ANSI colors")
+
 
 def parse_arguments(args=None):
     load_config_defaults()
@@ -91,15 +94,15 @@ def parse_arguments(args=None):
     if args is None:
         args = sys.argv[1:]
 
-    # Show splash and help if no args given at all
+    # show splash if no args given at all
     if len(args) == 0:
         print(splash_text())
-        print("Usage: ephem {now,cast,asc} [options]\nType `ephem --help` for more info.")
+        print("Usage: ephem {now,cast,asc,config} [options]\nType `ephem --help` for more info.")
         sys.exit(0)
 
     parsed = parser.parse_args(args)
 
-    # Validate 'cast' requires at least 1 event arg (DATE)
+    # validate 'cast' requires at least 1 event arg (DATE)
     if parsed.command == "cast" and (not parsed.event or len(parsed.event) < 1):
         print("\nError: `cast` needs at minimum a DATE argument. Type `ephem cast --help` for more info.", file=sys.stderr)
         sys.exit(1)
