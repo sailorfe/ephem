@@ -1,34 +1,36 @@
 # ephem
 
-**ephem** (tentative name) is a minimal, opinionated, and configurable horoscope CLI designed with electional astrology and premodern revivalism in mind.
+**ephem** is a minimal, opinionated, and configurable horoscope CLI designed with electional astrology and premodern revivalism in mind. It aims to be a portable, terminal version of print ephemerides in widespread use among astrologers prior to personal computers and GUIs, providing a reliable offline alternative to web-based chart generators.
 
-### features
+### Table of Contents
 
-- **`ephem now`** shows the current chart for your location.
-- **`ephem asc`** prints the ascendant for your location, for an efficient, scriptable clock.
-- **`ephem cast DATE TIME TITLE`** casts a chart for a specific event, like a birth.
+- [Features](#features)
+- [Usage](#usage)
+- [Installation](#installation)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [License](#license)
+
+<a name ="features"></a>
+## Features
+
+- `ephem now` shows the current chart for your location.
+- `ephem asc` prints the ascendant for your location, for an efficient, scriptable clock.
+- `ephem cast DATE TIME TITLE` casts a chart for a specific event, like a birth.
 - `--save-config` saves default place and display settings to `ephem.ini`
-- accommodates hypothetical chart from incomplete information by defaulting to UTC noon or Null Island (0,0).
-- default ANSI coloring following hellenistic sect
-
-### table of contents
-
-- [usage](#usage)
-- [installation](#installation)
-- [roadmap](#roadmap)
-- [contributing](#contributing)
-- [license](#license)
+- Accommodates incomplete information by defaulting to UTC noon or Null Island (0,0) for hypothetical charts.
+- Default ANSI coloring following Hellenistic planetary sect along with sign-based element and modality themes.
 
 <a name="usage"></a>
-## usage
+## Usage
 
-show chart of the moment for your location:
+Show chart of the moment for your location:
 
 ```sh
 ephem now
 ```
 
-cast an event or birth chart:
+Cast an event or birth chart:
 
 ```sh
 ephem cast 1998-08-26 8:20 "Jeon Soyeon" --lat 37.49 --lng 127.0855
@@ -39,44 +41,57 @@ ephem cast 1993-08-16 13:05 "Debian Linux"
 ```
 
 <a name="installation"></a>
-## installation
-clone this repo:
+## Installation
+
+### PyPI
+
+```sh
+pip install ephem
+```
+
+### From source
+Clone this repo:
 
 ```sh
 git clone https://codeberg.org/sailorfe/ephem.git
 ```
 
-create a venv (optional):
+Create a venv:
 
 ```sh
 python -m venv venv
 source venv/bin/activate
 ```
 
-install dependencies:
+Install dependencies:
 
 ```sh
 pip install -r requirements.txt
 ```
 
-<a name="roadmap"></a>
-## roadmap
+Install locally:
 
-- [ ] save a database of `YAML` chart data
-- [ ] follow [NO_COLOR](https://no-color.org)
-- [ ] conversion from local time to UTC and vice versa
-- [ ] pseudo "wheel" text output option in the style of Astrolog
-- [x] alternate ANSI color schemes by sign triplicity or quadruplicity
-- [x] integrate shell scriptable clock from [ascendant](https://codeberg.org/sailorfe/ascendant)
+```sh
+pip install .
+```
+
+<a name="roadmap"></a>
+## Roadmap
+
+- [ ] Save, list, and view chart data from a SQLite database
+- [ ] Conversion from local time to UTC and vice versa
+- [ ] Pseudo "wheel" text output option in the style of Astrolog
+- [x] Alternate ANSI color schemes by sign triplicity or quadruplicity
+- [x] Integrate shell scriptable clock from [ascendant](https://codeberg.org/sailorfe/ascendant)
 - [x] `config.ini` with configparser!
-- [x] ~~option to print or hide coordinates~~
+- [x] Option to hide coordinates from printing.
 
 <a name="contributing"></a>
-## contributing
+## Contributing
 
-this project is very new, and i welcome contributions!! this is my biggest python project so far. please help, please fork.
+This is my self-taught Python bootcamp project, so very much a work in progress as I learn. I welcome early testers and feedback but plan to keep development mostly solo for now.
 
 <a name="license"></a>
-## license
+## License
 
-per the original [swiss ephemeris](https://www.astro.com/swisseph/swephinfo_e.htm), this software is licensed under the AGPL.
+Per the original [Swiss Ephemeris C library](https://www.astro.com/swisseph/swephinfo_e.htm), this software is licensed under the AGPL.
