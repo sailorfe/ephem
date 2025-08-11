@@ -6,7 +6,8 @@ build-backend = "setuptools.build_meta"
 name = "ephem"
 dynamic = ["version"]
 dependencies = [
-	"pyswisseph"
+	"pyswisseph",
+	"rich"
 ]
 requires-python = ">=3.0"
 authors = [
@@ -29,4 +30,4 @@ classifiers = [
 ephem = "ephem.__main__:main"
 
 [project.urls]
-Repository = "https://codeberg.org/sailorfe/chart"
+Repository = "https://codeberg.org/sailorfe/ephem"
