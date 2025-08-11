@@ -17,7 +17,7 @@ def get_chart_title(title, approx_time, approx_locale):
 def get_chart_subtitle(dt, lat, lng, args, approx_locale):
     """Fetch subtitle from date and location."""
     subtitle_str = f"{dt} UTC"
-    if not args.no_coordinates and not approx_locale:
+    if not args.anonymize and not approx_locale:
         subtitle_str += f" @ {lat} {lng}"
     return subtitle_str
 
@@ -129,9 +129,9 @@ console = Console()
 
 def format_chart(args, title, lat, lng, dt, horoscope, planets, approx_time, approx_locale, config_locale):
     """If --no-color, print bare chart; otherwise print Rich table."""
-    if args.no_color:
+    if args.bare:
         # i'm not convinced i need this but there is a loose function somehwere that expects 4 arguments
-        colors = Colors(False if args.no_color else True)
+        colors = Colors(False if args.bare else True)
         lines = []
 
         # title + warnings
@@ -178,11 +178,8 @@ def format_chart(args, title, lat, lng, dt, horoscope, planets, approx_time, app
             elif args.format == "short":
                 obj_name = data.get("obj_glyph") or key.upper()
                 placement = data.get("short") or "??"
-            elif args.format == "mixed":
-                obj_name = data.get("obj_glyph") or key.upper()
-                placement = data.get("full") or "??"
             else:
-                obj_name = data.get("obj_name") or key
+                obj_name = data.get("obj_glyph") or key.upper()
                 placement = data.get("full") or "??"
 
             # ensure these are strings (not None or other types)

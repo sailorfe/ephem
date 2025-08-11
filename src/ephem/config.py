@@ -35,7 +35,7 @@ def save_config(args):
         config['location']['lng'] = str(args.lng)
 
     config['display'] = {}
-    display_keys = ['theme', 'format', 'node', 'classical', 'no_color', 'no_coordinates']
+    display_keys = ['theme', 'format', 'node']
     for key in display_keys:
         value = getattr(args, key, None)
         if value is not None:
