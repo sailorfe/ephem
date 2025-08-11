@@ -114,7 +114,7 @@ def render_sphere_lines(spheres, horoscope, args, colors):
         elif args.format == "short":
             obj_name = data.get("obj_glyph", key.upper()).ljust(6)
             placement = data.get("short", "??")
-        elif args.format == "mixed":
+        else:
             obj_name = data.get("obj_glyph", key.upper()).ljust(6)
             placement = data.get("full", "??")
 
