@@ -1,7 +1,8 @@
 import argparse
 import sys
-from .config import load_config_defaults
-from ephem.commands import now, cast, asc
+from .commands import now, cast, asc, config
+from .commands.config import load_config_defaults
+
 
 def splash_text():
     return """
@@ -45,7 +46,7 @@ def add_display_options(parser):
                          help="disable ANSI colors")
 
 def parse_arguments(args=None):
-    config_defaults = load_config_defaults()
+    load_config_defaults()
 
     parser = EphemParser(
         prog='ephem',
@@ -64,8 +65,6 @@ def parse_arguments(args=None):
     now_parser.add_argument('-x', '--lng', type=float, help="longitude")
     now_parser.add_argument('-s', '--shift', type=str,
                             help="shift time forward or backward, e.g. 2h, -30m, 1.5d, 4w (default is hours)")
-    now_parser.add_argument('--save-config', action='store_true',
-                            help="save default coordinates and display preferences to config")
     add_display_options(now_parser)
 
     # cast
@@ -75,8 +74,6 @@ def parse_arguments(args=None):
                              help="date, optional time and chart title, e.g. '2025-08-09 7:54 Aquarius Full Moon'")
     cast_parser.add_argument('-y', '--lat', type=float, help="latitude")
     cast_parser.add_argument('-x', '--lng', type=float, help="longitude")
-    cast_parser.add_argument('--save-config', action='store_true',
-                            help="save default coordinates and display preferences to config")
 
     add_display_options(cast_parser)
 
@@ -85,8 +82,11 @@ def parse_arguments(args=None):
     asc_parser.set_defaults(func=asc.run)
     asc_parser.add_argument('-y', '--lat', type=float, help="latitude")
     asc_parser.add_argument('-x', '--lng', type=float, help="longitude")
-    asc_parser.add_argument('--save-config', action='store_true', help="save coordinates to config")
     asc_parser.add_argument('-g', '--glyphs', action='store_true', help='show glyphs instead of truncated sign names')
+
+    # config
+    config.add_subparser(subparsers)
+
 
     if args is None:
         args = sys.argv[1:]
@@ -105,3 +105,23 @@ def parse_arguments(args=None):
         sys.exit(1)
 
     return parsed
+
+
+def main():
+    args = parse_arguments()
+
+    if not vars(args):
+        args.print_help()
+        args.exit(1)
+
+    if hasattr(args, "func"):
+        # Dispatch to the subcommand's run function
+        args.func(args)
+    else:
+        # No subcommand provided; show help and exit with error
+        args.print_help()
+        args.exit(1)
+
+
+if __name__ == "__main__":
+    main()

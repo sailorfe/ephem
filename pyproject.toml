@@ -27,7 +27,7 @@ classifiers = [
 ]
 
 [project.scripts]
-ephem = "ephem.__main__:main"
+ephem = "ephem.cli:main"
 
 [project.urls]
 Repository = "https://codeberg.org/sailorfe/ephem"

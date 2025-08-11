@@ -1,4 +1,4 @@
-from .config import load_config_defaults
+from .commands.config import load_config_defaults
 
 def get_locale(args):
     if args.lat is not None and args.lng is not None:
