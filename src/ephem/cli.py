@@ -50,8 +50,7 @@ def parse_arguments(args=None):
     parser = EphemParser(
         prog='ephem',
         description=(
-            "Terminal-based ephemeris, designed for clear, readable table output"
-            "remniscent of reading a print ephemeris."
+            "Astrology CLI designed for clear, readable table output remniscent of print ephemerides."
             ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
