@@ -1,43 +1,48 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import re
 import swisseph as swe
 
-def parse_shift_to_julian_delta(shift_str):
-    """Converts time shift string ('2h', '-3d') into astronomical Julian day offset."""
+def parse_shift_to_timedelta(shift_str):
     if not shift_str:
-        return 0.0
+        return timedelta(0)
 
-    # regex to parse optional number + optional unit (w,d,h,m)
     pattern = r"^\s*(-?\d*\.?\d*)([wdhm]?)\s*$"
     match = re.match(pattern, shift_str.lower())
-
     if not match:
         raise ValueError(f"Invalid shift format: {shift_str}")
 
-    value, unit = match.groups()
-    value = float(value)
+    value_str, unit = match.groups()
+    value = float(value_str)
 
-    if unit == "w":                     # weeks
-        return value * 7
-    elif unit == "d":                   # days
-        return value
-    elif unit == "h" or unit == "":     # hours
-        return value / 24
-    elif unit == "m":                   # minutes
-        return value / 1440
+    if unit == "w":
+        return timedelta(days=value * 7)
+    elif unit == "d":
+        return timedelta(days=value)
+    elif unit == "h" or unit == "":
+        return timedelta(hours=value)
+    elif unit == "m":
+        return timedelta(minutes=value)
     else:
         raise ValueError(f"Unknown unit in shift: {unit}")
 
 
 def get_julian_days(dt_utc, args):
-    dt = dt_utc
-    jd_now = swe.julday(dt.year, dt.month, dt.day, dt.hour + dt.minute / 60)
+    shift_td = timedelta(0)
+    if getattr(args, "shift", None):
+        shift_td = parse_shift_to_timedelta(args.shift)
+
+    dt_shifted = dt_utc + shift_td
+
+    frac_hour = (
+        dt_shifted.hour
+        + dt_shifted.minute / 60
+        + dt_shifted.second / 3600
+        + dt_shifted.microsecond / 3_600_000_000
+    )
+    jd_now = swe.julday(dt_shifted.year, dt_shifted.month, dt_shifted.day, frac_hour)
     jd_then = jd_now - (1 / 1440)
 
-    if args.command == "now" and args.shift:
-        jd_now += parse_shift_to_julian_delta(args.shift)
-
-    return jd_now, jd_then
+    return jd_now, jd_then, dt_shifted  # return shifted datetime for display too
 
 
 def jd_to_datetime(jd_now):

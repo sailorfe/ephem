@@ -51,11 +51,10 @@ def run(args):
     date, time, title = parse_event(args.event)
     dt_local, dt_utc, approx_time = get_moment(date, time, args.timezone)
     lat, lng, approx_locale, config_locale = get_locale(args)
-    jd_now, jd_then = get_julian_days(dt_utc, args)
+    jd_now, jd_then, *_ = get_julian_days(dt_utc, args)
     planets = get_planets(jd_now, jd_then)
     angles = get_angles(jd_now, lat, lng)
     horoscope = build_horoscope(planets, angles)
-    dt = jd_to_datetime(jd_now)
 
     output = format_chart(
         args, title, lat, lng,

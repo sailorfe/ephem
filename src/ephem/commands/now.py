@@ -21,16 +21,19 @@ def get_moment(tz_str=None):
 def run(args):
     dt_local, dt_utc, approx_time = get_moment(args.timezone)
     lat, lng, approx_locale, config_locale = get_locale(args)
-    jd_now, jd_then = get_julian_days(dt_utc, args)
+
+    jd_now, jd_then, dt_utc_shifted = get_julian_days(dt_utc, args)
+
+    dt_local_shifted = dt_utc_shifted.astimezone(dt_local.tzinfo)
+
     planets = get_planets(jd_now, jd_then)
     angles = get_angles(jd_now, lat, lng)
     horoscope = build_horoscope(planets, angles)
-    dt = jd_to_datetime(jd_now)
     title = "Chart of the Moment"
 
     output = format_chart(
         args, title, lat, lng,
-        dt_local, dt_utc,
+        dt_local_shifted, dt_utc_shifted,
         horoscope, planets,
         approx_time, approx_locale, config_locale
     )
@@ -38,5 +41,3 @@ def run(args):
     if output is not None:
         for line in output:
             print(line)
-    # else: Rich already printed, so do nothing here
-
