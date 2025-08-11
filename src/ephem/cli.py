@@ -34,7 +34,7 @@ def add_display_options(parser):
     display.add_argument('--theme', choices=['sect', 'element', 'mode'], default='sect',
                          help="choose ANSI color theme")
     display.add_argument('--format', choices=['glyphs', 'names', 'short'],
-                         help="choose display format: glyphs, full names, truncated names. Default mixes glyphs with full sign names.")
+                         help="choose display format: all glyphs, full planet and sign names, truncated signs with planetary glyphs. Default mixes planet glyphs with full sign names.")
     display.add_argument('-c', '--classical', action='store_true',
                          help="exclude Uranus through Pluto")
     display.add_argument('-z', '--no-angles', action='store_true',
@@ -50,7 +50,7 @@ def parse_arguments(args=None):
     parser = EphemParser(
         prog='ephem',
         description=(
-            "Astrology CLI designed for clear, readable table output remniscent of print ephemerides."
+            "ephem is an astrology CLI with clear, readable table output remniscent of print ephemerides."
             ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -65,18 +65,19 @@ def parse_arguments(args=None):
     now_parser.add_argument('-s', '--shift', type=str,
                             help="shift time forward or backward, e.g. 2h, -30m, 1.5d, 4w (default is hours)")
     now_parser.add_argument('--save-config', action='store_true',
-                            help="save coordinates and display preferences to config")
+                            help="save default coordinates and display preferences to config")
     add_display_options(now_parser)
 
     # cast
-    cast_parser = subparsers.add_parser('cast', help="calculate an event chart")
+    cast_parser = subparsers.add_parser('cast', help="calculate an event or birth chart")
     cast_parser.set_defaults(func=cast.run)
-    cast_parser.add_argument('--save-config', action='store_true',
-                             help="save coordinates and display preferences to config")
     cast_parser.add_argument('event', nargs="*", metavar="DATE [TIME] [TITLE]",
-                             help="date, optional time and title, e.g. '2025-08-09 7:54 Aquarius Full Moon'")
+                             help="date, optional time and chart title, e.g. '2025-08-09 7:54 Aquarius Full Moon'")
     cast_parser.add_argument('-y', '--lat', type=float, help="latitude")
     cast_parser.add_argument('-x', '--lng', type=float, help="longitude")
+    cast_parser.add_argument('--save-config', action='store_true',
+                            help="save default coordinates and display preferences to config")
+
     add_display_options(cast_parser)
 
     # asc
