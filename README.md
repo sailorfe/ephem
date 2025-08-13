@@ -35,7 +35,7 @@ ephem cast 1993-08-16 13:05 "Debian Linux"
 
 ### 1.0.0
 - [ ] Save, list, and view chart data from a SQLite database
-- [ ] Sidereal zodiac and custom offset support
+- [x] Sidereal zodiac and custom offset support
 - [x] Conversion from local time to UTC and vice versa
 - [x] Alternate ANSI color schemes by sign triplicity or quadruplicity
 - [x] Integrate shell scriptable clock from [ascendant](https://codeberg.org/sailorfe/ascendant)
@@ -84,6 +84,7 @@ This project is strongly influenced by:
 
 ## 📚 More information
 
+- [Changelog](./CHANGELOG) – Version history with major changes and bug fixes.
 - [Devlogs](https://sailorfe.codeberg.page) – More about the tech stack and really basic Python realizations had in real-time.
 - [Hackstrology](https://buttondown.com/hackstrology) – A broader, biweekly astrology newsletter with periodic progress updates for non-developers.
 

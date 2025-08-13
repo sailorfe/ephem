@@ -23,11 +23,12 @@ def run(args):
     lat, lng, approx_locale, config_locale = get_locale(args)
 
     jd_now, jd_then, dt_utc_shifted = get_julian_days(dt_utc, args)
+    offset = getattr(args, 'offset', None)  # Get offset from args, default to None
 
     dt_local_shifted = dt_utc_shifted.astimezone(dt_local.tzinfo)
 
-    planets = get_planets(jd_now, jd_then)
-    angles = get_angles(jd_now, lat, lng)
+    planets = get_planets(jd_now, jd_then, offset)
+    angles = get_angles(jd_now, lat, lng, offset)
     horoscope = build_horoscope(planets, angles)
     title = "Chart of the Moment"
 

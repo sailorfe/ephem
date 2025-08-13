@@ -1,29 +1,60 @@
 import swisseph as swe
-from .constants import SIGNS, OBJECTS
+from .constants import SIGNS, OBJECTS, AYANAMSAS
 
 SIGN_ORDER = list(SIGNS.keys())
 
+
 def sign_from_index(index):
-    """Returns zodiac sign name and its data for index 0-11 (Aries through Pisces)."""
-    if not 0 <= index <=11:
-        raise ValueError("Index must between 0 and 11 inclusive.")
+    """Return zodiac sign name and its data for index 0-11 (Aries through Pisces)."""
+    if not 0 <= index <= 11:
+        raise ValueError("Index must be between 0 and 11 inclusive.")
     name = SIGN_ORDER[index]
     return name, SIGNS[name]
 
 
-def get_planets(jd_now, jd_then):
-    """Use swisseph to fetch planetary positions for day given from get_julian_day()."""
+def _get_calc_flag(offset):
+    """
+    Return Swiss Ephemeris calculation flag including sidereal mode if requested.
+    offset: None = tropical, int = sidereal ayanamsha index
+    """
+    calc_flag = swe.FLG_SWIEPH
+
+    if offset is None:
+        return calc_flag  # Tropical
+
+    try:
+        sid_mode = list(AYANAMSAS.values())[offset]
+    except IndexError:
+        raise ValueError(f"Sidereal offset index out of range: {offset}")
+
+    swe.set_sid_mode(sid_mode, 0, 0)
+    calc_flag |= swe.FLG_SIDEREAL
+    return calc_flag
+
+
+PLANET_KEYS = [
+    "ae", "ag", "hg", "cu", "fe", "sn", "pb",
+    "ura", "nep", "plu", "mean_node", "true_node"
+]
+
+
+def get_planets(jd_now, jd_then, offset=None):
+    """
+    Fetch planetary positions using Swiss Ephemeris.
+    jd_now: current Julian day
+    jd_then: previous/next Julian day (for retrograde)
+    offset: None = tropical, int = sidereal ayanamsha index
+    """
+    calc_flag = _get_calc_flag(offset)
     planets = []
-    planet_keys = [
-        "ae", "ag", "hg", "cu", "fe", "sn", "pb",
-        "ura", "nep", "plu", "mean_node", "true_node"
-    ]
-    # swe.calc_ut returns a list tuples with 6 values (longitude, latitude, distance, speed in lng, speed in lat, speed in dist.;); we only need longitude
-    for planet_id, obj_key in enumerate(planet_keys):
-        dd_now = swe.calc_ut(jd_now, planet_id)[0][0]
-        dd_then = swe.calc_ut(jd_then, planet_id)[0][0]
+
+    for planet_id, obj_key in enumerate(PLANET_KEYS):
+        dd_now = swe.calc_ut(jd_now, planet_id, calc_flag)[0][0]
+        dd_then = swe.calc_ut(jd_then, planet_id, calc_flag)[0][0]
+
         dms = swe.split_deg(dd_now, 8)
         sign_name, sign_data = sign_from_index(dms[4])
+
         planets.append({
             'obj_key': obj_key,
             'deg': dms[0],
@@ -37,16 +68,19 @@ def get_planets(jd_now, jd_then):
             'rx': dd_then > dd_now,
             'lng': dd_now
         })
+
     return planets
 
 
-def get_angles(jd_now, lat, lng):
-    """Use swisseph to fetch ASC/MC. This specifies WSH (b'W'), but it truly doesn't matter (yet) because we're only printing two angles"""
+def get_angles(jd_now, lat, lng, offset=None):
+    """Fetch ASC and MC for given date and location, optionally in sidereal mode."""
+    calc_flag = _get_calc_flag(offset)
     angles = []
     angle_keys = ["asc", "mc"]
 
-    asc_mc = swe.houses(jd_now, lat, lng, b'W')[1]
-    # swe.houses returns two tuples: house cusps (here WSH) and the 6-item list ascmc; we only need ASC/MC
+    # Use houses_ex to pass calc_flag for sidereal if needed
+    asc_mc = swe.houses_ex(jd_now, lat, lng, b'W', calc_flag)[1]
+
     for angle_val, obj_key in zip(asc_mc[:2], angle_keys):
         dms = swe.split_deg(angle_val, 8)
         sign_name, sign_data = sign_from_index(dms[4])
@@ -61,12 +95,14 @@ def get_angles(jd_now, lat, lng):
             'trip': sign_data['trip'],
             'quad': sign_data['quad']
         })
+
     return angles
 
 
 def build_horoscope(planets, angles):
     """
-    Build horoscope dictionary with data for location in DMS, different sign name formatting, sign qualities/elements for color schemes.
+    Build horoscope dictionary with data for location in DMS,
+    including sign qualities/elements and retrograde info.
     """
     horoscope = {}
     all_bodies = planets + angles
@@ -88,7 +124,7 @@ def build_horoscope(planets, angles):
             "rx": body.get('rx', False),
         }
 
-        # renderers called immediately to store strings:
+        # pre-rendered strings for display
         entry["full"] = f"{entry['deg']:>2} {entry['sign']} {entry['mnt']} {entry['sec']}{' r' if entry['rx'] else ''}"
         entry["short"] = f"{entry['deg']:>2} {entry['sign_trunc']} {entry['mnt']}{' r' if entry['rx'] else ''}"
         entry["glyph"] = f"{entry['deg']:>2} {entry['sign_glyph']} {entry['mnt']}{' r' if entry['rx'] else ''}"

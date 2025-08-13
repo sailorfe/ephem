@@ -1,5 +1,5 @@
 import swisseph as swe
-from ephem.constants import SIGNS
+from ephem.constants import SIGNS, AYANAMSAS
 from ephem.utils.locale import get_locale
 from datetime import datetime, timezone
 
@@ -9,8 +9,21 @@ def sign_from_index(index):
     name = SIGN_ORDER[index]
     return name, SIGNS[name]
 
+def _get_calc_flag(offset):
+    calc_flag = swe.FLG_SWIEPH
+    if offset is None:
+        return calc_flag  # Tropical
+    try:
+        sid_mode = list(AYANAMSAS.values())[int(offset)]
+    except (IndexError, ValueError):
+        raise ValueError(f"Sidereal offset index out of range: {offset}")
+    swe.set_sid_mode(sid_mode, 0, 0)
+    calc_flag |= swe.FLG_SIDEREAL
+    return calc_flag
+
 def run(args):
     lat, lng, approx_locale, *_ = get_locale(args)
+    offset = getattr(args, 'offset', None)  # Get offset from args
 
     now = datetime.now(timezone.utc)
     jd = swe.julday(
@@ -19,8 +32,10 @@ def run(args):
         now.day,
         now.hour + now.minute / 60 + now.second / 3600
     )
-    # houses() returns two tuples: house cusps and array ascmc; we only need asc index 0 of the 2nd
-    houses = swe.houses(jd, lat, lng, b'W')
+
+    calc_flag = _get_calc_flag(offset)
+    # houses_ex allows passing calc_flag for sidereal
+    houses = swe.houses_ex(jd, lat, lng, b'W', calc_flag)
     asc_deg = houses[1][0]
     dms = swe.split_deg(asc_deg, 8)
     _, sign_data = sign_from_index(dms[4])

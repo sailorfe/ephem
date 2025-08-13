@@ -18,6 +18,11 @@ def run_save(args):
         if value is not None:
             config['display'][key.replace('_', '-')] = str(value)
 
+    # zodiac section for offset; this can store house system later!
+    config['zodiac'] = {}
+    if args.offset is not None:
+        config['zodiac']['offset'] = str(args.offset)
+
     path = get_config_path()
     os.makedirs(os.path.dirname(path), exist_ok=True)
 
@@ -73,6 +78,9 @@ def load_config_defaults():
                     defaults[key.replace('-', '_')] = config['display'].getboolean(key)
                 else:
                     defaults[key.replace('-', '_')] = value
+        # Read offset from zodiac section
+        if 'zodiac' in config and 'offset' in config['zodiac']:
+            defaults['offset'] = config['zodiac']['offset']
         return defaults
     return {}
 
@@ -92,6 +100,11 @@ def save_config(args):
         if value is not None:
             config['display'][key.replace('_', '-')] = str(value)
 
+    # Add zodiac section for offset
+    config['zodiac'] = {}
+    if args.offset is not None:
+        config['zodiac']['offset'] = str(args.offset)
+
     path = get_config_path()
     os.makedirs(os.path.dirname(path), exist_ok=True)  # check directory exists
 
@@ -99,24 +112,3 @@ def save_config(args):
         config.write(configfile)
 
     print(f"Saved config to {path}")
-
-
-def add_subparser(subparsers):
-    parser = subparsers.add_parser('config', help="view or modify stored preferences ⚙️")
-    config_subparsers = parser.add_subparsers(dest='config_cmd', required=True)
-
-    save_parser = config_subparsers.add_parser('save', help="save current settings as defaults")
-    save_parser.add_argument('-y', '--lat', type=float, help="latitude")
-    save_parser.add_argument('-x', '--lng', type=float, help="longitude")
-    save_parser.add_argument('--theme', choices=['sect', 'element', 'mode'], help="color theme")
-    save_parser.add_argument('--format', choices=['glyphs', 'names', 'short'], help="display format")
-    save_parser.add_argument('--node', choices=['true', 'mean'], help="lunar node calculation method")
-    save_parser.set_defaults(func=run_save)
-
-    show_parser = config_subparsers.add_parser('show', help="display saved configuration")
-    show_parser.set_defaults(func=run_show)
-
-    edit_parser = config_subparsers.add_parser('edit', help="edit configuration file")
-    edit_parser.set_defaults(func=run_edit)
-
-    return parser

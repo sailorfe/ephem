@@ -28,3 +28,10 @@
 ### Added
 
 - Support for local time zone input using `zoneinfo`.
+
+## 0.4.0 2025-08-13
+
+### Added
+
+- Support for sidereal zodiac via global `--offset` option.
+- `--list-offsets` global option that prints `index:key` pairs.

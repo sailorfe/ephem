@@ -2,24 +2,65 @@ from rich.console import Console
 from rich.table import Table
 from rich.align import Align
 from rich.text import Text
-from .constants import Colors
+from .constants import AYANAMSAS, Colors
 
-def get_chart_title(title, approx_time, approx_locale):
-    """Fetches given chart title from `cast [event]` argument or defaults to none"""
-    if title is None:
-        title = ""
-    title_str = f"{title}"
+def get_chart_title(title=None, approx_time=False, approx_locale=False, offset=None):
+    """
+    Returns chart title string with optional hyp. and zodiac info inline.
+
+    Args:
+        title (str | None): User-provided chart title.
+        approx_time (bool): Whether the time is approximate.
+        approx_locale (bool): Whether the location is approximate.
+        offset (int | str | None): Sidereal offset (None = Tropical).
+
+    Returns:
+        str: Formatted chart title line.
+    """
+    # Base title
+    title_str = title or ""
+
+    # Approximation marker
     if approx_time or approx_locale:
         title_str += " hyp."
-    return title_str
+
+    # Zodiac mode
+    if offset is None:
+        zodiac_info = "Tropical"
+    else:
+        # Convert numeric index to key
+        if isinstance(offset, int) or (isinstance(offset, str) and offset.isdigit()):
+            idx = int(offset)
+            try:
+                key = list(AYANAMSAS.keys())[idx]
+            except IndexError:
+                key = f"Unknown({offset})"
+        else:
+            key = offset
+
+        zodiac_info = f"Sidereal — {key}"
+
+    # Inline final title
+    return f"{title_str} ({zodiac_info})"
 
 
 def get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale):
+    """
+    Returns a tuple of (time_line, location_line) for chart subtitles.
+
+    - Shows UTC only if it differs from local time.
+    - Optionally hides location if anonymized or approximate.
+    """
     local_str = dt_local.strftime("%Y-%m-%d %H:%M %Z")  # e.g. 2025-08-09 07:54 EDT
     utc_str = dt_utc.strftime("%Y-%m-%d %H:%M UTC")
 
-    time_part = f"{local_str} ({utc_str})"
+    # Show UTC only if it differs
+    if local_str == utc_str:
+        time_part = local_str
+    else:
+        time_part = f"{local_str} | {utc_str}"
 
+    # Show location if allowed
     if not args.anonymize and not approx_locale:
         location_part = f"@ {lat} {lng}"
     else:
@@ -134,15 +175,16 @@ def render_sphere_lines(spheres, horoscope, args, colors):
 console = Console()
 
 def format_chart(args, title, lat, lng, dt_local, dt_utc, horoscope, planets, approx_time, approx_locale, config_locale):
-    """If --no-color, print bare chart; otherwise print Rich table."""
+    offset = getattr(args, 'offset', None)
 
+    """If --no-color, print bare chart; otherwise print Rich table."""
     if args.bare:
         colors = Colors(False if args.bare else True)
         lines = []
 
         # title + warnings
         lines.extend(get_warnings(args, approx_time, approx_locale, config_locale))
-        lines.append(get_chart_title(title, approx_time, approx_locale))
+        lines.append(get_chart_title(title, approx_time, approx_locale, offset))
 
         # For bare mode, join subtitle parts into one line for simplicity
         time_str, location_str = get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale)
@@ -165,7 +207,7 @@ def format_chart(args, title, lat, lng, dt_local, dt_utc, horoscope, planets, ap
             console.print(Text(warning, style="yellow"))
 
         # centered bold title
-        chart_title = get_chart_title(title, approx_time, approx_locale)
+        chart_title = get_chart_title(title, approx_time, approx_locale, offset)
         time_str, location_str = get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale)
         console.print(Align.center(Text(chart_title, style="bold")))
         console.print(Align.center(Text(time_str, style="bold")))
@@ -204,4 +246,3 @@ def format_chart(args, title, lat, lng, dt_local, dt_utc, horoscope, planets, ap
             table.add_row(obj_name, placement)
 
         console.print(Align.center(table))
-
