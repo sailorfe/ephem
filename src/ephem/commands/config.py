@@ -102,7 +102,7 @@ def save_config(args):
 
 
 def add_subparser(subparsers):
-    parser = subparsers.add_parser('config', help="view or modify configuration")
+    parser = subparsers.add_parser('config', help="view or modify stored preferences ⚙️")
     config_subparsers = parser.add_subparsers(dest='config_cmd', required=True)
 
     save_parser = config_subparsers.add_parser('save', help="save current settings as defaults")
