@@ -71,7 +71,7 @@ Ephem draws inspiration from:
 
 ## More information
 
-- [Changelog](./CHANGELOG) – Version history and updates.
+- [Changelog](./CHANGELOG.md) – Version history and updates.
 - [Devlogs](https://sailorfe.codeberg.page) — Real-time development notes
 - [Hackstrology](https://buttondown.com/hackstrology) — Biweekly astrology newsletter
 
