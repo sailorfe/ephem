@@ -1,4 +1,5 @@
 dist
+ephem.db
 venv
 src/chart/__pycache__
 src/*.egg-info

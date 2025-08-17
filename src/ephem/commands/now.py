@@ -4,6 +4,7 @@ from ephem.utils.locale import get_locale
 from ephem.julian import get_julian_days, jd_to_datetime
 from ephem.horoscope import get_planets, get_angles, build_horoscope
 from ephem.display import format_chart
+from ephem.db import add_chart, create_tables
 
 
 def get_moment(tz_str=None):
@@ -42,3 +43,13 @@ def run(args):
     if output is not None:
         for line in output:
             print(line)
+
+    if args.save:
+        create_tables()
+        add_chart(
+            name=title,
+            timestamp_utc=dt_utc.isoformat(),
+            timestamp_input=dt_local.isoformat(),
+            latitude = args.lat,
+            longitude = args.lng
+        )

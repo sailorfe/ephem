@@ -1,9 +1,10 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from ephem.utils.locale import get_locale
-from ephem.julian import get_julian_days, jd_to_datetime
+from ephem.julian import get_julian_days
 from ephem.horoscope import get_planets, get_angles, build_horoscope
 from ephem.display import format_chart
+from ephem.db import add_chart, create_tables
 
 
 def parse_event(event_args):
@@ -60,7 +61,7 @@ def run(args):
 
     output = format_chart(
         args, title, lat, lng,
-        dt_local, dt_utc,  # pass both local and UTC datetimes
+        dt_local, dt_utc,
         horoscope, planets,
         approx_time, approx_locale, config_locale
     )
@@ -68,5 +69,13 @@ def run(args):
     if output is not None:
         for line in output:
             print(line)
-    # else: Rich output already printed directly
 
+    if args.save:
+        create_tables()
+        add_chart(
+            name=str(title),
+            timestamp_utc=dt_utc.isoformat(),
+            timestamp_input=dt_local.isoformat(),
+            latitude = args.lat,
+            longitude = args.lng
+        )

@@ -1,8 +1,43 @@
 # Changelog
 
-## 0.1.0 2025-08-11
+## v0
 
-### Added
+### 0.5.0 2025-08-17
+
+#### Added
+
+- SQLite database and `data` command to interact with it.
+
+
+### 0.4.0 2025-08-13
+
+#### Added
+
+- Support for sidereal zodiac via global `--offset` option.
+- `--list-offsets` global option that prints `index:key` pairs.
+
+
+### 0.3.0 2025-08-11
+
+#### Added
+
+- Support for local time zone input using `zoneinfo`.
+
+
+### 0.2.0 2025-08-11
+
+#### Added
+
+- `config` command to replace `--save-config`.
+
+#### Fixed
+
+- `--bare` flag UnboundLocalError
+
+
+### 0.1.0 2025-08-11
+
+#### Added
 
 - Initial public release.
 - Commands: `now`, `cast` and `asc`:
@@ -10,28 +45,3 @@
     * `cast` calculates charts for given date, time, and coordinates.
 - Detailed help messages and error handling.
 - Sensible fallbacks for hypothetical charts, e.g. those missing time and/or place.
-
-
-## 0.2.0 2025-08-11
-
-### Added
-
-- `config` command to replace `--save-config`.
-
-### Fixed
-
-- `--bare` flag UnboundLocalError
-
-
-## 0.3.0 2025-08-11
-
-### Added
-
-- Support for local time zone input using `zoneinfo`.
-
-## 0.4.0 2025-08-13
-
-### Added
-
-- Support for sidereal zodiac via global `--offset` option.
-- `--list-offsets` global option that prints `index:key` pairs.

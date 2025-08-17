@@ -1,29 +1,83 @@
 import argparse
 import sys
+from datetime import datetime
 from .commands import now, cast, asc, config
 from .commands.config import load_config_defaults
 from .constants import AYANAMSAS
+from .db import view_charts, get_chart, delete_chart
 
 
 def splash_text():
     return """
-                      ,dPYb,                                
-                      IP'`Yb                                
-                      I8  8I                                
-                      I8  8'                                
-  ,ggg,   gg,gggg,    I8 dPgg,    ,ggg,    ,ggg,,ggg,,ggg,  
- i8" "8i  I8P"  "Yb   I8dP" "8I  i8" "8i  ,8" "8P" "8P "8, 
- I8, ,8I  I8'    ,8i  I8P    I8  I8, ,8I  I8   8I   8I   8I 
+                      ,dPYb,
+                      IP'`Yb
+                      I8  8I
+                      I8  8
+  ,ggg,   gg,gggg,    I8 dPgg,    ,ggg,    ,ggg,,ggg,,ggg,
+ i8" "8i  I8P"  "Yb   I8dP" "8I  i8" "8i  ,8" "8P" "8P "8,
+ I8, ,8I  I8'    ,8i  I8P    I8  I8, ,8I  I8   8I   8I   8I
  `YbadP' ,I8 _  ,d8' ,d8     I8, `YbadP' ,dP   8I   8I   Yb,
 888P"Y888PI8 YY88888P88P     `Y8888P"Y8888P'   8I   8I   `Y8
-          I8                                                
-          I8                                                
-          I8                                                
-          I8                                                
-          I8                                                
-          I8                                                
+          I8
+          I8
+          I8
+          I8
+          I8
+          I8
 """
 
+def run_loaded_chart(args):
+    chart = get_chart(args.id)
+    if not chart:
+        print(f"No chart found with ID {args.id}")
+        return
+
+    # parse ISO 8601 timestamp into separate date and time strings
+    dt = datetime.fromisoformat(chart['timestamp_utc'])
+    date_str = dt.date().isoformat()       # "YYYY-MM-DD"
+    time_str = dt.time().strftime("%H:%M") # "HH:MM"
+
+    # Create base args from chart data
+    loaded_args = argparse.Namespace(
+        lat=chart['latitude'],
+        lng=chart['longitude'],
+        offset=None,
+        event=[date_str, time_str, chart['name']],
+        timezone=None,
+        save=False,
+        command="cast"
+    )
+
+    # Copy display options from command line args
+    copy_options = [
+        'bare', 'anonymize', 'no_angles', 
+        'classical', 'theme', 'format', 'node'
+    ]
+    for opt in copy_options:
+        setattr(loaded_args, opt, getattr(args, opt, None))
+
+    # Handle offset separately since it needs type conversion
+    if hasattr(args, 'offset') and args.offset is not None:
+        loaded_args.offset = int(args.offset)
+
+    cast.run(loaded_args)
+
+def print_charts(args=None, cli_path=None):
+    charts = view_charts(cli_path)
+    if not charts:
+        print("✨ No charts saved yet! Run `ephem cast --save` to add your first chart.")
+        return
+
+    for chart in charts:
+        print(f"[{chart['id']}] {chart['name']}")
+        print(f"   UTC:   {chart['timestamp_utc']}")
+        print(f"   Local: {chart['timestamp_input']}")
+        print(f"   Lat: {chart['latitude']}, Lng: {chart['longitude']}")
+        print()
+
+
+def cli_delete_chart(args):
+    delete_chart(args.id)
 
 class EphemParser(argparse.ArgumentParser):
     def error(self, message):
@@ -65,7 +119,7 @@ def parse_arguments(args=None):
     parent_parser = argparse.ArgumentParser(add_help=False)
     parent_parser.add_argument('-y', '--lat', type=float, help="latitude")
     parent_parser.add_argument('-x', '--lng', type=float, help="longitude")
-    parent_parser.add_argument('--offset', type=str, help="sidereal ayanamsha index or None for tropical")
+    parent_parser.add_argument('--offset', type=str, help="sidereal ayanamsa index or None for tropical")
 
     parser = EphemParser(
         prog='ephem',
@@ -74,7 +128,8 @@ def parse_arguments(args=None):
     )
 
     # Add global --list-offsets option
-    parser.add_argument('--list-offsets', action='store_true', help="list all ayanamsha offsets as index:key pairs")
+    parser.add_argument('--list-offsets', action='store_true', help="list all ayanamsa offsets as index:key pairs")
+    parser.add_argument('--db', type=str, help="specify custom database path (default: ~/.config/ephem/ephem.db)")
 
     if args is None:
         args = sys.argv[1:]
@@ -89,28 +144,46 @@ def parse_arguments(args=None):
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # now
-    now_parser = subparsers.add_parser('now', help="calculate the chart of the moment 🌌", parents=[parent_parser])
+    now_parser = subparsers.add_parser('now', help="🌌 calculate the chart of the moment", parents=[parent_parser])
     now_parser.set_defaults(func=now.run)
     now_parser.add_argument('-s', '--shift', type=str,
                             help="shift time forward or backward, e.g. 2h, -30m, 1.5d, 4w (default is hours)")
     now_parser.add_argument('-z', '--timezone', type=str, help="IANA time zone name, e.g. 'America/New_York'")
+    now_parser.add_argument('--save', action='store_true', help="save to chart database")
     add_display_options(now_parser)
 
     # cast
-    cast_parser = subparsers.add_parser('cast', help="calculate an event or birth chart 🎂", parents=[parent_parser])
+    cast_parser = subparsers.add_parser('cast', help="🎂 calculate an event or birth chart", parents=[parent_parser])
     cast_parser.set_defaults(func=cast.run)
     cast_parser.add_argument('event', nargs="*", metavar="DATE [TIME] [TITLE]",
                              help="date, optional time and chart title, e.g. '2025-08-09 7:54 Aquarius Full Moon'")
     cast_parser.add_argument('-z', '--timezone', type=str, help="IANA time zone name, e.g. 'America/New_York'")
+    cast_parser.add_argument('--save', action='store_true', help="save to chart database")
     add_display_options(cast_parser)
 
     # asc
-    asc_parser = subparsers.add_parser('asc', help="print current ascendant", parents=[parent_parser])
+    asc_parser = subparsers.add_parser('asc', help="🌅 print current ascendant", parents=[parent_parser])
     asc_parser.set_defaults(func=asc.run)
     asc_parser.add_argument('-g', '--glyphs', action='store_true', help='show glyphs instead of truncated sign names')
 
+    # data
+    data_parser = subparsers.add_parser('data', help="🗃️ manage chart database")
+    data_subparsers = data_parser.add_subparsers(dest="data_cmd", required=True)
+
+    view_parser = data_subparsers.add_parser('view', help="show chart database")
+    view_parser.set_defaults(func=print_charts)
+
+    load_parser = data_subparsers.add_parser('load', help="load chart from database", parents=[parent_parser])
+    load_parser.add_argument('id', type=int, help="chart ID to laod")
+    add_display_options(load_parser)
+    load_parser.set_defaults(func=run_loaded_chart)
+
+    delete_parser = data_subparsers.add_parser('delete', help="delete chart from database")
+    delete_parser.add_argument('id', type=int, help="delete chart  by ID ")
+    delete_parser.set_defaults(func=delete_chart)
+
     # config
-    config_parser = subparsers.add_parser('config', help="view or modify stored preferences ⚙️")
+    config_parser = subparsers.add_parser('config', help="⚙️ view or modify stored preferences")
     config_subparsers = config_parser.add_subparsers(dest='config_cmd', required=True)
 
     save_parser = config_subparsers.add_parser('save', help="save current settings as defaults", parents=[parent_parser])
@@ -121,6 +194,7 @@ def parse_arguments(args=None):
 
     edit_parser = config_subparsers.add_parser('edit', help="edit configuration file")
     edit_parser.set_defaults(func=config.run_edit)
+
 
     # show splash if no args given at all
     if len(args) == 0:
