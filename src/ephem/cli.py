@@ -186,15 +186,13 @@ def parse_arguments(args=None):
     config_parser = subparsers.add_parser('config', help="⚙️ view or modify stored preferences")
     config_subparsers = config_parser.add_subparsers(dest='config_cmd', required=True)
 
-    save_parser = config_subparsers.add_parser('save', help="save current settings as defaults", parents=[parent_parser])
+    # save - only location settings
+    save_parser = config_subparsers.add_parser('save', help="save default location", parents=[parent_parser])
     save_parser.set_defaults(func=config.run_save)
 
+    # show
     show_parser = config_subparsers.add_parser('show', help="display saved configuration")
     show_parser.set_defaults(func=config.run_show)
-
-    edit_parser = config_subparsers.add_parser('edit', help="edit configuration file")
-    edit_parser.set_defaults(func=config.run_edit)
-
 
     # show splash if no args given at all
     if len(args) == 0:

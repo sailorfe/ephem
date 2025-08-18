@@ -1,14 +1,5 @@
-.PHONY: test coverage clean
-
 test:
-	PYTHONPATH=test python3 -m unittest discover -s tests
-
-coverage:
-	PYTHONPATH=src coverage run -m unittest discover -s tests
-	coverage report -m
+	PYTHONPATH=src python3 -W ignore::ResourceWarning -m unittest discover -s tests
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
-	rm -f .coverage
-	rm -rf htmlcov
-
