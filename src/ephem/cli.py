@@ -119,7 +119,7 @@ def parse_arguments(args=None):
     parent_parser = argparse.ArgumentParser(add_help=False)
     parent_parser.add_argument('-y', '--lat', type=float, help="latitude")
     parent_parser.add_argument('-x', '--lng', type=float, help="longitude")
-    parent_parser.add_argument('--offset', type=str, help="sidereal ayanamsa index or None for tropical")
+    parent_parser.add_argument('--offset', type=int, help="sidereal ayanamsa index or None for tropical")
 
     parser = EphemParser(
         prog='ephem',
