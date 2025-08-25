@@ -1,5 +1,13 @@
 # Changelog
 
+# v1
+
+### 1.0.1 2025-08-25
+
+#### Fixed
+
+- Replaced `sqlite3.OperationError` with helpful message.
+
 ## v0
 
 ### 0.6.0 2025-08-22

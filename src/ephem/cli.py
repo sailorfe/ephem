@@ -1,5 +1,6 @@
 import argparse
 import sys
+import sqlite3
 from datetime import datetime
 from .commands import now, cast, asc, config
 from .commands.config import load_config_defaults
@@ -63,7 +64,14 @@ def run_loaded_chart(args):
     cast.run(loaded_args)
 
 def print_charts(args=None, cli_path=None):
-    charts = view_charts(cli_path)
+    try:
+        charts = view_charts(cli_path)
+    except sqlite3.OperationalError as e:
+        if "no such table: charts" in str(e):
+            print("✨ No charts saved yet! Run `ephem cast --save` to add your first chart.")
+            return
+        raise e  # Re-raise if it's a different database error
+
     if not charts:
         print("✨ No charts saved yet! Run `ephem cast --save` to add your first chart.")
         return
@@ -74,7 +82,6 @@ def print_charts(args=None, cli_path=None):
         print(f"   Local: {chart['timestamp_input']}")
         print(f"   Lat: {chart['latitude']}, Lng: {chart['longitude']}")
         print()
-
 
 def cli_delete_chart(args):
     delete_chart(args.id)
