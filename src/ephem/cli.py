@@ -28,7 +28,15 @@ def splash_text():
 """
 
 def run_loaded_chart(args):
-    chart = get_chart(args.id)
+    """Run `ephem data load` as if it's `ephem cast`."""
+    try:
+        chart = get_chart(args.id)
+    except sqlite3.OperationalError as e:
+        if "no such table: charts" in str(e):
+            print("✨ No charts saved yet! Run `ephem cast --save` to add your first chart.")
+            return
+        raise e  # Re-raise if it's a different database error
+
     if not chart:
         print(f"No chart found with ID {args.id}")
         return
@@ -63,7 +71,9 @@ def run_loaded_chart(args):
 
     cast.run(loaded_args)
 
+
 def print_charts(args=None, cli_path=None):
+    """View chart database."""
     try:
         charts = view_charts(cli_path)
     except sqlite3.OperationalError as e:
@@ -84,7 +94,9 @@ def print_charts(args=None, cli_path=None):
         print()
 
 def cli_delete_chart(args):
+    """Delete chart by id."""
     delete_chart(args.id)
+
 
 class EphemParser(argparse.ArgumentParser):
     def error(self, message):
@@ -93,6 +105,7 @@ class EphemParser(argparse.ArgumentParser):
 
 
 def add_display_options(parser):
+    """Display options for cast, now, and data load."""
     display = parser.add_argument_group('display options')
     display.add_argument('--node', choices=['true', 'mean'], default='true',
                          help="choose lunar node calculation method")
@@ -111,6 +124,7 @@ def add_display_options(parser):
 
 
 def offset_type(value):
+    """Select ayanamsa from index 0-46; no string support possibly ever."""
     try:
         ivalue = int(value)
     except ValueError:
@@ -121,8 +135,10 @@ def offset_type(value):
 
 
 def parse_arguments(args=None):
+    # load locale from config if not given
     load_config_defaults()
 
+    # global flags for locale and ayanamsa
     parent_parser = argparse.ArgumentParser(add_help=False)
     parent_parser.add_argument('-y', '--lat', type=float, help="latitude")
     parent_parser.add_argument('-x', '--lng', type=float, help="longitude")
@@ -130,7 +146,11 @@ def parse_arguments(args=None):
 
     parser = EphemParser(
         prog='ephem',
-        description="ephem is an astrology CLI...",
+        description="""
+        Ephem is a tool for calculating astrological charts for a given location, date, and time.
+
+        The quickest way to try it is `ephem now`, which prints the chart of the moment with either configured coordinates or no geographic information; no ascendant or midheaven.
+        """,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
@@ -201,10 +221,10 @@ def parse_arguments(args=None):
     show_parser = config_subparsers.add_parser('show', help="display saved configuration")
     show_parser.set_defaults(func=config.run_show)
 
-    # show splash if no args given at all
+    # show splash text and help if no args given
     if len(args) == 0:
         print(splash_text())
-        print("✨ Usage: ephem {now,cast,asc,config} [options]\nType `ephem --help` for more info.")
+        parser.print_help()
         sys.exit(0)
 
     parsed = parser.parse_args(args)
@@ -240,4 +260,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
