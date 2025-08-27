@@ -49,7 +49,7 @@ def get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale):
     Returns a tuple of (time_line, location_line) for chart subtitles.
 
     - Shows UTC only if it differs from local time.
-    - Optionally hides location if anonymized or approximate.
+    - Optionally hides location if no_geo or approximate.
     """
     local_str = dt_local.strftime("%Y-%m-%d %H:%M %Z")  # e.g. 2025-08-09 07:54 EDT
     utc_str = dt_utc.strftime("%Y-%m-%d %H:%M UTC")
@@ -61,7 +61,8 @@ def get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale):
         time_part = f"{local_str} | {utc_str}"
 
     # Show location if allowed
-    if not args.anonymize and not approx_locale:
+    no_geo = getattr(args, 'no_geo', False)
+    if not no_geo and not approx_locale:
         location_part = f"@ {lat} {lng}"
     else:
         location_part = ""
@@ -176,10 +177,11 @@ console = Console()
 
 def format_chart(args, title, lat, lng, dt_local, dt_utc, horoscope, planets, approx_time, approx_locale, config_locale):
     offset = getattr(args, 'offset', None)
+    no_color = getattr(args, 'no_color', False)
 
     """If --no-color, print bare chart; otherwise print Rich table."""
-    if args.bare:
-        colors = Colors(False if args.bare else True)
+    if no_color:
+        colors = Colors(False if args.no_color else True)
         lines = []
 
         # title + warnings

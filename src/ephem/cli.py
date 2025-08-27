@@ -2,8 +2,8 @@ import argparse
 import sys
 import sqlite3
 from datetime import datetime
-from .commands import now, cast, asc, config
-from .commands.config import load_config_defaults
+from .commands import now, cast
+from .config import load_config_defaults
 from .constants import AYANAMSAS
 from .db import view_charts, get_chart, delete_chart
 
@@ -115,11 +115,11 @@ def add_display_options(parser):
                          help="choose display format: all glyphs, full planet and sign names, truncated signs with planetary glyphs. Default mixes planet glyphs with full sign names.")
     display.add_argument('-c', '--classical', action='store_true',
                          help="exclude Uranus through Pluto")
-    display.add_argument('-n', '--no-angles', action='store_true',
+    display.add_argument('--no-angles', action='store_true',
                          help="don't print Ascendant or Midheaven")
-    display.add_argument('-a', '--anonymize', action='store_true',
+    display.add_argument('--no-geo', action='store_true',
                          help="don't print coordinates")
-    display.add_argument('-b', '--bare', action='store_true',
+    display.add_argument('--no-color', action='store_true',
                          help="disable ANSI colors")
 
 
@@ -188,11 +188,6 @@ def parse_arguments(args=None):
     cast_parser.add_argument('--save', action='store_true', help="save to chart database")
     add_display_options(cast_parser)
 
-    # asc
-    asc_parser = subparsers.add_parser('asc', help="🌅 print current ascendant", parents=[parent_parser])
-    asc_parser.set_defaults(func=asc.run)
-    asc_parser.add_argument('-g', '--glyphs', action='store_true', help='show glyphs instead of truncated sign names')
-
     # data
     data_parser = subparsers.add_parser('data', help="🗃️ manage chart database")
     data_subparsers = data_parser.add_subparsers(dest="data_cmd", required=True)
@@ -208,18 +203,6 @@ def parse_arguments(args=None):
     delete_parser = data_subparsers.add_parser('delete', help="delete chart from database")
     delete_parser.add_argument('id', type=int, help="delete chart  by ID ")
     delete_parser.set_defaults(func=delete_chart)
-
-    # config
-    config_parser = subparsers.add_parser('config', help="⚙️ view or modify stored preferences")
-    config_subparsers = config_parser.add_subparsers(dest='config_cmd', required=True)
-
-    # save - only location settings
-    save_parser = config_subparsers.add_parser('save', help="save default location", parents=[parent_parser])
-    save_parser.set_defaults(func=config.run_save)
-
-    # show
-    show_parser = config_subparsers.add_parser('show', help="display saved configuration")
-    show_parser.set_defaults(func=config.run_show)
 
     # show splash text and help if no args given
     if len(args) == 0:
