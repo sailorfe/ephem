@@ -9,7 +9,7 @@ def get_db_path(cli_path=None):
     env_path = os.environ.get("EPHEM_DB")
     if env_path:
         return env_path
-    config_home = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+    config_home = Path(os.environ.get("XDG_DATA_HOME", Path.home() / "./local/share"))
     return config_home / "ephem" / "ephem.db"
 
 def get_connection(cli_path=None):
