@@ -59,16 +59,18 @@ def run(args):
     angles = get_angles(jd_now, lat, lng, offset)
     horoscope = build_horoscope(planets, angles)
 
-    output = format_chart(
-        args, title, lat, lng,
-        dt_local, dt_utc,
-        horoscope, planets,
-        approx_time, approx_locale, config_locale
-    )
+    # Only display chart if not showing/saving config
+    if not getattr(args, 'show_config', False) and not getattr(args, 'save_config', False):
+        output = format_chart(
+            args, title, lat, lng,
+            dt_local, dt_utc,
+            horoscope, planets,
+            approx_time, approx_locale, config_locale
+        )
 
-    if output is not None:
-        for line in output:
-            print(line)
+        if output is not None:
+            for line in output:
+                print(line)
 
     if args.save:
         create_tables()

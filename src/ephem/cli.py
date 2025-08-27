@@ -3,7 +3,7 @@ import sys
 import sqlite3
 from datetime import datetime
 from .commands import now, cast
-from .config import load_config_defaults
+from .config import load_config_defaults, run_save, run_show
 from .constants import AYANAMSAS
 from .db import view_charts, get_chart, delete_chart
 
@@ -54,7 +54,9 @@ def run_loaded_chart(args):
         event=[date_str, time_str, chart['name']],
         timezone=None,
         save=False,
-        command="cast"
+        command="cast",
+        save_config=False,
+        show_config=False
     )
 
     # Copy display options from command line args
@@ -115,12 +117,31 @@ def add_display_options(parser):
                          help="choose display format: all glyphs, full planet and sign names, truncated signs with planetary glyphs. Default mixes planet glyphs with full sign names.")
     display.add_argument('-c', '--classical', action='store_true',
                          help="exclude Uranus through Pluto")
-    display.add_argument('--no-angles', action='store_true',
+    display.add_argument('-n', '--no-angles', action='store_true',
                          help="don't print Ascendant or Midheaven")
-    display.add_argument('--no-geo', action='store_true',
+    display.add_argument('-a', '--anonymize', action='store_true',
                          help="don't print coordinates")
-    display.add_argument('--no-color', action='store_true',
+    display.add_argument('-b', '--bare', action='store_true',
                          help="disable ANSI colors")
+
+
+def add_config_options(parser):
+    """Add configuration options to parser."""
+    config = parser.add_argument_group('configuration')
+    config.add_argument('--save-config', action='store_true',
+                        help="save current location settings as defaults")
+    config.add_argument('--show-config', action='store_true',
+                        help="display current configuration and exit")
+
+
+def handle_config_actions(args):
+    """Handle config-related actions before running main command."""
+    if args.show_config:
+        run_show(args)
+        sys.exit(0)
+    
+    if args.save_config:
+        run_save(args)
 
 
 def offset_type(value):
@@ -178,6 +199,7 @@ def parse_arguments(args=None):
     now_parser.add_argument('-z', '--timezone', type=str, help="IANA time zone name, e.g. 'America/New_York'")
     now_parser.add_argument('--save', action='store_true', help="save to chart database")
     add_display_options(now_parser)
+    add_config_options(now_parser)
 
     # cast
     cast_parser = subparsers.add_parser('cast', help="🎂 calculate an event or birth chart", parents=[parent_parser])
@@ -187,6 +209,7 @@ def parse_arguments(args=None):
     cast_parser.add_argument('-z', '--timezone', type=str, help="IANA time zone name, e.g. 'America/New_York'")
     cast_parser.add_argument('--save', action='store_true', help="save to chart database")
     add_display_options(cast_parser)
+    add_config_options(cast_parser)
 
     # data
     data_parser = subparsers.add_parser('data', help="🗃️ manage chart database")
@@ -231,6 +254,10 @@ def main():
     if not vars(args):
         args.print_help()
         args.exit(1)
+
+    # Handle config actions for 'now' and 'cast' commands
+    if args.command in ['now', 'cast']:
+        handle_config_actions(args)
 
     if hasattr(args, "func"):
         # Dispatch to the subcommand's run function
