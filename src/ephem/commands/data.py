@@ -36,7 +36,7 @@ def run_loaded_chart(args):
 
     # Copy display options from command line args
     copy_options = [
-        'bare', 'anonymize', 'no_angles', 
+        'no_color', 'no_geo', 'no_angles',
         'classical', 'theme', 'format', 'node'
     ]
     for opt in copy_options:

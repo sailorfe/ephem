@@ -61,7 +61,7 @@ def run_loaded_chart(args):
 
     # Copy display options from command line args
     copy_options = [
-        'bare', 'anonymize', 'no_angles', 
+        'no_color', 'no_geo', 'no_angles', 
         'classical', 'theme', 'format', 'node'
     ]
     for opt in copy_options:
@@ -106,22 +106,32 @@ class EphemParser(argparse.ArgumentParser):
         self.exit(2, f"\n❌ Error: {message}\n\nUse -h or --help for more information.\n")
 
 
-def add_display_options(parser):
+def add_display_options(parser, config_defaults=None):
     """Display options for cast, now, and data load."""
+    if config_defaults is None:
+        config_defaults = {}
+    
     display = parser.add_argument_group('display options')
-    display.add_argument('--node', choices=['true', 'mean'], default='true',
+    display.add_argument('--node', choices=['true', 'mean'], 
+                         default=config_defaults.get('node', 'true'),
                          help="choose lunar node calculation method")
-    display.add_argument('--theme', choices=['sect', 'element', 'mode'], default='sect',
+    display.add_argument('--theme', choices=['sect', 'element', 'mode'], 
+                         default=config_defaults.get('theme', 'sect'),
                          help="choose ANSI color theme")
     display.add_argument('--format', choices=['glyphs', 'names', 'short'],
+                         default=config_defaults.get('format'),
                          help="choose display format: all glyphs, full planet and sign names, truncated signs with planetary glyphs. Default mixes planet glyphs with full sign names.")
     display.add_argument('-c', '--classical', action='store_true',
+                         default=config_defaults.get('classical', False),
                          help="exclude Uranus through Pluto")
-    display.add_argument('-n', '--no-angles', action='store_true',
+    display.add_argument('--no-angles', action='store_true',
+                         default=config_defaults.get('no_angles', False),
                          help="don't print Ascendant or Midheaven")
-    display.add_argument('-a', '--anonymize', action='store_true',
+    display.add_argument('--no_geo', action='store_true',
+                         default=config_defaults.get('no_geo', False),
                          help="don't print coordinates")
-    display.add_argument('-b', '--bare', action='store_true',
+    display.add_argument('--no-color', action='store_true',
+                         default=config_defaults.get('no_colors', False),
                          help="disable ANSI colors")
 
 
@@ -156,14 +166,18 @@ def offset_type(value):
 
 
 def parse_arguments(args=None):
-    # load locale from config if not given
-    load_config_defaults()
+    # load config defaults first
+    config_defaults = load_config_defaults()
 
     # global flags for locale and ayanamsa
     parent_parser = argparse.ArgumentParser(add_help=False)
-    parent_parser.add_argument('-y', '--lat', type=float, help="latitude")
-    parent_parser.add_argument('-x', '--lng', type=float, help="longitude")
-    parent_parser.add_argument('--offset', type=int, help="sidereal ayanamsa index or None for tropical")
+    parent_parser.add_argument('-y', '--lat', type=float, 
+                               default=config_defaults.get('lat'), help="latitude")
+    parent_parser.add_argument('-x', '--lng', type=float, 
+                               default=config_defaults.get('lng'), help="longitude")
+    parent_parser.add_argument('--offset', type=int, 
+                               default=config_defaults.get('offset'), 
+                               help="sidereal ayanamsa index or None for tropical")
 
     parser = EphemParser(
         prog='ephem',
@@ -177,7 +191,7 @@ def parse_arguments(args=None):
 
     # Add global --list-offsets option
     parser.add_argument('--list-offsets', action='store_true', help="list all ayanamsa offsets as index:key pairs")
-    parser.add_argument('--db', type=str, help="specify custom database path (default: ~/.config/ephem/ephem.db)")
+    parser.add_argument('--db', type=str, help="specify custom database path (default: ~/.local/share/ephem/ephem.db)")
 
     if args is None:
         args = sys.argv[1:]
@@ -198,7 +212,7 @@ def parse_arguments(args=None):
                             help="shift time forward or backward, e.g. 2h, -30m, 1.5d, 4w (default is hours)")
     now_parser.add_argument('-z', '--timezone', type=str, help="IANA time zone name, e.g. 'America/New_York'")
     now_parser.add_argument('--save', action='store_true', help="save to chart database")
-    add_display_options(now_parser)
+    add_display_options(now_parser, config_defaults)
     add_config_options(now_parser)
 
     # cast
@@ -208,7 +222,7 @@ def parse_arguments(args=None):
                              help="date, optional time and chart title, e.g. '2025-08-09 7:54 Aquarius Full Moon'")
     cast_parser.add_argument('-z', '--timezone', type=str, help="IANA time zone name, e.g. 'America/New_York'")
     cast_parser.add_argument('--save', action='store_true', help="save to chart database")
-    add_display_options(cast_parser)
+    add_display_options(cast_parser, config_defaults)
     add_config_options(cast_parser)
 
     # data
@@ -220,7 +234,7 @@ def parse_arguments(args=None):
 
     load_parser = data_subparsers.add_parser('load', help="load chart from database", parents=[parent_parser])
     load_parser.add_argument('id', type=int, help="chart ID to laod")
-    add_display_options(load_parser)
+    add_display_options(load_parser, config_defaults)
     load_parser.set_defaults(func=run_loaded_chart)
 
     delete_parser = data_subparsers.add_parser('delete', help="delete chart from database")
