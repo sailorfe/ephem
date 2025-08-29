@@ -1,11 +1,9 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from ephem.utils.locale import get_locale
-from ephem.julian import get_julian_days
-from ephem.horoscope import get_planets, get_angles, build_horoscope
+from ephem import sweph
 from ephem.display import format_chart
 from ephem.db import add_chart, create_tables
-
 
 def parse_event(event_args):
     """Reads event positional arg output based on length."""
@@ -52,12 +50,12 @@ def run(args):
     date, time, title = parse_event(args.event)
     dt_local, dt_utc, approx_time = get_moment(date, time, args.timezone)
     lat, lng, approx_locale, config_locale = get_locale(args)
-    jd_now, jd_then, *_ = get_julian_days(dt_utc, args)
+    jd_now, jd_then, *_ = sweph.get_julian_days(dt_utc, args)
     offset = getattr(args, 'offset', None)  # Get offset from args, default to None
 
-    planets = get_planets(jd_now, jd_then, offset)
-    angles = get_angles(jd_now, lat, lng, offset)
-    horoscope = build_horoscope(planets, angles)
+    planets = sweph.get_planets(jd_now, jd_then, offset)
+    angles = sweph.get_angles(jd_now, lat, lng, offset)
+    horoscope = sweph.build_horoscope(planets, angles)
 
     # Only display chart if not showing/saving config
     if not getattr(args, 'show_config', False) and not getattr(args, 'save_config', False):

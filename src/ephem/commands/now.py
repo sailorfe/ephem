@@ -1,11 +1,9 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from ephem.utils.locale import get_locale
-from ephem.julian import get_julian_days, jd_to_datetime
-from ephem.horoscope import get_planets, get_angles, build_horoscope
+from ephem import sweph
 from ephem.display import format_chart
 from ephem.db import add_chart, create_tables
-
 
 def get_moment(tz_str=None):
     # current time in user's timezone or UTC
@@ -23,14 +21,14 @@ def run(args):
     dt_local, dt_utc, approx_time = get_moment(args.timezone)
     lat, lng, approx_locale, config_locale = get_locale(args)
 
-    jd_now, jd_then, dt_utc_shifted = get_julian_days(dt_utc, args)
+    jd_now, jd_then, dt_utc_shifted = sweph.get_julian_days(dt_utc, args)
     offset = getattr(args, 'offset', None)  # Get offset from args, default to None
 
     dt_local_shifted = dt_utc_shifted.astimezone(dt_local.tzinfo)
 
-    planets = get_planets(jd_now, jd_then, offset)
-    angles = get_angles(jd_now, lat, lng, offset)
-    horoscope = build_horoscope(planets, angles)
+    planets = sweph.get_planets(jd_now, jd_then, offset)
+    angles = sweph.get_angles(jd_now, lat, lng, offset)
+    horoscope = sweph.build_horoscope(planets, angles)
     title = "Chart of the Moment"
 
     # Only display chart if not showing/saving config

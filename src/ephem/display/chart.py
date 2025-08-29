@@ -2,7 +2,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.align import Align
 from rich.text import Text
-from .constants import AYANAMSAS, Colors
+from ephem.constants import AYANAMSAS, Colors
 
 def get_chart_title(title=None, approx_time=False, approx_locale=False, offset=None):
     """
