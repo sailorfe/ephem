@@ -1,6 +1,6 @@
 import swisseph as swe
 from ephem.utils.signs import sign_from_index
-from .sidereal import get_calc_flag
+from .ayanamsas import get_calc_flag
 
 def get_angles(jd_now, lat, lng, offset=None):
     """Fetch ASC and MC for given date and location, optionally in sidereal mode."""

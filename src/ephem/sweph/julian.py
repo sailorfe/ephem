@@ -53,3 +53,8 @@ def jd_to_datetime(jd_now):
     seconds = int(((h - hours) * 60 - minutes) * 60)
     dt = datetime(y, m, d, hours, minutes, seconds, tzinfo=timezone.utc)
     return datetime.strftime(dt, "%Y-%m-%d %H:%M")
+
+
+def sidereal_time(jd_now):
+    st = swe.sidtime(jd_now)
+    return st

@@ -1,8 +1,9 @@
 import argparse
+import calendar
 import sys
 import sqlite3
-from datetime import datetime
-from .commands import now, cast
+from datetime import date
+from .commands import now, cast, cal
 from .config import load_config_defaults, run_save, run_show
 from .constants import AYANAMSAS
 from .db import view_charts, get_chart, delete_chart
@@ -149,7 +150,7 @@ def handle_config_actions(args):
     if args.show_config:
         run_show(args)
         sys.exit(0)
-    
+
     if args.save_config:
         run_save(args)
 
@@ -163,6 +164,29 @@ def offset_type(value):
     if not (0 <= ivalue <= 46):
         raise argparse.ArgumentTypeError(f"Offset must be between 0 and 46, got {ivalue}.")
     return ivalue
+
+import calendar
+
+def parse_month(value: str):
+    """For cal command"""
+    # Try numeric
+    try:
+        month_num = int(value)
+        if 1 <= month_num <= 12:
+            return month_num
+    except ValueError:
+        pass
+
+    # Try name or abbreviation (case-insensitive)
+    value = value.lower()
+    months = {name.lower(): i for i, name in enumerate(calendar.month_name) if name}
+    abbrevs = {name.lower(): i for i, name in enumerate(calendar.month_abbr) if name}
+ 
+    lookup = {**months, **abbrevs}
+    if value in lookup:
+        return lookup[value]
+
+    raise ValueError(f"Invalid month: {value}")
 
 
 def parse_arguments(args=None):
@@ -241,6 +265,14 @@ def parse_arguments(args=None):
     delete_parser.add_argument('id', type=int, help="delete chart  by ID ")
     delete_parser.set_defaults(func=delete_chart)
 
+    # cal
+    today = date.today()
+    cal_parser = subparsers.add_parser('cal', help="📅 calculate ephemeris table for a given month month, e.g. 1989 December", parents=[parent_parser])
+    cal_parser.add_argument("year", type=int, nargs="?", default=today.year, help="year as an integer")
+    cal_parser.add_argument("month", type=parse_month, nargs="?", default=today.month, help="month as an integer (1–12) or a string (e.g. 'Aug')")
+    cal_parser.add_argument("--format", choices=['glyph','short'], default="glyph", help="")
+    cal_parser.set_defaults(func=cal.run)
+
     # show splash text and help if no args given
     if len(args) == 0:
         print(splash_text())
@@ -265,10 +297,6 @@ def parse_arguments(args=None):
 def main():
     args = parse_arguments()
 
-    if not vars(args):
-        args.print_help()
-        args.exit(1)
-
     # Handle config actions for 'now' and 'cast' commands
     if args.command in ['now', 'cast']:
         handle_config_actions(args)
@@ -278,9 +306,10 @@ def main():
         args.func(args)
     else:
         # No subcommand provided; show help and exit with error
-        args.print_help()
-        args.exit(1)
-
+        print(splash_text())
+        # Re-parse with just help, so you still get the global help text
+        EphemParser(prog="ephem").print_help()
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

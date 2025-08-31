@@ -1,0 +1,136 @@
+from datetime import datetime
+from rich.console import Console
+from rich.table import Table, box
+from rich.align import Align
+from rich.text import Text
+from ephem.constants import OBJECTS, AYANAMSAS
+from ephem.sweph import get_planets, build_horoscope
+from ephem.utils.signs import sign_from_index
+import swisseph as swe
+
+
+def get_sidereal_time(jd):
+    """Calculate sidereal time for given Julian day (UTC midnight)."""
+    gst = swe.sidtime(jd) % 24
+    total_seconds = int(round(gst * 3600))
+    hours = (total_seconds // 3600) % 24
+    minutes = (total_seconds % 3600) // 60
+    seconds = total_seconds % 60
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+
+
+def get_moon_positions(jd_midnight, jd_noon, offset=None, fmt="glyph"):
+    """Get Moon positions at 0hr and noon for the same day."""
+    calc_flag = swe.FLG_SWIEPH
+    if offset is not None:
+        try:
+            sid_mode = list(AYANAMSAS.values())[offset]
+            swe.set_sid_mode(sid_mode, 0, 0)
+            calc_flag |= swe.FLG_SIDEREAL
+        except IndexError:
+            pass
+
+    moon_0hr = swe.calc_ut(jd_midnight, 1, calc_flag)[0][0]
+    moon_noon = swe.calc_ut(jd_noon, 1, calc_flag)[0][0]
+
+    def format_moon_pos(lng):
+        dms = swe.split_deg(lng, 8)
+        _, sign_data = sign_from_index(dms[4])
+        if fmt == "short":
+            return f"{dms[0]:2d} {sign_data['trunc']:<3} {dms[1]:02d} {dms[2]:02d}"
+        else:
+            return f"{dms[0]:2d} {sign_data['glyph']:<3} {dms[1]:02d} {dms[2]:02d}"
+
+    return format_moon_pos(moon_0hr), format_moon_pos(moon_noon)
+
+
+def format_planet_position(entry, fmt="glyph"):
+    """Fixed-width DMS string for Rich table columns."""
+    deg_str = f"{entry['deg']:2d}"
+    mnt_str = f"{entry['mnt']:02d}"
+    sec_str = f"{entry.get('sec',0):02d}"
+    rx_str = " r" if entry.get("rx") else ""
+
+    sign_str = f"{entry['sign_trunc']:<3}" if fmt == "short" else f"{entry['sign_glyph']:<3}"
+    return f"{deg_str} {sign_str} {mnt_str} {sec_str}{rx_str}"
+
+
+def format_calendar(args):
+    """Generate ephemeris calendar for given month/year."""
+    offset = getattr(args, 'offset', None)
+    fmt = getattr(args, "format", "glyph")  # use fmt consistently
+
+    first_day = datetime(args.year, args.month, 1)
+    next_month = datetime(args.year + 1, 1, 1) if args.month == 12 else datetime(args.year, args.month + 1, 1)
+    days_in_month = (next_month - first_day).days
+
+    console = Console()
+    month_name = first_day.strftime("%B %Y")
+    subtitle = "Tropical"
+    if offset is not None:
+        try:
+            ayanamsa_name = list(AYANAMSAS.keys())[offset]
+            subtitle = f"Sidereal — {ayanamsa_name}"
+        except IndexError:
+            subtitle = f"Sidereal — Offset {offset}"
+
+    console.print(Align.center(Text(f"{month_name}", style="bold")))
+    console.print(Align.center(Text(f"({subtitle})", style="italic")))
+    console.print()
+
+    EPHEMERIS_COLUMNS = [
+        ("Day", "right", "bold"),
+        ("Sid. Time", "center", None),
+        ("ae", "left", None),  # Sun
+        ("ag", "left", None),  # Moon (0hr)
+        ("ag_noon", "left", None),  # Moon (noon) 
+        ("true_node", "left", None),
+        ("hg", "left", None),  # Mercury
+        ("cu", "left", None),  # Venus
+        ("fe", "left", None),  # Mars
+        ("sn", "left", None),  # Jupiter  
+        ("pb", "left", None),  # Saturn
+        ("ura", "left", None), # Uranus
+        ("nep", "left", None), # Neptune
+        ("plu", "left", None)  # Pluto
+    ]
+
+    table = Table(show_header=True, box=box.SQUARE)
+    for col_name, cell_justify, style in EPHEMERIS_COLUMNS:
+        if col_name in OBJECTS:
+            header_str = OBJECTS[col_name]["glyph"]
+        elif col_name == "ag_noon":
+            header_str = "Noon " + OBJECTS["ag"]["glyph"]
+        elif col_name == "ag":
+            header_str = "0hr " + OBJECTS["ag"]["glyph"]
+        else:
+            header_str = col_name
+        table.add_column(Text(header_str, justify="center"), justify=cell_justify, style=style, no_wrap=True)
+
+    for day in range(1, days_in_month + 1):
+        jd_midnight = swe.julday(args.year, args.month, day, 0.0)
+        jd_noon = swe.julday(args.year, args.month, day, 12.0)
+        jd_prev = jd_midnight - 1/1440
+
+        sid_time = get_sidereal_time(jd_midnight)
+        planets = get_planets(jd_midnight, jd_prev, offset)
+        horoscope = build_horoscope(planets, [])
+
+        moon_0hr, moon_noon = get_moon_positions(jd_midnight, jd_noon, offset, fmt=fmt)
+
+        row_data = [str(day), sid_time]
+        for col_name, _, _ in EPHEMERIS_COLUMNS[2:]:
+            if col_name == "ag":
+                row_data.append(moon_0hr)
+            elif col_name == "ag_noon":
+                row_data.append(moon_noon)
+            elif col_name in horoscope:
+                row_data.append(format_planet_position(horoscope[col_name], fmt=fmt))
+            else:
+                row_data.append("--")
+
+        table.add_row(*row_data)
+
+    console.print(Align.center(table))
+    return None
+

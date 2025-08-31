@@ -1,6 +1,6 @@
 import swisseph as swe
 from ephem.utils.signs import sign_from_index
-from .sidereal import get_calc_flag
+from .ayanamsas import get_calc_flag
 
 PLANET_KEYS = [
     "ae", "ag", "hg", "cu", "fe", "sn", "pb",
