@@ -51,14 +51,15 @@ ephem cast 1993-08-16 13:05 "Debian Linux"
 | ----------| ------------------------------------- |
 | `now`     | calculate the chart of the moment     |
 | `cast`    | calculate chart for an event or birth |
+| `cal`     | calculate monthly ephemeris table     |
 | `data`    | manage chart database                 |
 
 ## roadmap
 ### v2
 
-- [ ] replace configparser with tomllib
+- [x] replace configparser with tomllib
+- [x] calendar view for current and specified months
 - [ ] YAML-based database interaction
-- [ ] calendar view for current and specified months
 
 ## contributing
 
