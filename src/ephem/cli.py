@@ -199,9 +199,7 @@ def parse_arguments(args=None):
     parser = EphemParser(
         prog='ephem',
         description="""
-        Ephem is a tool for calculating astrological charts for a given location, date, and time.
-
-        The quickest way to try it is `ephem now`, which prints the chart of the moment with either configured coordinates or no geographic information; no ascendant or midheaven.
+        Ephem is a tool for calculating astrological charts and monthly ephemerides.
         """,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -246,6 +244,14 @@ def parse_arguments(args=None):
     add_display_options(cast_parser, config_defaults)
     add_config_options(cast_parser)
 
+    # cal
+    today = date.today()
+    cal_parser = subparsers.add_parser('cal', help="📅 calculate ephemeris table for a given or the current month", parents=[parent_parser])
+    cal_parser.add_argument("year", type=int, nargs="?", default=today.year, help="year as an integer")
+    cal_parser.add_argument("month", type=parse_month, nargs="?", default=today.month, help="month as an integer (1–12) or a string (e.g. 'Aug')")
+    cal_parser.add_argument("--ascii", action="store_true", help="use ASCII text instead of Unicode glyphs")
+    cal_parser.set_defaults(func=cal.run)
+
     # data
     data_parser = subparsers.add_parser('data', help="🗃️ manage chart database")
     data_subparsers = data_parser.add_subparsers(dest="data_cmd", required=True)
@@ -261,14 +267,6 @@ def parse_arguments(args=None):
     delete_parser = data_subparsers.add_parser('delete', help="delete chart from database")
     delete_parser.add_argument('id', type=int, help="delete chart  by ID ")
     delete_parser.set_defaults(func=delete_chart)
-
-    # cal
-    today = date.today()
-    cal_parser = subparsers.add_parser('cal', help="📅 calculate ephemeris table for a given month month, e.g. 1989 December", parents=[parent_parser])
-    cal_parser.add_argument("year", type=int, nargs="?", default=today.year, help="year as an integer")
-    cal_parser.add_argument("month", type=parse_month, nargs="?", default=today.month, help="month as an integer (1–12) or a string (e.g. 'Aug')")
-    cal_parser.add_argument("--ascii", action="store_true", help="")
-    cal_parser.set_defaults(func=cal.run)
 
     # show splash text and help if no args given
     if len(args) == 0:
