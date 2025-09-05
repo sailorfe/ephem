@@ -192,6 +192,8 @@ class Colors:
         self.use_color = use_color
 
     COLOR_MAP = {
+        "black": "black",
+        "bright_black": "bright_black",
         "red": "red",
         "bright_red": "bright_red",
         "blue": "blue",
@@ -203,6 +205,8 @@ class Colors:
         "bright_magenta": "bright_magenta",
         "cyan": "cyan",
         "bright_cyan": "bright_cyan",
+        "white": "white",
+        "bright_white": "bright_white",
         "bold": "bold",
     }
 

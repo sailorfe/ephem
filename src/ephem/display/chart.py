@@ -91,26 +91,50 @@ def get_mercury_sect_color(planets, default_color):
 
 
 def get_spheres(horoscope, args, planets, approx_time, approx_locale):
-    # Simplified color scheme - just sect colors
-    spheres = [
-        ("ae", "bright_red"), ("ag", "bright_blue"), ("hg", None),
-        ("cu", "blue"), ("fe", "blue"), ("sn", "red"), ("pb", "red"),
-        ("ura", None), ("nep", None), ("plu", None),
-        ("mean_node", None), ("true_node", None),
-        ("asc", None), ("mc", None)
-    ]
+    """Assemble list of objects to display and their element/mode colors."""
+    ELEMENT_COLORS = {
+        "fire": "red",
+        "earth": "green",
+        "air": "bright_black",
+        "water": "blue"
+    }
+    MODE_COLORS = {
+        "cardinal": "magenta",
+        "fixed": "yellow",
+        "mutable": "cyan"
+    }
+    THEME_COLORS = {
+        "element": ELEMENT_COLORS,
+        "mode": MODE_COLORS,
+        "sect": None
+    }
 
-    # Mercury sect color
-    final_spheres = []
-    for key, default_color in spheres:
-        if key == "hg":
-            color = get_mercury_sect_color(planets, default_color)
-        else:
-            color = default_color
-        final_spheres.append((key, color))
-    spheres = final_spheres
+    if args.theme == "sect":
+        spheres = [
+            ("ae", "bright_red"), ("ag", "bright_blue"), ("hg", None),
+            ("cu", "blue"), ("fe", "blue"), ("sn", "red"), ("pb", "red"),
+            ("ura", None), ("nep", None), ("plu", None),
+            ("mean_node", None), ("true_node", None),
+            ("asc", None), ("mc", None)
+        ]
+        # hg sect
+        final_spheres = []
+        for key, default_color in spheres:
+            if key == "hg":
+                color = get_mercury_sect_color(planets, default_color)
+            else:
+                color = default_color
+            final_spheres.append((key, color))
+            spheres = final_spheres
 
-    # Apply filtering flags
+    else:
+        color_map = THEME_COLORS.get(args.theme)
+        spheres = [
+            (key, color_map.get(data["trip" if args.theme == "element" else "quad"]))
+            for key, data in horoscope.items()
+        ]
+
+    # apply filtering flags
     if args.classical:
         spheres = [(k, c) for k, c in spheres if k not in ("ura", "nep", "plu")]
     if approx_time or approx_locale or args.no_angles:

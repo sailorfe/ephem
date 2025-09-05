@@ -113,12 +113,15 @@ def add_display_options(parser, config_defaults=None):
         config_defaults = {}
 
     display = parser.add_argument_group('display options')
-    display.add_argument('--node', choices=['true', 'mean'], 
+    display.add_argument('--node', choices=['true', 'mean'],
                          default=config_defaults.get('node', 'true'),
                          help="choose lunar node calculation method")
     display.add_argument('--ascii', action='store_true',
                          default=config_defaults.get('ascii', False),
                          help="use ASCII text instead of Unicode glyphs")
+    display.add_argument('--theme', choices=['sect', 'mode', 'element'],
+                         default=config_defaults.get('theme', 'sect'),
+                         help="choose colorscheme by planetary sect, or sign mode or element (default: sect)")
     display.add_argument('-c', '--classical', action='store_true',
                          default=config_defaults.get('classical', False),
                          help="exclude Uranus through Pluto")
