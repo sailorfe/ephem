@@ -91,50 +91,26 @@ def get_mercury_sect_color(planets, default_color):
 
 
 def get_spheres(horoscope, args, planets, approx_time, approx_locale):
-    """Assemble list of objects to display and their element/mode colors."""
-    ELEMENT_COLORS = {
-        "fire": "red",
-        "earth": "green",
-        "air": "yellow",
-        "water": "blue"
-    }
-    MODE_COLORS = {
-        "cardinal": "magenta",
-        "fixed": "bright_green",
-        "mutable": "cyan"
-    }
-    THEME_COLORS = {
-        "element": ELEMENT_COLORS,
-        "mode": MODE_COLORS,
-        "sect": None
-    }
+    # Simplified color scheme - just sect colors
+    spheres = [
+        ("ae", "bright_red"), ("ag", "bright_blue"), ("hg", None),
+        ("cu", "blue"), ("fe", "blue"), ("sn", "red"), ("pb", "red"),
+        ("ura", None), ("nep", None), ("plu", None),
+        ("mean_node", None), ("true_node", None),
+        ("asc", None), ("mc", None)
+    ]
 
-    if args.theme == "sect":
-        spheres = [
-            ("ae", "bright_red"), ("ag", "bright_blue"), ("hg", None),
-            ("cu", "blue"), ("fe", "blue"), ("sn", "red"), ("pb", "red"),
-            ("ura", None), ("nep", None), ("plu", None),
-            ("mean_node", None), ("true_node", None),
-            ("asc", None), ("mc", None)
-        ]
-        # hg sect
-        final_spheres = []
-        for key, default_color in spheres:
-            if key == "hg":
-                color = get_mercury_sect_color(planets, default_color)
-            else:
-                color = default_color
-            final_spheres.append((key, color))
-            spheres = final_spheres
+    # Mercury sect color
+    final_spheres = []
+    for key, default_color in spheres:
+        if key == "hg":
+            color = get_mercury_sect_color(planets, default_color)
+        else:
+            color = default_color
+        final_spheres.append((key, color))
+    spheres = final_spheres
 
-    else:
-        color_map = THEME_COLORS.get(args.theme)
-        spheres = [
-            (key, color_map.get(data["trip" if args.theme == "element" else "quad"]))
-            for key, data in horoscope.items()
-        ]
-
-    # apply filtering flags
+    # Apply filtering flags
     if args.classical:
         spheres = [(k, c) for k, c in spheres if k not in ("ura", "nep", "plu")]
     if approx_time or approx_locale or args.no_angles:
@@ -148,23 +124,18 @@ def get_spheres(horoscope, args, planets, approx_time, approx_locale):
 
 
 def render_sphere_lines(spheres, horoscope, args, colors):
-    """Apply formatting objects and color schemes."""
     lines = []
     for key, color in spheres:
         data = horoscope.get(key, {})
 
-        if args.format == "names":
+        if args.ascii:
+            # ASCII mode: full names, abbreviated signs
             obj_name = data.get("obj_name", key).ljust(12)
-            placement = data.get("full", "??")
-        elif args.format == "glyphs":
-            obj_name = data.get("obj_glyph", key.upper()).ljust(6)
-            placement = data.get("glyph", "??")
-        elif args.format == "short":
-            obj_name = data.get("obj_glyph", key.upper()).ljust(6)
-            placement = data.get("short", "??")
+            placement = f"{data.get('deg', 0):>2} {data.get('sign_trunc', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}{'r' if data.get('rx') else ''}"
         else:
-            obj_name = data.get("obj_glyph", key.upper()).ljust(6)
-            placement = data.get("full", "??")
+            # Default: glyphs for objects, full sign names
+            obj_name = data.get("obj_glyph", key.upper()).ljust(3)
+            placement = f"{data.get('deg', 0):>2} {data.get('sign', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}{' r' if data.get('rx') else ''}"
 
         line = f"{obj_name} {placement}"
         if colors and color:
@@ -226,18 +197,14 @@ def format_chart(args, title, lat, lng, dt_local, dt_utc, horoscope, planets, ap
         for key, color in spheres:
             data = horoscope.get(key, {})
 
-            if args.format == "names":
+            if args.ascii:
+                # ASCII mode: full names, abbreviated signs
                 obj_name = data.get("obj_name") or key
-                placement = data.get("full") or "??"
-            elif args.format == "glyphs":
-                obj_name = data.get("obj_glyph") or key.upper()
-                placement = data.get("glyph") or "??"
-            elif args.format == "short":
-                obj_name = data.get("obj_glyph") or key.upper()
-                placement = data.get("short") or "??"
+                placement = f"{data.get('deg', 0):>2} {data.get('sign_trunc', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}{' r' if data.get('rx') else ''}"
             else:
+                # Default: glyphs for objects, full sign names  
                 obj_name = data.get("obj_glyph") or key.upper()
-                placement = data.get("full") or "??"
+                placement = f"{data.get('deg', 0):>2} {data.get('sign', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}{' r' if data.get('rx') else ''}"
 
             obj_name = str(obj_name)
             placement = str(placement)

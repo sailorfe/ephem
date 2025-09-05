@@ -2,7 +2,7 @@ import argparse
 import calendar
 import sys
 import sqlite3
-from datetime import date
+from datetime import date, datetime
 from .commands import now, cast, cal
 from .config import load_config_defaults, run_save, run_show
 from .constants import AYANAMSAS
@@ -62,8 +62,8 @@ def run_loaded_chart(args):
 
     # Copy display options from command line args
     copy_options = [
-        'no_color', 'no_geo', 'no_angles', 
-        'classical', 'theme', 'format', 'node'
+        'no_color', 'no_geo', 'no_angles',
+        'classical', 'theme', 'ascii', 'node'
     ]
     for opt in copy_options:
         setattr(loaded_args, opt, getattr(args, opt, None))
@@ -111,28 +111,25 @@ def add_display_options(parser, config_defaults=None):
     """Display options for cast, now, and data load."""
     if config_defaults is None:
         config_defaults = {}
-    
+
     display = parser.add_argument_group('display options')
     display.add_argument('--node', choices=['true', 'mean'], 
                          default=config_defaults.get('node', 'true'),
                          help="choose lunar node calculation method")
-    display.add_argument('--theme', choices=['sect', 'element', 'mode'], 
-                         default=config_defaults.get('theme', 'sect'),
-                         help="choose ANSI color theme")
-    display.add_argument('--format', choices=['glyphs', 'names', 'short'],
-                         default=config_defaults.get('format'),
-                         help="choose display format: all glyphs, full planet and sign names, truncated signs with planetary glyphs. Default mixes planet glyphs with full sign names.")
+    display.add_argument('--ascii', action='store_true',
+                         default=config_defaults.get('ascii', False),
+                         help="use ASCII text instead of Unicode glyphs")
     display.add_argument('-c', '--classical', action='store_true',
                          default=config_defaults.get('classical', False),
                          help="exclude Uranus through Pluto")
     display.add_argument('--no-angles', action='store_true',
                          default=config_defaults.get('no_angles', False),
                          help="don't print Ascendant or Midheaven")
-    display.add_argument('--no_geo', action='store_true',
+    display.add_argument('--no-geo', action='store_true',
                          default=config_defaults.get('no_geo', False),
                          help="don't print coordinates")
     display.add_argument('--no-color', action='store_true',
-                         default=config_defaults.get('no_colors', False),
+                         default=config_defaults.get('no_color', False),
                          help="disable ANSI colors")
 
 
@@ -195,11 +192,7 @@ def parse_arguments(args=None):
 
     # global flags for locale and ayanamsa
     parent_parser = argparse.ArgumentParser(add_help=False)
-    parent_parser.add_argument('-y', '--lat', type=float, 
-                               default=config_defaults.get('lat'), help="latitude")
-    parent_parser.add_argument('-x', '--lng', type=float, 
-                               default=config_defaults.get('lng'), help="longitude")
-    parent_parser.add_argument('--offset', type=int, 
+    parent_parser.add_argument('--offset', type=int,
                                default=config_defaults.get('offset'), 
                                help="sidereal ayanamsa index or None for tropical")
 
@@ -232,6 +225,8 @@ def parse_arguments(args=None):
     # now
     now_parser = subparsers.add_parser('now', help="🌌 calculate the chart of the moment", parents=[parent_parser])
     now_parser.set_defaults(func=now.run)
+    now_parser.add_argument('lat', type=float, nargs='?', default=config_defaults.get('lat'), help="latitude")
+    now_parser.add_argument('lng', type=float, nargs='?', default=config_defaults.get('lng'), help="longitude")
     now_parser.add_argument('-s', '--shift', type=str,
                             help="shift time forward or backward, e.g. 2h, -30m, 1.5d, 4w (default is hours)")
     now_parser.add_argument('-z', '--timezone', type=str, help="IANA time zone name, e.g. 'America/New_York'")
@@ -244,6 +239,8 @@ def parse_arguments(args=None):
     cast_parser.set_defaults(func=cast.run)
     cast_parser.add_argument('event', nargs="*", metavar="DATE [TIME] [TITLE]",
                              help="date, optional time and chart title, e.g. '2025-08-09 7:54 Aquarius Full Moon'")
+    cast_parser.add_argument('lat', type=float, nargs='?', default=config_defaults.get('lat'), help="latitude")
+    cast_parser.add_argument('lng', type=float, nargs='?', default=config_defaults.get('lng'), help="longitude")
     cast_parser.add_argument('-z', '--timezone', type=str, help="IANA time zone name, e.g. 'America/New_York'")
     cast_parser.add_argument('--save', action='store_true', help="save to chart database")
     add_display_options(cast_parser, config_defaults)
@@ -270,7 +267,7 @@ def parse_arguments(args=None):
     cal_parser = subparsers.add_parser('cal', help="📅 calculate ephemeris table for a given month month, e.g. 1989 December", parents=[parent_parser])
     cal_parser.add_argument("year", type=int, nargs="?", default=today.year, help="year as an integer")
     cal_parser.add_argument("month", type=parse_month, nargs="?", default=today.month, help="month as an integer (1–12) or a string (e.g. 'Aug')")
-    cal_parser.add_argument("--format", choices=['glyph','short'], default="glyph", help="")
+    cal_parser.add_argument("--ascii", action="store_true", help="")
     cal_parser.set_defaults(func=cal.run)
 
     # show splash text and help if no args given

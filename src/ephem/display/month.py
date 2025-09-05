@@ -19,7 +19,7 @@ def get_sidereal_time(jd):
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
 
-def get_moon_positions(jd_midnight, jd_noon, offset=None, fmt="glyph"):
+def get_moon_positions(jd_midnight, jd_noon, offset=None, ascii_mode=False):
     """Get Moon positions at 0hr and noon for the same day."""
     calc_flag = swe.FLG_SWIEPH
     if offset is not None:
@@ -36,7 +36,7 @@ def get_moon_positions(jd_midnight, jd_noon, offset=None, fmt="glyph"):
     def format_moon_pos(lng):
         dms = swe.split_deg(lng, 8)
         _, sign_data = sign_from_index(dms[4])
-        if fmt == "short":
+        if ascii_mode:
             return f"{dms[0]:2d} {sign_data['trunc']:<3} {dms[1]:02d} {dms[2]:02d}"
         else:
             return f"{dms[0]:2d} {sign_data['glyph']:<3} {dms[1]:02d} {dms[2]:02d}"
@@ -44,21 +44,25 @@ def get_moon_positions(jd_midnight, jd_noon, offset=None, fmt="glyph"):
     return format_moon_pos(moon_0hr), format_moon_pos(moon_noon)
 
 
-def format_planet_position(entry, fmt="glyph"):
+def format_planet_position(entry, ascii_mode=False):
     """Fixed-width DMS string for Rich table columns."""
     deg_str = f"{entry['deg']:2d}"
     mnt_str = f"{entry['mnt']:02d}"
     sec_str = f"{entry.get('sec',0):02d}"
     rx_str = " r" if entry.get("rx") else ""
 
-    sign_str = f"{entry['sign_trunc']:<3}" if fmt == "short" else f"{entry['sign_glyph']:<3}"
+    if ascii_mode:
+        sign_str = f"{entry['sign_trunc']:<3}"
+    else:
+        sign_str = f"{entry['sign_glyph']:<3}"
+
     return f"{deg_str} {sign_str} {mnt_str} {sec_str}{rx_str}"
 
 
 def format_calendar(args):
     """Generate ephemeris calendar for given month/year."""
     offset = getattr(args, 'offset', None)
-    fmt = getattr(args, "format", "glyph")  # use fmt consistently
+    ascii_mode = getattr(args, "ascii", False)
 
     first_day = datetime(args.year, args.month, 1)
     next_month = datetime(args.year + 1, 1, 1) if args.month == 12 else datetime(args.year, args.month + 1, 1)
@@ -83,12 +87,12 @@ def format_calendar(args):
         ("Sid. Time", "center", None),
         ("ae", "left", None),  # Sun
         ("ag", "left", None),  # Moon (0hr)
-        ("ag_noon", "left", None),  # Moon (noon) 
+        ("ag_noon", "left", None),  # Moon (noon)
         ("true_node", "left", None),
         ("hg", "left", None),  # Mercury
         ("cu", "left", None),  # Venus
         ("fe", "left", None),  # Mars
-        ("sn", "left", None),  # Jupiter  
+        ("sn", "left", None),  # Jupiter
         ("pb", "left", None),  # Saturn
         ("ura", "left", None), # Uranus
         ("nep", "left", None), # Neptune
@@ -97,12 +101,15 @@ def format_calendar(args):
 
     table = Table(show_header=True, box=box.SQUARE)
     for col_name, cell_justify, style in EPHEMERIS_COLUMNS:
-        if col_name in OBJECTS:
-            header_str = OBJECTS[col_name]["glyph"]
+        if col_name == "ag":
+            header_str = "0hr Moon" if ascii_mode else "0hr " + OBJECTS["ag"]["glyph"]
         elif col_name == "ag_noon":
-            header_str = "Noon " + OBJECTS["ag"]["glyph"]
-        elif col_name == "ag":
-            header_str = "0hr " + OBJECTS["ag"]["glyph"]
+            header_str = "Noon Moon" if ascii_mode else "Noon " + OBJECTS["ag"]["glyph"]
+        elif col_name in OBJECTS:
+            if ascii_mode:
+                header_str = OBJECTS[col_name]["name"]
+            else:
+                header_str = OBJECTS[col_name]["glyph"]
         else:
             header_str = col_name
         table.add_column(Text(header_str, justify="center"), justify=cell_justify, style=style, no_wrap=True)
@@ -116,7 +123,7 @@ def format_calendar(args):
         planets = get_planets(jd_midnight, jd_prev, offset)
         horoscope = build_horoscope(planets, [])
 
-        moon_0hr, moon_noon = get_moon_positions(jd_midnight, jd_noon, offset, fmt=fmt)
+        moon_0hr, moon_noon = get_moon_positions(jd_midnight, jd_noon, offset, ascii_mode=ascii_mode)
 
         row_data = [str(day), sid_time]
         for col_name, _, _ in EPHEMERIS_COLUMNS[2:]:
@@ -125,7 +132,7 @@ def format_calendar(args):
             elif col_name == "ag_noon":
                 row_data.append(moon_noon)
             elif col_name in horoscope:
-                row_data.append(format_planet_position(horoscope[col_name], fmt=fmt))
+                row_data.append(format_planet_position(horoscope[col_name], ascii_mode=ascii_mode))
             else:
                 row_data.append("--")
 
@@ -133,4 +140,3 @@ def format_calendar(args):
 
     console.print(Align.center(table))
     return None
-

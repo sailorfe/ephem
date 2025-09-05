@@ -47,7 +47,7 @@ def load_config_defaults():
         display = config['display']
 
         # Boolean options
-        for bool_opt in ['bare', 'anonymize', 'no_angles', 'classical']:
+        for bool_opt in ['no_geo', 'anonymize', 'no_angles', 'classical', 'ascii']:
             if bool_opt.replace('_', '-') in display:
                 defaults[bool_opt] = bool(display[bool_opt.replace('_', '-')])
             elif bool_opt in display:
@@ -56,12 +56,6 @@ def load_config_defaults():
         # Choice options with validation
         if 'node' in display and display['node'] in ['true', 'mean']:
             defaults['node'] = display['node']
-
-        if 'theme' in display and display['theme'] in ['sect', 'element', 'mode']:
-            defaults['theme'] = display['theme']
-
-        if 'format' in display and display['format'] in ['glyphs', 'names', 'short']:
-            defaults['format'] = display['format']
 
     # Load ayanamsa/zodiac settings if they exist
     if 'zodiac' in config:
@@ -123,13 +117,12 @@ def run_save(args):
     # Update display settings
     display_changed = False
     display_attrs = {
-        'bare': 'bare',
+        'no_geo': 'no-geo',
         'anonymize': 'anonymize', 
         'no_angles': 'no-angles',
         'classical': 'classical',
-        'node': 'node',
-        'theme': 'theme',
-        'format': 'format'
+        'ascii': 'ascii',
+        'node': 'node'
     }
 
     for attr, config_key in display_attrs.items():
@@ -138,11 +131,9 @@ def run_save(args):
             # Only save if explicitly set (not just default values)
             if value is not None and (
                 # For boolean flags, save if True
-                (attr in ['bare', 'anonymize', 'no_angles', 'classical'] and value) or
+                (attr in ['no_geo', 'anonymize', 'no_angles', 'classical', 'ascii'] and value) or
                 # For choice options, save if not default
-                (attr == 'node' and value != 'true') or
-                (attr == 'theme' and value != 'sect') or
-                (attr == 'format' and value is not None)
+                (attr == 'node' and value != 'true')
             ):
                 if 'display' not in config:
                     config['display'] = {}
@@ -217,18 +208,18 @@ def run_show(args):
     if 'display' in config and config['display']:
         print("\nDisplay preferences:")
         display = config['display']
-        
+
         # Boolean flags
         bool_flags = {
-            'bare': 'Disable colors',
-            'anonymize': 'Hide coordinates', 
+            'no-geo': 'Hide coordinates',
             'no-angles': 'Hide angles',
-            'classical': 'Classical planets only'
+            'classical': 'Classical planets only',
+            'ascii': 'ASCII mode (no Unicode glyphs)'
         }
         for key, description in bool_flags.items():
             if key in display and display[key]:
                 print(f"  {description}: enabled")
-        
+
         # Choice options
         if 'node' in display:
             print(f"  Node calculation: {display['node']}")
@@ -236,8 +227,8 @@ def run_show(args):
             print(f"  Color theme: {display['theme']}")
         if 'format' in display:
             print(f"  Display format: {display['format']}")
-        
+
         has_settings = True
-    
+
     if not has_settings:
         print("No settings configured.")
