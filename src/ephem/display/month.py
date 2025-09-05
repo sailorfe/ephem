@@ -84,7 +84,7 @@ def format_calendar(args):
 
     EPHEMERIS_COLUMNS = [
         ("Day", "right", "bold"),
-        ("Sid. Time", "center", None),
+        ("Sid. 0hr", "center", None),
         ("ae", "left", None),  # Sun
         ("ag", "left", None),  # Moon (0hr)
         ("ag_noon", "left", None),  # Moon (noon)
