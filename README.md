@@ -5,26 +5,19 @@
 it provides offline, terminal-based horoscope calculations using the [swiss ephemeris](https://www.astro.com/swisseph/swephinfo_e.htm), serving as a portable alternative to web-based chart generators.
 
 ## features
-- swiss ephemeris calculations
-- readable, terminal-friendly table output
 - configurable default location
-- multiple display modes and ANSI color schemes
+- sidereal ayanamsa support
+- readable, terminal-friendly table output
 - handles incomplete data gracefully
 
 ## installation
 
 you can install **ephem-cli** directly from [PyPI](https://pypi.org/project/ephem-cli).
 
-### with `pipx`
 
 ```sh
-pipx install ephem-cli
-```
-
-### with `pip`
-
-```sh
-pip install --user ephem-cli
+pip install --user ephem-cli    # if you use pip
+pipx install ephem-cli          # if you use pipx
 ```
 
 ### from source
@@ -32,6 +25,9 @@ pip install --user ephem-cli
 ```sh
 git clone https://codeberg.org/sailorfe/ephem.git
 cd ephem
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 pip install -e .
 ```
 
@@ -43,6 +39,9 @@ ephem now
 
 # chart for a specific date and time; location optional
 ephem cast 1993-08-16 13:05 "Debian Linux"
+
+# ephemeris for specific month
+ephem cal 1989 Dec
 ```
 
 ## commands
