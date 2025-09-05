@@ -31,13 +31,15 @@ def run_loaded_chart(args):
         event=[date_str, time_str, chart['name']],
         timezone=None,
         save=False,
-        command="cast"
+        command="cast",
+        save_config=False,
+        show_config=False
     )
 
     # Copy display options from command line args
     copy_options = [
         'no_color', 'no_geo', 'no_angles',
-        'classical', 'theme', 'format', 'node'
+        'classical', 'theme', 'ascii', 'node'
     ]
     for opt in copy_options:
         setattr(loaded_args, opt, getattr(args, opt, None))
@@ -71,6 +73,10 @@ def print_charts(args=None, cli_path=None):
         print()
 
 
-def cli_delete_chart(args):
-    """Delete chart by id."""
-    delete_chart(args.id)
+def delete_chart(args):
+    chart_id = args.id
+    success = delete_chart(chart_id)
+    if success:
+        print(f"✅ Deleted chart {chart_id}")
+    else:
+        print(f"⚠️  Chart ID {chart_id} not found. Nothing deleted.")

@@ -1,12 +1,10 @@
 import argparse
 import calendar
 import sys
-import sqlite3
-from datetime import date, datetime
-from .commands import now, cast, cal
+from datetime import date
+from .commands import now, cast, cal, data
 from .config import load_config_defaults, run_save, run_show
 from .constants import AYANAMSAS
-from .db import view_charts, get_chart, delete_chart
 
 
 def splash_text():
@@ -27,79 +25,6 @@ def splash_text():
           I8
           I8
 """
-
-def run_loaded_chart(args):
-    """Run `ephem data load` as if it's `ephem cast`."""
-    try:
-        chart = get_chart(args.id)
-    except sqlite3.OperationalError as e:
-        if "no such table: charts" in str(e):
-            print("✨ No charts saved yet! Run `ephem cast --save` to add your first chart.")
-            return
-        raise e  # Re-raise if it's a different database error
-
-    if not chart:
-        print(f"No chart found with ID {args.id}")
-        return
-
-    # parse ISO 8601 timestamp into separate date and time strings
-    dt = datetime.fromisoformat(chart['timestamp_utc'])
-    date_str = dt.date().isoformat()       # "YYYY-MM-DD"
-    time_str = dt.time().strftime("%H:%M") # "HH:MM"
-
-    # Create base args from chart data
-    loaded_args = argparse.Namespace(
-        lat=chart['latitude'],
-        lng=chart['longitude'],
-        offset=None,
-        event=[date_str, time_str, chart['name']],
-        timezone=None,
-        save=False,
-        command="cast",
-        save_config=False,
-        show_config=False
-    )
-
-    # Copy display options from command line args
-    copy_options = [
-        'no_color', 'no_geo', 'no_angles',
-        'classical', 'theme', 'ascii', 'node'
-    ]
-    for opt in copy_options:
-        setattr(loaded_args, opt, getattr(args, opt, None))
-
-    # Handle offset separately since it needs type conversion
-    if hasattr(args, 'offset') and args.offset is not None:
-        loaded_args.offset = int(args.offset)
-
-    cast.run(loaded_args)
-
-
-def print_charts(args=None, cli_path=None):
-    """View chart database."""
-    try:
-        charts = view_charts(cli_path)
-    except sqlite3.OperationalError as e:
-        if "no such table: charts" in str(e):
-            print("✨ No charts saved yet! Run `ephem cast --save` to add your first chart.")
-            return
-        raise e  # Re-raise if it's a different database error
-
-    if not charts:
-        print("✨ No charts saved yet! Run `ephem cast --save` to add your first chart.")
-        return
-
-    for chart in charts:
-        print(f"[{chart['id']}] {chart['name']}")
-        print(f"   UTC:   {chart['timestamp_utc']}")
-        print(f"   Local: {chart['timestamp_input']}")
-        print(f"   Lat: {chart['latitude']}, Lng: {chart['longitude']}")
-        print()
-
-def cli_delete_chart(args):
-    """Delete chart by id."""
-    delete_chart(args.id)
-
 
 class EphemParser(argparse.ArgumentParser):
     def error(self, message):
@@ -260,16 +185,16 @@ def parse_arguments(args=None):
     data_subparsers = data_parser.add_subparsers(dest="data_cmd", required=True)
 
     view_parser = data_subparsers.add_parser('view', help="show chart database")
-    view_parser.set_defaults(func=print_charts)
+    view_parser.set_defaults(func=data.print_charts)
 
     load_parser = data_subparsers.add_parser('load', help="load chart from database", parents=[parent_parser])
     load_parser.add_argument('id', type=int, help="chart ID to laod")
     add_display_options(load_parser, config_defaults)
-    load_parser.set_defaults(func=run_loaded_chart)
+    load_parser.set_defaults(func=data.run_loaded_chart)
 
     delete_parser = data_subparsers.add_parser('delete', help="delete chart from database")
-    delete_parser.add_argument('id', type=int, help="delete chart  by ID ")
-    delete_parser.set_defaults(func=delete_chart)
+    delete_parser.add_argument('id', type=int, help="delete chart by ID ")
+    delete_parser.set_defaults(func=data.delete_chart)
 
     # show splash text and help if no args given
     if len(args) == 0:
