@@ -73,7 +73,7 @@ def print_charts(args=None, cli_path=None):
         print()
 
 
-def delete_chart(args):
+def cli_del_chart(args):
     chart_id = args.id
     success = delete_chart(chart_id)
     if success:

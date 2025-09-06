@@ -20,8 +20,12 @@ pip install --user ephem-cli    # if you use pip
 pipx install ephem-cli          # if you use pipx
 ```
 
-or you can grab a pre-release from the codeberg [packages](https://codeberg.org/sailorfe/ephem/packages) tab.
+or you can grab a pre-release from the codeberg [packages](https://codeberg.org/sailorfe/ephem/packages) tab with this convoluted situation:
 
+```sh
+pip{x} install ephem-cli \
+  --pip-args="--index-url https://codeberg.org/api/packages/sailorfe/pypi/simple/ --extra-index-url https://pypi.org/simple --pre"
+```
 
 ### from source
 

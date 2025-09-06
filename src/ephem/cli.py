@@ -194,7 +194,7 @@ def parse_arguments(args=None):
 
     delete_parser = data_subparsers.add_parser('delete', help="delete chart from database")
     delete_parser.add_argument('id', type=int, help="delete chart by ID ")
-    delete_parser.set_defaults(func=data.delete_chart)
+    delete_parser.set_defaults(func=data.cli_del_chart)
 
     # show splash text and help if no args given
     if len(args) == 0:

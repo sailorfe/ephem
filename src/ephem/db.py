@@ -9,7 +9,7 @@ def get_db_path(cli_path=None):
     env_path = os.environ.get("EPHEM_DB")
     if env_path:
         return env_path
-    config_home = Path(os.environ.get("XDG_DATA_HOME", Path.home() / "./local/share"))
+    config_home = Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local/share"))
     return config_home / "ephem" / "ephem.db"
 
 def get_connection(cli_path=None):
@@ -81,5 +81,7 @@ def view_charts(cli_path=None):
 def delete_chart(chart_id: int, cli_path=None):
     """Delete a chart by ID."""
     with get_connection(cli_path) as conn:
-        conn.execute("DELETE FROM charts WHERE id = ?", (chart_id,))
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM charts WHERE id = ?", (chart_id,))
         conn.commit()
+        return cursor.rowcount > 0  # returns True if rows were deleted
