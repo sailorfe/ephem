@@ -20,6 +20,9 @@ pip install --user ephem-cli    # if you use pip
 pipx install ephem-cli          # if you use pipx
 ```
 
+or you can grab a pre-release from the codeberg [packages](https://codeberg.org/sailorfe/ephem/packages) tab.
+
+
 ### from source
 
 ```sh
