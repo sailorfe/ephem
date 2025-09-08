@@ -1,7 +1,6 @@
 from datetime import datetime
 from rich.console import Console
 from rich.table import Table, box
-from rich.align import Align
 from rich.text import Text
 from ephem.constants import OBJECTS, AYANAMSAS
 from ephem.sweph import get_planets, build_horoscope
@@ -78,8 +77,8 @@ def format_calendar(args):
         except IndexError:
             subtitle = f"Sidereal — Offset {offset}"
 
-    console.print(Align.center(Text(f"{month_name}", style="bold")))
-    console.print(Align.center(Text(f"({subtitle})", style="italic")))
+    console.print(Text(f"{month_name}", style="bold"))
+    console.print(Text(f"({subtitle})", style="italic"))
     console.print()
 
     EPHEMERIS_COLUMNS = [
@@ -138,5 +137,5 @@ def format_calendar(args):
 
         table.add_row(*row_data)
 
-    console.print(Align.center(table))
+    console.print(table)
     return None

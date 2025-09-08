@@ -1,6 +1,5 @@
 from rich.console import Console
 from rich.table import Table
-from rich.align import Align
 from rich.text import Text
 from ephem.constants import AYANAMSAS, Colors
 
@@ -38,10 +37,10 @@ def get_chart_title(title=None, approx_time=False, approx_locale=False, offset=N
         else:
             key = offset
 
-        zodiac_info = f"Sidereal — {key}"
+        zodiac_info = f" Sidereal — {key}"
 
     # Inline final title
-    return f"{title_str} ({zodiac_info})"
+    return f" {title_str} ({zodiac_info})"
 
 
 def get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale):
@@ -56,14 +55,14 @@ def get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale):
 
     # Show UTC only if it differs
     if local_str == utc_str:
-        time_part = local_str
+        time_part = f" {local_str}"
     else:
-        time_part = f"{local_str} | {utc_str}"
+        time_part = f" {local_str} | {utc_str}"
 
     # Show location if allowed
     no_geo = getattr(args, 'no_geo', False)
     if not no_geo and not approx_locale:
-        location_part = f"@ {lat} {lng}"
+        location_part = f" @ {lat} {lng}"
     else:
         location_part = ""
 
@@ -206,15 +205,18 @@ def format_chart(args, title, lat, lng, dt_local, dt_utc, horoscope, planets, ap
         # centered bold title
         chart_title = get_chart_title(title, approx_time, approx_locale, offset)
         time_str, location_str = get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale)
-        console.print(Align.center(Text(chart_title, style="bold")))
-        console.print(Align.center(Text(time_str, style="bold")))
+        console.print(Text(chart_title, style="bold"))
+        console.print(Text(time_str, style="bold"))
         if location_str:
-            console.print(Align.center(Text(location_str, style="bold")))
+            console.print(Text(location_str, style="bold"))
         console.print()  # Blank line
 
         # prepare the table with no header or borders
         table = Table(show_header=False, box=None, pad_edge=True)
-        table.add_column("Object", justify="right", style="bold")
+        if args.ascii:
+            table.add_column("Object", justify="left", style="bold")
+        else:
+            table.add_column("Object", justify="right", style="bold")
         table.add_column("Placement", justify="left")
 
         spheres = get_spheres(horoscope, args, planets, approx_time, approx_locale)
@@ -238,4 +240,4 @@ def format_chart(args, title, lat, lng, dt_local, dt_utc, horoscope, planets, ap
 
             table.add_row(obj_name, placement)
 
-        console.print(Align.center(table))
+        console.print(table)
