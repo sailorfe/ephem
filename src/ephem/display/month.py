@@ -140,5 +140,5 @@ def format_calendar(args):
 
         table.add_row(*row_data)
 
-    console.print(table)
+    console.print(Align.center(table))
     return None
