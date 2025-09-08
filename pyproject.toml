@@ -14,7 +14,8 @@ readme = "README.md"
 requires-python = ">=3.0"
 dependencies = [
     "pyswisseph",
-    "rich"
+    "rich",
+		"tomli-w"
 ]
 authors = [
     {name = "sailorfe", email = "sailorf@proton.me"}
