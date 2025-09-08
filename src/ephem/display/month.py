@@ -83,7 +83,6 @@ def format_calendar(args):
         title_line += f" — {subtitle}"
 
     console.print(Align.center(Text(f"{title_line}", style="bold")))
-    console.print()
 
     EPHEMERIS_COLUMNS = [
         ("Day", "right", "bold"),
@@ -141,5 +140,5 @@ def format_calendar(args):
 
         table.add_row(*row_data)
 
-    console.print(Align.center(table))
+    console.print(table)
     return None

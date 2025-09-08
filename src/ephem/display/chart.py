@@ -55,7 +55,7 @@ def get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale):
 
     # Show UTC only if it differs
     if local_str == utc_str:
-        time_part = local_str
+        time_part = f"{local_str}"
     else:
         time_part = f"{local_str} | {utc_str}"
 
@@ -213,7 +213,6 @@ def format_chart(args, title, lat, lng, dt_local, dt_utc, horoscope, planets, ap
         console.print(Text(f" {subtitle_line}", style="bold"))
         console.print()
 
-        # prepare the table with no header or borders
         table = Table(show_header=False, box=None, pad_edge=True)
         if args.ascii:
             table.add_column("Object", justify="left", style="bold")
