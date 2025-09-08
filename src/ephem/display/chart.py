@@ -1,6 +1,5 @@
 from rich.console import Console
 from rich.table import Table
-from rich.align import Align
 from rich.text import Text
 from ephem.constants import AYANAMSAS, Colors
 
@@ -203,19 +202,25 @@ def format_chart(args, title, lat, lng, dt_local, dt_utc, horoscope, planets, ap
         for warning in warnings:
             console.print(Text(warning, style="yellow"))
 
-        # centered bold title
         chart_title = get_chart_title(title, approx_time, approx_locale, offset)
         time_str, location_str = get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale)
-        console.print(Align.center(Text(chart_title, style="bold")))
-        console.print(Align.center(Text(time_str, style="bold")))
+
+        subtitle_line = time_str
         if location_str:
-            console.print(Align.center(Text(location_str, style="bold")))
-        console.print()  # Blank line
+            subtitle_line += " " + location_str
+
+        console.print(Text(f" {chart_title}", style="bold"))
+        console.print(Text(f" {subtitle_line}", style="bold"))
+        console.print()
 
         # prepare the table with no header or borders
         table = Table(show_header=False, box=None, pad_edge=True)
-        table.add_column("Object", justify="right", style="bold")
+        if args.ascii:
+            table.add_column("Object", justify="left", style="bold")
+        else:
+            table.add_column("Object", justify="right", style="bold")
         table.add_column("Placement", justify="left")
+
 
         spheres = get_spheres(horoscope, args, planets, approx_time, approx_locale)
         for key, color in spheres:
@@ -238,4 +243,4 @@ def format_chart(args, title, lat, lng, dt_local, dt_utc, horoscope, planets, ap
 
             table.add_row(obj_name, placement)
 
-        console.print(Align.center(table))
+        console.print(table)

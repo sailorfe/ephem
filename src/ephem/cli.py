@@ -126,9 +126,7 @@ def parse_arguments(args=None):
 
     parser = EphemParser(
         prog='ephem',
-        description="""
-        Ephem is a tool for calculating astrological charts and monthly ephemerides.
-        """,
+        description="""Ephem is a tool for calculating astrological charts and monthly ephemerides.""",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 

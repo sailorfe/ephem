@@ -78,8 +78,11 @@ def format_calendar(args):
         except IndexError:
             subtitle = f"Sidereal — Offset {offset}"
 
-    console.print(Align.center(Text(f"{month_name}", style="bold")))
-    console.print(Align.center(Text(f"({subtitle})", style="italic")))
+    title_line = month_name
+    if subtitle:
+        title_line += f" — {subtitle}"
+
+    console.print(Align.center(Text(f"{title_line}", style="bold")))
     console.print()
 
     EPHEMERIS_COLUMNS = [
