@@ -80,3 +80,14 @@ def delete_chart_cmd(args):
         print(f"✅ Deleted chart {args.id}")
     else:
         print(f"⚠️  Chart ID {args.id} not found. Nothing deleted.")
+
+
+def yaml_sync_cmd(args=None):
+    """Sync YAML files with database."""
+    try:
+        from ephem.yaml_sync import full_sync
+        full_sync()
+    except ImportError:
+        print("⚠️  YAML sync functionality not available. Install PyYAML: pip install pyyaml")
+    except Exception as e:
+        print(f"❌ Sync failed: {e}")

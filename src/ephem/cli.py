@@ -192,6 +192,9 @@ def parse_arguments(args=None):
     delete_parser.add_argument('id', type=int, help="delete chart by ID ")
     delete_parser.set_defaults(func=data.delete_chart_cmd)
 
+    sync_parser = data_subparsers.add_parser('sync', help="sync YAML charts with database")
+    sync_parser.set_defaults(func=data.yaml_sync_cmd)
+
     # show splash text and help if no args given
     if len(args) == 0:
         print(splash_text())
