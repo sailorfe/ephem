@@ -12,18 +12,18 @@ def run_loaded_chart(args):
         if "no such table: charts" in str(e):
             print("✨ No charts saved yet! Run `ephem cast --save` to add your first chart.")
             return
-        raise e  # Re-raise if it's a different database error
+        raise e
 
     if not chart:
         print(f"No chart found with ID {args.id}")
         return
 
-    # parse ISO 8601 timestamp into separate date and time strings
+    # Parse ISO 8601 timestamp into separate date and time strings
     dt = datetime.fromisoformat(chart['timestamp_utc'])
-    date_str = dt.date().isoformat()       # "YYYY-MM-DD"
-    time_str = dt.time().strftime("%H:%M") # "HH:MM"
+    date_str = dt.date().isoformat()
+    time_str = dt.time().strftime("%H:%M")
 
-    # Create base args from chart data
+    # Create args from chart data
     loaded_args = argparse.Namespace(
         lat=chart['latitude'],
         lng=chart['longitude'],
@@ -37,11 +37,11 @@ def run_loaded_chart(args):
     )
 
     # Copy display options from command line args
-    copy_options = [
+    display_options = [
         'no_color', 'no_geo', 'no_angles',
         'classical', 'theme', 'ascii', 'node'
     ]
-    for opt in copy_options:
+    for opt in display_options:
         setattr(loaded_args, opt, getattr(args, opt, None))
 
     # Handle offset separately since it needs type conversion
@@ -51,15 +51,15 @@ def run_loaded_chart(args):
     cast.run(loaded_args)
 
 
-def print_charts(args=None, cli_path=None):
+def print_charts(args=None):
     """View chart database."""
     try:
-        charts = view_charts(cli_path)
+        charts = view_charts()
     except sqlite3.OperationalError as e:
         if "no such table: charts" in str(e):
             print("✨ No charts saved yet! Run `ephem cast --save` to add your first chart.")
             return
-        raise e  # Re-raise if it's a different database error
+        raise e
 
     if not charts:
         print("✨ No charts saved yet! Run `ephem cast --save` to add your first chart.")
@@ -73,10 +73,10 @@ def print_charts(args=None, cli_path=None):
         print()
 
 
-def cli_del_chart(args):
-    chart_id = args.id
-    success = delete_chart(chart_id)
+def delete_chart_cmd(args):
+    """Delete a chart by ID."""
+    success = delete_chart(args.id)
     if success:
-        print(f"✅ Deleted chart {chart_id}")
+        print(f"✅ Deleted chart {args.id}")
     else:
-        print(f"⚠️  Chart ID {chart_id} not found. Nothing deleted.")
+        print(f"⚠️  Chart ID {args.id} not found. Nothing deleted.")

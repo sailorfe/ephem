@@ -2,26 +2,26 @@ import sqlite3
 import os
 from pathlib import Path
 
-def get_db_path(cli_path=None):
-    """Return the SQLite DB path, checking CLI arg, env var, or default config location."""
-    if cli_path:
-        return cli_path
+def get_db_path():
+    """Get the XDG-compliant database path."""
     env_path = os.environ.get("EPHEM_DB")
     if env_path:
-        return env_path
-    config_home = Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local/share"))
-    return config_home / "ephem" / "ephem.db"
+        return Path(env_path)
+
+    xdg_data = os.environ.get("XDG_DATA_HOME", Path.home() / ".local" / "share")
+    return Path(xdg_data) / "ephem" / "ephem.db"
 
 
-def get_connection(cli_path=None):
-    db_path = get_db_path(cli_path)
-    os.makedirs(os.path.dirname(db_path), exist_ok=True)  # ensure folder exists
+def get_connection():
+    """Get a database connection."""
+    db_path = get_db_path()
+    os.makedirs(db_path.parent, exist_ok=True)
     return sqlite3.connect(db_path)
 
 
-def create_tables(cli_path=None):
+def create_tables():
     """Create database tables if they don't exist."""
-    with get_connection(cli_path) as conn:
+    with get_connection() as conn:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS charts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,10 +35,9 @@ def create_tables(cli_path=None):
         conn.commit()
 
 
-def add_chart(name: str, timestamp_utc: str, timestamp_input: str,
-              latitude=None, longitude=None, cli_path=None):
+def add_chart(name: str, timestamp_utc: str, timestamp_input: str, latitude=None, longitude=None):
     """Add a chart to the database."""
-    with get_connection(cli_path) as conn:
+    with get_connection() as conn:
         conn.execute("""
             INSERT INTO charts (name, timestamp_utc, timestamp_input, latitude, longitude)
             VALUES (?, ?, ?, ?, ?)
@@ -46,9 +45,9 @@ def add_chart(name: str, timestamp_utc: str, timestamp_input: str,
         conn.commit()
 
 
-def get_chart(chart_id: int, cli_path=None):
+def get_chart(chart_id: int):
     """Get a specific chart by ID."""
-    with get_connection(cli_path) as conn:
+    with get_connection() as conn:
         cursor = conn.execute("""
             SELECT id, name, timestamp_utc, timestamp_input, latitude, longitude 
             FROM charts WHERE id = ?
@@ -66,9 +65,9 @@ def get_chart(chart_id: int, cli_path=None):
     return None
 
 
-def view_charts(cli_path=None):
+def view_charts():
     """View all saved charts."""
-    with get_connection(cli_path) as conn:
+    with get_connection() as conn:
         cursor = conn.execute("""
             SELECT id, name, timestamp_utc, timestamp_input, latitude, longitude 
             FROM charts ORDER BY id
@@ -84,10 +83,10 @@ def view_charts(cli_path=None):
         } for row in rows]
 
 
-def delete_chart(chart_id: int, cli_path=None):
+def delete_chart(chart_id: int):
     """Delete a chart by ID."""
-    with get_connection(cli_path) as conn:
+    with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("DELETE FROM charts WHERE id = ?", (chart_id,))
         conn.commit()
-        return cursor.rowcount > 0  # returns True if rows were deleted
+        return cursor.rowcount > 0

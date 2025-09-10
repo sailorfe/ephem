@@ -90,7 +90,6 @@ def offset_type(value):
         raise argparse.ArgumentTypeError(f"Offset must be between 0 and 46, got {ivalue}.")
     return ivalue
 
-import calendar
 
 def parse_month(value: str):
     """For cal command"""
@@ -132,7 +131,6 @@ def parse_arguments(args=None):
 
     # Add global --list-offsets option
     parser.add_argument('--list-offsets', action='store_true', help="list all ayanamsa offsets as index:key pairs")
-    parser.add_argument('--db', type=str, help="specify custom database path (default: ~/.local/share/ephem/ephem.db)")
 
     if args is None:
         args = sys.argv[1:]
@@ -192,7 +190,7 @@ def parse_arguments(args=None):
 
     delete_parser = data_subparsers.add_parser('delete', help="delete chart from database")
     delete_parser.add_argument('id', type=int, help="delete chart by ID ")
-    delete_parser.set_defaults(func=data.cli_del_chart)
+    delete_parser.set_defaults(func=data.delete_chart_cmd)
 
     # show splash text and help if no args given
     if len(args) == 0:
