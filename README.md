@@ -29,6 +29,7 @@ deliberately out of scope:
 - [quick start](#quick-start)
 - [usage](#usage)
 - [yaml database](#yaml-database)
+- [testing](#testing)
 - [contributing](#contributing)
 - [acknowledgments](#acknowledgments)
 - [license](#license)
@@ -285,6 +286,17 @@ _metadata:
   source: ephem_cli
   tags: [famous, musician, adb, rodden-c]
 ```
+
+<a name="testing"></a>
+## testing
+
+`ephem` has a test suite. run it with:
+
+```sh
+make test
+```
+
+these tests currently focus on CLI behavior and database interactions. core astronomical calculations are handled by the Swiss Ephemeris library. more tests are planned as this project evolves.
 
 <a name="conributing"></a>
 ## contributing
