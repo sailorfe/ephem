@@ -71,8 +71,17 @@ def load_config_defaults():
 
     return defaults
 
+def validate_config_values(lat: float | None, lng: float | None):
+    """Raise ValueError if latitude or longitude are out of bounds."""
+    if lat is not None and not -90 <= lat <= 90:
+        raise ValueError(f"Invalid latitude {lat}, must be between -90 and 90")
+    if lng is not None and not -180 <= lng <= 180:
+        raise ValueError(f"Invalid longitude {lng}, must be between -180 and 180")
+
+
 def run_save(args):
-    """Save location settings from command line args."""
+    """Save location, zodiac, and display settings from command line args."""
+    # No settings? Early exit
     if (args.lat is None and args.lng is None and 
         (not hasattr(args, 'offset') or args.offset is None) and
         not any(hasattr(args, attr) and getattr(args, attr) is not None 
@@ -80,24 +89,27 @@ def run_save(args):
         print("No settings provided. Use location, zodiac, or display options to save configuration.")
         return
 
+    # tomli_w check
     if tomli_w is None:
         print("Error: tomli_w package is required for saving configuration.")
         print("Install it with: pip install tomli_w")
         return
 
-    path = get_config_path()
+    # Validate coordinates
+    if args.lat is not None or args.lng is not None:
+        validate_config_values(args.lat, args.lng)
 
-    # Load existing config or start with empty dict
+    # Load existing config or start fresh
+    path = get_config_path()
     config = {}
     if path.exists():
         try:
             with open(path, 'rb') as f:
                 config = tomllib.load(f)
         except (tomllib.TOMLDecodeError, OSError):
-            # If config is corrupted, start fresh
             config = {}
 
-    # Update location settings
+    # Update location
     if args.lat is not None or args.lng is not None:
         if 'location' not in config:
             config['location'] = {}
@@ -106,7 +118,7 @@ def run_save(args):
         if args.lng is not None:
             config['location']['lng'] = args.lng
 
-    # Update zodiac settings
+    # Update zodiac
     zodiac_changed = False
     if hasattr(args, 'offset') and args.offset is not None:
         if 'zodiac' not in config:
@@ -128,11 +140,8 @@ def run_save(args):
     for attr, config_key in display_attrs.items():
         if hasattr(args, attr):
             value = getattr(args, attr)
-            # Only save if explicitly set (not just default values)
             if value is not None and (
-                # For boolean flags, save if True
                 (attr in ['no_geo', 'anonymize', 'no_angles', 'classical', 'ascii'] and value) or
-                # For choice options, save if not default
                 (attr == 'node' and value != 'true')
             ):
                 if 'display' not in config:
@@ -142,7 +151,6 @@ def run_save(args):
 
     # Write config file
     path.parent.mkdir(parents=True, exist_ok=True)
-
     try:
         with open(path, 'wb') as f:
             tomli_w.dump(config, f)
@@ -163,72 +171,3 @@ def run_save(args):
     except OSError as e:
         print(f"Error saving config file: {e}")
 
-def run_show(args):
-    """Display current config file contents."""
-    path = get_config_path()
-    if not path.exists():
-        print("No config file found.")
-        return
-
-    try:
-        with open(path, 'rb') as f:
-            config = tomllib.load(f)
-    except (tomllib.TOMLDecodeError, OSError) as e:
-        print(f"Error reading config file: {e}")
-        return
-
-    has_settings = False
-
-    if 'location' in config and config['location']:
-        print("\nLocation defaults:")
-        location = config['location']
-        if 'lat' in location:
-            print(f"  Latitude:  {location['lat']}")
-        if 'lng' in location:
-            print(f"  Longitude: {location['lng']}")
-        has_settings = True
-
-    if 'zodiac' in config and config['zodiac']:
-        print("\nZodiac system:")
-        zodiac = config['zodiac']
-        if 'offset' in zodiac:
-            offset_val = zodiac['offset']
-            if offset_val is None:
-                print(f"  System: Tropical")
-            else:
-                # Import here to avoid circular imports
-                from .constants import AYANAMSAS
-                try:
-                    ayanamsa_name = list(AYANAMSAS.keys())[offset_val]
-                    print(f"  System: Sidereal — {ayanamsa_name} (index {offset_val})")
-                except IndexError:
-                    print(f"  System: Sidereal — Unknown ayanamsa (index {offset_val})")
-        has_settings = True
-
-    if 'display' in config and config['display']:
-        print("\nDisplay preferences:")
-        display = config['display']
-
-        # Boolean flags
-        bool_flags = {
-            'no-geo': 'Hide coordinates',
-            'no-angles': 'Hide angles',
-            'classical': 'Classical planets only',
-            'ascii': 'ASCII mode (no Unicode glyphs)'
-        }
-        for key, description in bool_flags.items():
-            if key in display and display[key]:
-                print(f"  {description}: enabled")
-
-        # Choice options
-        if 'node' in display:
-            print(f"  Node calculation: {display['node']}")
-        if 'theme' in display:
-            print(f"  Color theme: {display['theme']}")
-        if 'format' in display:
-            print(f"  Display format: {display['format']}")
-
-        has_settings = True
-
-    if not has_settings:
-        print("No settings configured.")

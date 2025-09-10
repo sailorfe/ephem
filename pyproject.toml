@@ -15,7 +15,7 @@ requires-python = ">=3.0"
 dependencies = [
     "pyswisseph",
     "rich",
-		"tomli-w"
+    "tomli_w"
 ]
 authors = [
     {name = "sailorfe", email = "sailorf@proton.me"}
