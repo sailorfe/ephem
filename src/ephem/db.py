@@ -12,10 +12,12 @@ def get_db_path(cli_path=None):
     config_home = Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local/share"))
     return config_home / "ephem" / "ephem.db"
 
+
 def get_connection(cli_path=None):
     db_path = get_db_path(cli_path)
     os.makedirs(os.path.dirname(db_path), exist_ok=True)  # ensure folder exists
     return sqlite3.connect(db_path)
+
 
 def create_tables(cli_path=None):
     """Create database tables if they don't exist."""
@@ -32,6 +34,7 @@ def create_tables(cli_path=None):
         """)
         conn.commit()
 
+
 def add_chart(name: str, timestamp_utc: str, timestamp_input: str,
               latitude=None, longitude=None, cli_path=None):
     """Add a chart to the database."""
@@ -41,6 +44,7 @@ def add_chart(name: str, timestamp_utc: str, timestamp_input: str,
             VALUES (?, ?, ?, ?, ?)
         """, (name, timestamp_utc, timestamp_input, latitude, longitude))
         conn.commit()
+
 
 def get_chart(chart_id: int, cli_path=None):
     """Get a specific chart by ID."""
@@ -61,6 +65,7 @@ def get_chart(chart_id: int, cli_path=None):
             }
     return None
 
+
 def view_charts(cli_path=None):
     """View all saved charts."""
     with get_connection(cli_path) as conn:
@@ -77,6 +82,7 @@ def view_charts(cli_path=None):
             'latitude': row[4],
             'longitude': row[5]
         } for row in rows]
+
 
 def delete_chart(chart_id: int, cli_path=None):
     """Delete a chart by ID."""
