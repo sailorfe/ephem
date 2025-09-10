@@ -5,7 +5,7 @@ from pathlib import Path
 from datetime import datetime
 import re
 from typing import Dict, List, Optional, Tuple
-from .db import get_db_path, view_charts, add_chart
+from .db import get_db_path, view_charts, add_chart, create_tables
 
 def slugify(text: str) -> str:
     """Convert text to a filesystem-safe slug."""
@@ -44,7 +44,8 @@ def chart_to_yaml_dict(chart: Dict) -> Dict:
     # Add metadata
     yaml_dict['_metadata'] = {
         'created': datetime.now().isoformat(),
-        'source': 'ephem_cli'
+        'source': 'ephem_cli',
+        'tags': []
     }
 
     return yaml_dict
@@ -184,9 +185,12 @@ def sync_yaml_to_db() -> Dict[str, List[str]]:
 
 def full_sync():
     """Complete bidirectional sync: bootstrap missing YAMLs, then sync YAMLs to DB."""
-    print("Syncing database... 🪐")
+    print("💫 Syncing database...")
 
-    # First, create YAML files for any DB entries that don't have them
+    # Ensure database tables exist first
+    create_tables()
+
+    # Create YAML files for any DB entries that don't have them
     yaml_files = {f.stem for f in find_yaml_files()}
     db_charts = view_charts()
 
@@ -206,7 +210,7 @@ def full_sync():
     print(f"\nSyncing YAML files to database...")
     results = sync_yaml_to_db()
 
-    print(f"\nSync complete! 💫")
+    print(f"\n🪐 Sync complete!")
     if results['added']:
         print(f"Added {len(results['added'])} new entries to database")
     if results['errors']:

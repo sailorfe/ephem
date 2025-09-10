@@ -67,9 +67,9 @@ def print_charts(args=None):
 
     for chart in charts:
         print(f"[{chart['id']}] {chart['name']}")
-        print(f"   UTC:   {chart['timestamp_utc']}")
-        print(f"   Local: {chart['timestamp_input']}")
-        print(f"   Lat: {chart['latitude']}, Lng: {chart['longitude']}")
+        print(f"   UTC:     {chart['timestamp_utc']}")
+        print(f"   Local:   {chart['timestamp_input']}")
+        print(f"   Lat:     {chart['latitude']}, Lng: {chart['longitude']}")
         print()
 
 
