@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="./assets/logo.svg" width="240">
+
 # ephem
 
 a minimal, opinionated astrology CLI
@@ -9,10 +11,10 @@ a minimal, opinionated astrology CLI
 </div>
 
 
-**ephem** is a linux-native cli for astrologers, built with hellenistic tradition and electional and horary practice in mind. it generates horoscopes and monthly ephemerides with professional accuracy.
+`ephem` is a linux-native cli for astrologers, built with hellenistic tradition and electional and horary practice in mind. it generates horoscopes and monthly ephemerides with professional accuracy.
 
-features include:
-- all 47 sidereal offsets from [Swiss Ephemeris](https://www.astro.com/swisseph/swephprg.htm)
+currently supports:
+- all 47 sidereal offsets from the [Swiss Ephemeris](https://www.astro.com/swisseph/swephprg.htm)
 - the sun, moon, and eight planets (mercury–pluto)
 - choice of lunar node calculation method
 - clear table output for charts and ephemerides
@@ -38,7 +40,7 @@ deliberately out of scope:
 
 ### stable
 
-the stable release of **ephem** can be installed directly from pypi:
+the stable release of `ephem` can be installed directly from pypi:
 
 ```sh
 pip install --user ephem-cli    # if you use pip
@@ -119,12 +121,12 @@ these tests currently focus on CLI behavior and database interactions since core
 <a name="contributing"></a>
 ## contributing
 
-**ephem** is in early development. contributions are welcome, especially from developers with experience in astrology software, but what it *really* needs at this stage is testers. let me know if that's you and i'll start a discord: [hello@sailorfe.dev](mailto:hello@sailorfe.dev).
+`ephem` is in early development. contributions are welcome, especially from developers with experience in astrology software, but what it *really* needs at this stage is testers. [join the humble discord server](https://discord.gg/b3vA5ZhSu2)!
 
 <a name="acknowledgments"></a>
 ## acknowledgments
 
-**ephem** draws inspiration from:
+`ephem` draws inspiration from:
 
 - [Swiss Ephemeris](https://www.astro.com/swisseph/swephinfo_e.htm) and [Astro.com](https://www.astro.com/horoscope)
 - [Astrolog](https://astrolog.org/astrolog.html) by Walter Pullen
