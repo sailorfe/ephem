@@ -72,7 +72,6 @@ def handle_save_config_action(args):
     """Handle --save-config action for subcommands that support it."""
     if hasattr(args, 'save_config') and args.save_config:
         run_save(args)
-        # Don't exit - let the main command continue
 
 
 def handle_global_actions(args_list):
@@ -83,7 +82,17 @@ def handle_global_actions(args_list):
         for i, key in enumerate(AYANAMSAS.keys()):
             print(f"{i:2}: {key}")
         sys.exit(0)
-    
+
+    # Handle --list-zones
+    if '--list-zones' in args_list:
+        import zoneinfo
+        print("\nAvailable IANA time zones:\n")
+        # Get all available zones, sorted
+        zones = sorted(zoneinfo.available_timezones())
+        for zone in zones:
+            print(zone)
+        sys.exit(0)
+
     # Handle --show-config
     if '--show-config' in args_list:
         # Create a minimal args object for run_show
@@ -151,6 +160,8 @@ def parse_arguments(args=None):
     # Add global options
     parser.add_argument('--list-offsets', action='store_true', 
                        help="list all ayanamsa offsets as index:key pairs")
+    parser.add_argument('--list-zones', action='store_true', 
+                       help="list all available IANA time zone identifiers")
     parser.add_argument('--show-config', action='store_true', 
                        help="display current configuration and exit")
 
@@ -235,7 +246,7 @@ def main():
         # Handle --save-config BEFORE running the main command
         if args.command in ['now', 'cast']:
             handle_save_config_action(args)
-        
+
         # Dispatch to the subcommand's run function
         args.func(args)
     else:
