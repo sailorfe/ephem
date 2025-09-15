@@ -62,22 +62,35 @@ def add_display_options(parser, config_defaults=None):
 
 
 def add_config_options(parser):
-    """Add configuration options to parser."""
+    """Add configuration options to parser (only --save-config now)."""
     config = parser.add_argument_group('configuration')
     config.add_argument('--save-config', action='store_true',
                         help="save current location settings as defaults")
-    config.add_argument('--show-config', action='store_true',
-                        help="display current configuration and exit")
 
 
-def handle_config_actions(args):
-    """Handle config-related actions before running main command."""
-    if args.show_config:
-        run_show(args)
-        sys.exit(0)
-
-    if args.save_config:
+def handle_save_config_action(args):
+    """Handle --save-config action for subcommands that support it."""
+    if hasattr(args, 'save_config') and args.save_config:
         run_save(args)
+        # Don't exit - let the main command continue
+
+
+def handle_global_actions(args_list):
+    """Handle global actions that should exit before subcommand parsing."""
+    # Handle --list-offsets
+    if '--list-offsets' in args_list:
+        print("\nAyanamsa offsets:\n")
+        for i, key in enumerate(AYANAMSAS.keys()):
+            print(f"{i:2}: {key}")
+        sys.exit(0)
+    
+    # Handle --show-config
+    if '--show-config' in args_list:
+        # Create a minimal args object for run_show
+        class ConfigArgs:
+            pass
+        run_show(ConfigArgs())
+        sys.exit(0)
 
 
 def offset_type(value):
@@ -117,6 +130,12 @@ def parse_arguments(args=None):
     # load config defaults first
     config_defaults = load_config_defaults()
 
+    if args is None:
+        args = sys.argv[1:]
+
+    # Handle global actions BEFORE any parsing
+    handle_global_actions(args)
+
     # global flags for locale and ayanamsa
     parent_parser = argparse.ArgumentParser(add_help=False)
     parent_parser.add_argument('--offset', type=int,
@@ -129,18 +148,11 @@ def parse_arguments(args=None):
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
-    # Add global --list-offsets option
-    parser.add_argument('--list-offsets', action='store_true', help="list all ayanamsa offsets as index:key pairs")
-
-    if args is None:
-        args = sys.argv[1:]
-
-    # Handle global --list-offsets BEFORE requiring a command
-    if '--list-offsets' in args:
-        print("\nAyanamsa offsets:\n")
-        for i, key in enumerate(AYANAMSAS.keys()):
-            print(f"{i:2}: {key}")
-        sys.exit(0)
+    # Add global options
+    parser.add_argument('--list-offsets', action='store_true', 
+                       help="list all ayanamsa offsets as index:key pairs")
+    parser.add_argument('--show-config', action='store_true', 
+                       help="display current configuration and exit")
 
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -219,11 +231,11 @@ def parse_arguments(args=None):
 def main():
     args = parse_arguments()
 
-    # Handle config actions for 'now' and 'cast' commands
-    if args.command in ['now', 'cast']:
-        handle_config_actions(args)
-
     if hasattr(args, "func"):
+        # Handle --save-config BEFORE running the main command
+        if args.command in ['now', 'cast']:
+            handle_save_config_action(args)
+        
         # Dispatch to the subcommand's run function
         args.func(args)
     else:

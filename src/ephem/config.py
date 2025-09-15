@@ -1,6 +1,8 @@
 import os
 import tomllib
 from pathlib import Path
+from functools import partial
+from typing import Dict, Any, Optional, Callable
 
 try:
     import tomli_w
@@ -12,8 +14,68 @@ def get_config_path():
     config_home = os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")
     return Path(config_home) / "ephem" / "ephem.toml"
 
+# FUNCTIONAL OVERHAUL YEAAAAAAH
+def parse_float_field(value: Any) -> Optional[float]:
+    """Safely parse a float value."""
+    try:
+        return float(value)
+    except (ValueError, TypeError):
+        return None
+
+
+def parse_bool_field(value: Any) -> bool:
+    """Safely parse a bool value."""
+    return bool(value)
+
+
+def validate_choice_field(choices: list) -> Callable[[Any], Optional[str]]:
+    """Return a validator function for choice fields."""
+    def validator(value: Any) -> Optional[str]:
+        return value if value in choices else None
+    return validator
+
+
+def validate_offset_field(value: Any) -> Optional[int]:
+    """Validate zodiac offset field (0-46 or None)."""
+    if value is None:
+        return None
+    try:
+        offset_val = int(value)
+        return offset_val if 0 <= offset_val <= 46 else None
+    except (ValueError, TypeError):
+        return None
+
+
+FIELD_PARSERS = {
+    ('location', 'lat'): parse_float_field,
+    ('location', 'lng'): parse_float_field,
+    ('zodiac', 'offset'): validate_offset_field,
+    ('display', 'node'): validate_choice_field(['true', 'mean']),
+    ('display', 'theme'): validate_choice_field(['sect', 'mode', 'element']),
+    ('display', 'no-geo'): parse_bool_field,
+    ('display', 'no-angles'): parse_bool_field,
+    ('display', 'classical'): parse_bool_field,
+    ('display', 'ascii'): parse_bool_field,
+    ('display', 'no-color'): parse_bool_field,
+}
+
+
+CLI_TO_CONFIG_MAPPING = {
+    'no_geo': ('display', 'no-geo'),
+    'no_angles': ('display', 'no-angles'),
+    'no_color': ('display', 'no-color'),
+    'classical': ('display', 'classical'),
+    'ascii': ('display', 'ascii'),
+    'node': ('display', 'node'),
+    'theme': ('display', 'theme'),
+    'lat': ('location', 'lat'),
+    'lng': ('location', 'lng'),
+    'offset': ('zodiac', 'offset'),
+}
+
+
 def load_config_defaults():
-    """Load and return config values as a dict."""
+    """Load and return config values as a dict using functional approach."""
     path = get_config_path()
 
     if not path.exists():
@@ -28,50 +90,22 @@ def load_config_defaults():
 
     defaults = {}
 
-    # Load location settings if they exist
-    if 'location' in config:
-        location = config['location']
-        if 'lat' in location:
-            try:
-                defaults['lat'] = float(location['lat'])
-            except (ValueError, TypeError):
-                pass
-        if 'lng' in location:
-            try:
-                defaults['lng'] = float(location['lng'])
-            except (ValueError, TypeError):
-                pass
-
-    # Load display settings if they exist
-    if 'display' in config:
-        display = config['display']
-
-        # Boolean options
-        for bool_opt in ['no_geo', 'anonymize', 'no_angles', 'classical', 'ascii']:
-            if bool_opt.replace('_', '-') in display:
-                defaults[bool_opt] = bool(display[bool_opt.replace('_', '-')])
-            elif bool_opt in display:
-                defaults[bool_opt] = bool(display[bool_opt])
-
-        # Choice options with validation
-        if 'node' in display and display['node'] in ['true', 'mean']:
-            defaults['node'] = display['node']
-
-    # Load ayanamsa/zodiac settings if they exist
-    if 'zodiac' in config:
-        zodiac = config['zodiac']
-        if 'offset' in zodiac:
-            try:
-                offset_val = zodiac['offset']
-                # Validate offset range (0-46 or None for tropical)
-                if offset_val is None or (isinstance(offset_val, int) and 0 <= offset_val <= 46):
-                    defaults['offset'] = offset_val
-            except (ValueError, TypeError):
-                pass
+    # Process all fields using the parser mapping
+    for (section, key), parser in FIELD_PARSERS.items():
+        if section in config and key in config[section]:
+            parsed_value = parser(config[section][key])
+            if parsed_value is not None:
+                # Convert config key back to CLI arg name
+                cli_key = next(
+                    (cli_key for cli_key, (sec, k) in CLI_TO_CONFIG_MAPPING.items() 
+                     if sec == section and k == key),
+                    key.replace('-', '_')  # fallback
+                )
+                defaults[cli_key] = parsed_value
 
     return defaults
 
-def validate_config_values(lat: float | None, lng: float | None):
+def validate_config_values(lat: Optional[float], lng: Optional[float]):
     """Raise ValueError if latitude or longitude are out of bounds."""
     if lat is not None and not -90 <= lat <= 90:
         raise ValueError(f"Invalid latitude {lat}, must be between -90 and 90")
@@ -79,12 +113,50 @@ def validate_config_values(lat: float | None, lng: float | None):
         raise ValueError(f"Invalid longitude {lng}, must be between -180 and 180")
 
 
+def should_save_value(attr: str, value: Any) -> bool:
+    """Determine if a value should be saved to config."""
+    if value is None:
+        return False
+
+    # Boolean flags: save if True
+    bool_flags = {'no_geo', 'no_angles', 'classical', 'ascii', 'no_color'}
+    if attr in bool_flags:
+        return bool(value)
+
+    # Choice options: save if not default
+    choice_defaults = {'node': 'true', 'theme': 'sect'}
+    if attr in choice_defaults:
+        return value != choice_defaults[attr]
+
+    # Location and zodiac: always save if provided
+    return True
+
+
+def update_config_section(config: Dict[str, Any], section: str, updates: Dict[str, Any]):
+    """Functionally update a config section."""
+    if updates:
+        if section not in config:
+            config[section] = {}
+        config[section].update(updates)
+
+
 def run_save(args):
-    """Save location settings from command line args."""
-    if (args.lat is None and args.lng is None and 
-        (not hasattr(args, 'offset') or args.offset is None) and
-        not any(hasattr(args, attr) and getattr(args, attr) is not None 
-                for attr in ['bare', 'anonymize', 'no_angles', 'classical', 'node', 'theme', 'format'])):
+    """Save location settings from command line args using functional approach."""
+
+    # Collect all potential saves
+    saves_to_make = {
+        attr: getattr(args, attr, None) 
+        for attr in CLI_TO_CONFIG_MAPPING.keys() 
+        if hasattr(args, attr)
+    }
+
+    # Filter to only values that should be saved
+    filtered_saves = {
+        attr: value for attr, value in saves_to_make.items() 
+        if should_save_value(attr, value)
+    }
+
+    if not filtered_saves:
         print("No settings provided. Use location, zodiac, or display options to save configuration.")
         return
 
@@ -95,58 +167,26 @@ def run_save(args):
 
     path = get_config_path()
 
-    # Load existing config or start with empty dict
+    # Load existing config
     config = {}
     if path.exists():
         try:
             with open(path, 'rb') as f:
                 config = tomllib.load(f)
         except (tomllib.TOMLDecodeError, OSError):
-            # If config is corrupted, start fresh
             config = {}
 
-    # Update location settings
-    if args.lat is not None or args.lng is not None:
-        if 'location' not in config:
-            config['location'] = {}
-        if args.lat is not None:
-            config['location']['lat'] = args.lat
-        if args.lng is not None:
-            config['location']['lng'] = args.lng
+    # Group updates by section
+    section_updates = {}
+    for attr, value in filtered_saves.items():
+        section, key = CLI_TO_CONFIG_MAPPING[attr]
+        if section not in section_updates:
+            section_updates[section] = {}
+        section_updates[section][key] = value
 
-    # Update zodiac settings
-    zodiac_changed = False
-    if hasattr(args, 'offset') and args.offset is not None:
-        if 'zodiac' not in config:
-            config['zodiac'] = {}
-        config['zodiac']['offset'] = args.offset
-        zodiac_changed = True
-
-    # Update display settings
-    display_changed = False
-    display_attrs = {
-        'no_geo': 'no-geo',
-        'anonymize': 'anonymize', 
-        'no_angles': 'no-angles',
-        'classical': 'classical',
-        'ascii': 'ascii',
-        'node': 'node'
-    }
-
-    for attr, config_key in display_attrs.items():
-        if hasattr(args, attr):
-            value = getattr(args, attr)
-            # Only save if explicitly set (not just default values)
-            if value is not None and (
-                # For boolean flags, save if True
-                (attr in ['no_geo', 'anonymize', 'no_angles', 'classical', 'ascii'] and value) or
-                # For choice options, save if not default
-                (attr == 'node' and value != 'true')
-            ):
-                if 'display' not in config:
-                    config['display'] = {}
-                config['display'][config_key] = value
-                display_changed = True
+    # Apply updates to config
+    for section, updates in section_updates.items():
+        update_config_section(config, section, updates)
 
     # Write config file
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -155,21 +195,15 @@ def run_save(args):
         with open(path, 'wb') as f:
             tomli_w.dump(config, f)
 
-        saved_items = []
-        if args.lat is not None or args.lng is not None:
-            saved_items.append("location settings")
-        if zodiac_changed:
-            saved_items.append("zodiac preferences")
-        if display_changed:
-            saved_items.append("display preferences")
+        saved_sections = list(section_updates.keys())
+        section_names = {'location': 'location settings', 'zodiac': 'zodiac preferences', 'display': 'display preferences'}
+        saved_items = [section_names[section] for section in saved_sections]
 
-        if saved_items:
-            print(f"Saved {' and '.join(saved_items)} to {path}")
-        else:
-            print("No changes to save.")
+        print(f"Saved {' and '.join(saved_items)} to {path}")
 
     except OSError as e:
         print(f"Error saving config file: {e}")
+
 
 def run_show(args):
     """Display current config file contents."""
@@ -220,7 +254,8 @@ def run_show(args):
         # Boolean flags
         bool_flags = {
             'no-geo': 'Hide coordinates',
-            'no-angles': 'Hide angles',
+            'no-angles': 'Hide angles', 
+            'no-color': 'Disable ANSI colors',
             'classical': 'Classical planets only',
             'ascii': 'ASCII mode (no Unicode glyphs)'
         }
@@ -233,8 +268,6 @@ def run_show(args):
             print(f"  Node calculation: {display['node']}")
         if 'theme' in display:
             print(f"  Color theme: {display['theme']}")
-        if 'format' in display:
-            print(f"  Display format: {display['format']}")
 
         has_settings = True
 

@@ -22,7 +22,7 @@ def run(args):
     lat, lng, approx_locale, config_locale = get_locale(args)
 
     jd_now, jd_then, dt_utc_shifted = sweph.get_julian_days(dt_utc, args)
-    offset = getattr(args, 'offset', None)  # Get offset from args, default to None
+    offset = getattr(args, 'offset', None)
 
     dt_local_shifted = dt_utc_shifted.astimezone(dt_local.tzinfo)
 
@@ -31,18 +31,16 @@ def run(args):
     horoscope = sweph.build_horoscope(planets, angles)
     title = "Chart of the Moment"
 
-    # Only display chart if not showing/saving config
-    if not getattr(args, 'show_config', False) and not getattr(args, 'save_config', False):
-        output = format_chart(
-            args, title, lat, lng,
-            dt_local_shifted, dt_utc_shifted,
-            horoscope, planets,
-            approx_time, approx_locale, config_locale
-        )
+    output = format_chart(
+        args, title, lat, lng,
+        dt_local_shifted, dt_utc_shifted,
+        horoscope, planets,
+        approx_time, approx_locale, config_locale
+    )
 
-        if output is not None:
-            for line in output:
-                print(line)
+    if output is not None:
+        for line in output:
+            print(line)
 
     if args.save:
         create_tables()
@@ -50,6 +48,6 @@ def run(args):
             name=title,
             timestamp_utc=dt_utc.isoformat(),
             timestamp_input=dt_local.isoformat(),
-            latitude = args.lat,
-            longitude = args.lng
+            latitude=args.lat,
+            longitude=args.lng
         )
