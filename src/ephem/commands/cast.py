@@ -6,27 +6,28 @@ from ephem.display import format_chart
 from ephem.db import add_chart, create_tables
 import re
 
-TIME_RE = re.compile(r"^(?P<h>\d{1,2})(:(?P<m>\d{1,2}))?$")
+TIME_RE = re.compile(r"^(?P<h>\d{1,2})(:(?P<m>\d{1,2}))?(:(?P<s>\d{1,2}))?$")
 
 def parse_time(time_str):
     """
-    Parses a time string like "9", "9:5", "09:05" into normalized "HH:MM".
-    Defaults missing minutes to 00. Returns None if time_str is None.
+    Parses a time string like "9", "9:5", "09:05", "09:05:30" into normalized "HH:MM:SS".
+    Defaults missing minutes and seconds to 00. Returns None if time_str is None.
     """
     if not time_str:
         return None
 
     match = TIME_RE.match(time_str.strip())
     if not match:
-        raise ValueError(f"Time must be in H:MM or HH:MM format, got '{time_str}'")
+        raise ValueError(f"Time must be in H:MM, HH:MM, or HH:MM:SS format, got '{time_str}'")
 
     hour = int(match.group("h"))
     minute = int(match.group("m") or 0)
+    second = int(match.group("s") or 0)  # Default to 0 if not provided
 
-    if not (0 <= hour <= 23 and 0 <= minute <= 59):
-        raise ValueError(f"Time out of range: {hour:02d}:{minute:02d}")
+    if not (0 <= hour <= 23 and 0 <= minute <= 59 and 0 <= second <= 59):
+        raise ValueError(f"Time out of range: {hour:02d}:{minute:02d}:{second:02d}")
 
-    return f"{hour:02d}:{minute:02d}"
+    return f"{hour:02d}:{minute:02d}:{second:02d}"
 
 
 def parse_event(event_args):
@@ -59,7 +60,7 @@ def get_moment(date_str, time_str=None, tz_str=None):
 
     # default time to noon if missing
     if not time_str:
-        time_str = "12:00"
+        time_str = "12:00:00"
         approx_time = True
 
     # parse date parts
@@ -68,13 +69,14 @@ def get_moment(date_str, time_str=None, tz_str=None):
     except ValueError:
         raise ValueError(f"Date must be in YYYY-MM-DD format, got '{date_str}'")
 
-    # parse time parts
-    hour_str, minute_str = time_str.split(":")
-    hour = int(hour_str)
-    minute = int(minute_str)
+    # parse time parts - now expecting HH:MM:SS
+    time_parts = time_str.split(":")
+    hour = int(time_parts[0])
+    minute = int(time_parts[1])
+    second = int(time_parts[2]) if len(time_parts) > 2 else 0
 
-    # build naive datetime
-    dt_naive = datetime(year, month, day, hour, minute)
+    # build naive datetime with seconds
+    dt_naive = datetime(year, month, day, hour, minute, second)
 
     # assign timezone (or UTC default)
     tz = ZoneInfo(tz_str) if tz_str else ZoneInfo("UTC")

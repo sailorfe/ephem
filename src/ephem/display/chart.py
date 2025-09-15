@@ -50,8 +50,8 @@ def get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale):
     - Shows UTC only if it differs from local time.
     - Optionally hides location if no_geo or approximate.
     """
-    local_str = dt_local.strftime("%Y-%m-%d %H:%M %Z")  # e.g. 2025-08-09 07:54 EDT
-    utc_str = dt_utc.strftime("%Y-%m-%d %H:%M UTC")
+    local_str = dt_local.strftime("%Y-%m-%d %H:%M:%S %Z")  # e.g. 2025-08-09 07:54 EDT
+    utc_str = dt_utc.strftime("%Y-%m-%d %H:%M:%S UTC")
 
     # Show UTC only if it differs
     if local_str == utc_str:
