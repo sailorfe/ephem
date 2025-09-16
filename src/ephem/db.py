@@ -38,11 +38,12 @@ def create_tables():
 def add_chart(name: str, timestamp_utc: str, timestamp_input: str, latitude=None, longitude=None):
     """Add a chart to the database."""
     with get_connection() as conn:
-        conn.execute("""
+        cursor = conn.execute("""
             INSERT INTO charts (name, timestamp_utc, timestamp_input, latitude, longitude)
             VALUES (?, ?, ?, ?, ?)
         """, (name, timestamp_utc, timestamp_input, latitude, longitude))
         conn.commit()
+        return cursor.lastrowid
 
 
 def get_chart(chart_id: int):

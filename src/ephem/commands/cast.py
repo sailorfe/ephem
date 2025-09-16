@@ -111,18 +111,19 @@ def run(args):
         approx_time, approx_locale, config_locale
     )
 
-    if output is not None:
-        for line in output:
-            print(line)
-
     if args.save:
         create_tables()
-        # DB-safe name: default to "Untitled Chart" if None/empty
         name_to_save = str(title).strip() if title and title.strip() else "Untitled Chart"
-        add_chart(
+        chart_id = add_chart(
             name=name_to_save,
             timestamp_utc=dt_utc.isoformat(),
             timestamp_input=dt_local.isoformat(),
             latitude=args.lat,
             longitude=args.lng
         )
+        print()
+        print(f"Chart saved at index {chart_id}.")
+
+    if output is not None:
+        for line in output:
+            print(line)
