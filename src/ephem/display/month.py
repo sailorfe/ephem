@@ -116,7 +116,13 @@ def format_calendar(args):
             header_str = col_name
         table.add_column(Text(header_str, justify="center"), justify=cell_justify, style=style, no_wrap=True)
 
+    # Day abbreviation mapping
+    day_abbrevs = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
+
     for day in range(1, days_in_month + 1):
+        current_date = datetime(args.year, args.month, day)
+        day_abbrev = day_abbrevs[current_date.weekday()]  # weekday() returns 0=Monday, 6=Sunday
+        
         jd_midnight = swe.julday(args.year, args.month, day, 0.0)
         jd_noon = swe.julday(args.year, args.month, day, 12.0)
         jd_prev = jd_midnight - 1/1440
@@ -127,7 +133,10 @@ def format_calendar(args):
 
         moon_0hr, moon_noon = get_moon_positions(jd_midnight, jd_noon, offset, ascii_mode=ascii_mode)
 
-        row_data = [str(day), sid_time]
+        # Format day with abbreviation
+        day_str = f"{day:2d} {day_abbrev}"
+        
+        row_data = [day_str, sid_time]
         for col_name, _, _ in EPHEMERIS_COLUMNS[2:]:
             if col_name == "ag":
                 row_data.append(moon_0hr)
