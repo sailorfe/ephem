@@ -38,28 +38,27 @@ def add_display_options(parser, config_defaults=None):
         config_defaults = {}
 
     display = parser.add_argument_group('display options')
-    display.add_argument('--node', choices=['true', 'mean'],
-                         default=config_defaults.get('node', 'true'),
-                         help="choose lunar node calculation method")
-    display.add_argument('--ascii', action='store_true',
+    display.add_argument('-a', '--ascii', action='store_true',
                          default=config_defaults.get('ascii', False),
                          help="use ASCII text instead of Unicode glyphs")
-    display.add_argument('--theme', choices=['sect', 'mode', 'element'],
+    display.add_argument('-t', '--theme', choices=['sect', 'mode', 'element'],
                          default=config_defaults.get('theme', 'sect'),
                          help="choose colorscheme by planetary sect, or sign mode or element (default: sect)")
+    display.add_argument('-C', '--no-color', action='store_true',
+                         default=config_defaults.get('no_color', False),
+                         help="disable ANSI colors")
     display.add_argument('-c', '--classical', action='store_true',
                          default=config_defaults.get('classical', False),
                          help="exclude Uranus through Pluto")
-    display.add_argument('--no-angles', action='store_true',
+    display.add_argument('-n', '--node', choices=['true', 'mean'],
+                         default=config_defaults.get('node', 'true'),
+                         help="choose lunar node calculation method")
+    display.add_argument('-A', '--no-angles', action='store_true',
                          default=config_defaults.get('no_angles', False),
                          help="don't print Ascendant or Midheaven")
-    display.add_argument('--no-geo', action='store_true',
+    display.add_argument('-G', '--no-geo', action='store_true',
                          default=config_defaults.get('no_geo', False),
                          help="don't print coordinates")
-    display.add_argument('--no-color', action='store_true',
-                         default=config_defaults.get('no_color', False),
-                         help="disable ANSI colors")
-
 
 def add_config_options(parser):
     """Add configuration options to parser (only --save-config now)."""
@@ -147,7 +146,7 @@ def parse_arguments(args=None):
 
     # global flags for locale and ayanamsa
     parent_parser = argparse.ArgumentParser(add_help=False)
-    parent_parser.add_argument('--offset', type=int,
+    parent_parser.add_argument('-o', '--offset', type=int,
                                default=config_defaults.get('offset'), 
                                help="sidereal ayanamsa index or None for tropical")
 
