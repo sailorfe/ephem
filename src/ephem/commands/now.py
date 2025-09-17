@@ -39,9 +39,10 @@ def run(args):
     )
 
     if args.save:
+        save_title = f"{dt_utc.strftime('%Y-%m-%d %H:%M:%S UTC')}"
         create_tables()
         chart_id = add_chart(
-            name=title,
+            name=save_title,
             timestamp_utc=dt_utc.isoformat(),
             timestamp_input=dt_local.isoformat(),
             latitude=args.lat,
