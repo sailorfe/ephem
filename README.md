@@ -4,14 +4,14 @@
 
 # ephem
 
-a minimal, opinionated astrology CLI
+a minimal, opinionated astrology CLI tool
 
 [![pypi](https://img.shields.io/pypi/v/ephem-cli.svg)](https://pypi.org/project/ephem-cli/) [![license: agpl v3](https://img.shields.io/badge/license-agpl--3-blue.svg)](./LICENSE)
 
 </div>
 
 
-`ephem` is a linux-native cli for astrologers, built with hellenistic tradition and electional and horary practice in mind. it generates horoscopes and monthly ephemerides with professional accuracy.
+`ephem` is a linux-native cli for astrologers, built on hellenistic tradition with electional and horary practice in mind. it generates horoscopes and monthly ephemerides with professional accuracy, and stores time and geodata in a local database that can be edited as YAML files.
 
 currently supports:
 - all 47 sidereal offsets from the [Swiss Ephemeris](https://www.astro.com/swisseph/swephprg.htm)
@@ -22,14 +22,15 @@ currently supports:
 
 deliberately out of scope:
 - house cusps and placements
-- asteroids
 - graphical charts
+- asteroids
 
 ### table of contents
 
 - [installation](#installation)
 - [usage](#usage)
     * [examples](#examples)
+    * [tutorial](#tutorial)
 - [testing](#testing)
 - [contributing](#contributing)
 - [acknowledgments](#acknowledgments)
@@ -69,7 +70,7 @@ pip install ephem-cli \
 
 ```sh
 # with pipx
-pip install ephem-cli \
+pipx install ephem-cli \
   --pip-args="--index-url https://codeberg.org/api/packages/sailorfe/pypi/simple/ --extra-index-url https://pypi.org/simple --pre"
 ```
 
@@ -106,6 +107,10 @@ get a monthly ephemeris:
 ```sh
 ephem cal 1989 dec
 ```
+<a name="tutorial"></a>
+### tutorial
+
+for more detailed examples, see [the ephem tutorial](./docs/00-tutorial.md).
 
 <a name="testing"></a>
 ## testing
