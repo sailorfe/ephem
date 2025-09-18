@@ -1,4 +1,4 @@
-# Electional Workflows
+# Electional Examples
 
 Electional astrology, also known as inceptional astrology, is the practice of selecting optimal times and dates to begin or *incept* something. It's arguably one of the oldest and most accessible disciplines: farmers choose (elect) the full moon nearest to the autumnal equinox to  harvest their fall crops, for example.
 
