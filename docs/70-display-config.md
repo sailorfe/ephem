@@ -41,7 +41,7 @@ Display preferences:
 rm ~/.config/ephem/ephem.toml
 ```
 
-### Options
+### Configuration options
 
 You already got a taste of `--save-config` when you [set your location defaults](./10-getting-started), but let's take a look at all the configuration options available for the three calculation commands.
 
@@ -112,9 +112,9 @@ Midheaven  19 Leo 59 12
 
 - `--theme sect`, the default, mimics Astrodienst's Hellenistic wheel style of coloring the visible planets by sect, including Mercury, whose sect is relative to the Sun.
 - `--theme mode` colors the planets by the modality of their sign. This is a useful way to look for squares and oppositions.
-- `--theme element` colors the planets by the modality of their sign. This is a useful way to look for trines.
+- `--theme element` colors the planets by the element of their sign. This is a useful way to look for trines.
 
-#### Suppression
+#### Suppressing geodata
 
 Two flags, `-G/--no-geo` and `-A/--no-angles`, serve to hold back information from the output. You may consider using them in the following situations:
 
