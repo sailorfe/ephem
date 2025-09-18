@@ -206,7 +206,7 @@ def parse_arguments(args=None):
     view_parser.set_defaults(func=data.print_charts)
 
     load_parser = data_subparsers.add_parser('load', help="load chart from database", parents=[parent_parser])
-    load_parser.add_argument('id', type=int, help="chart ID to laod")
+    load_parser.add_argument('id', type=int, help="chart ID to load")
     add_display_options(load_parser, config_defaults)
     load_parser.set_defaults(func=data.run_loaded_chart)
 

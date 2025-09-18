@@ -21,7 +21,7 @@ def run_loaded_chart(args):
     # Parse ISO 8601 timestamp into separate date and time strings
     dt = datetime.fromisoformat(chart['timestamp_utc'])
     date_str = dt.date().isoformat()
-    time_str = dt.time().strftime("%H:%M")
+    time_str = dt.time().strftime("%H:%M:%S")
 
     # Create args from chart data
     loaded_args = argparse.Namespace(
