@@ -46,7 +46,7 @@ class TestDataCommands(unittest.TestCase):
         self.assertEqual(called_args.lng, -74.0060)
         self.assertEqual(called_args.command, "cast")
         self.assertEqual(called_args.event[0], "2025-09-10")
-        self.assertEqual(called_args.event[1], "12:00")
+        self.assertEqual(called_args.event[1], "12:00:00")
 
     @patch('ephem.commands.data.get_chart')
     def test_run_loaded_chart_not_found(self, mock_get_chart):
