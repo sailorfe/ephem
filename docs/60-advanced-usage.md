@@ -5,8 +5,7 @@
 The database you just interacted with is stored at `~/.local/share/ephem/ephem.db`:
 
 ```
-~
-|.local/share/ephem
+.local/share/ephem
 |-- charts/
 |   |-- jean-cremers.yaml
 |   |-- jeon-soyeon.yaml
@@ -40,7 +39,6 @@ ephem data sync
 ```
 
 This workflow can be faster than running `ephem cast --save`, but the one tradeoff I can think of is **you'll need to perform a local time -> UTC conversion yourself**. You can also remove or add as many `_metadata` fields as you want.
-
 
 ### Editing existing YAML charts
 
