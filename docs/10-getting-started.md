@@ -1,6 +1,6 @@
-# Getting Started
+## Getting Started
 
-## Your first `ephem` chart
+### Your first `ephem` chart
 
 The fastest way to try `ephem` is by running
 
@@ -30,7 +30,7 @@ T☊  18 Pisces 19 53
 
 This purposely mimics Astrodienst's [Chart of the Moment](https://www.astro.com/cgi/chart.cgi?lang=e&act=chm&sdat=&ishkch=1), which prints a chart without geographical information—no angles, no houses. This is plenty useful on its own if you know your own birth chart by heart or use techniques like essential dignity, but the ascendant and midheaven are the two most rapidly changing and geocentric (well, geo-dependent) points of any horoscope.
 
-## Setting location defaults
+### Setting location defaults
 `ephem` uses decimal degrees for coordinates, which you can find with the following:
 
 1. Look up your locale on Wikipedia.

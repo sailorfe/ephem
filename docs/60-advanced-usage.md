@@ -1,4 +1,4 @@
-# Advanced Usage: YAML database
+## Advanced Usage: YAML database
 
 `ephem`'s database is designed to be usable with only the `data view/load/delete` commands, but you may want to edit an existing chart—e.g., rename a chart created with `now --save`—or create new ones without running any commands. This is where the `data sync` comes in.
 
@@ -30,7 +30,7 @@ _metadata:
   tags: [famous, musician, adb, rodden-c]
 ```
 
-## Creating new charts with YAML
+### Creating new charts with YAML
 
 ```sh
 cd ~/.local/share/ephem/charts
@@ -42,7 +42,7 @@ ephem data sync
 This workflow can be faster than running `ephem cast --save`, but the one tradeoff I can think of is **you'll need to perform a local time -> UTC conversion yourself**. You can also remove or add as many `_metadata` fields as you want.
 
 
-## Editing existing YAML charts
+### Editing existing YAML charts
 
 ```sh
 cd ~/.local/share/ephem/charts
@@ -61,7 +61,7 @@ ephem data sync                                                 # Creates backup
 
 Note: `ephem data sync` will recreate the original timestamped .yaml file because the chart still exists in ephem.db. This functions as a backup! It's generally poor science to discard data. But if you *really* want to go nuclear...
 
-### Deleting charts permanently ⚠️
+#### Deleting charts permanently ⚠️
 
 Combine these commands:
 

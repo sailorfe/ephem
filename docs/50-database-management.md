@@ -1,4 +1,4 @@
-# Database Management
+## Database Management
 
 Besides the `--save` option to `now` and `cast`, the `data` command lets you interact with your saved chart database. It has the following subcommands:
 

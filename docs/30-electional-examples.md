@@ -1,10 +1,10 @@
-# Electional Examples
+## Electional Examples
 
 Electional astrology, also known as inceptional astrology, is the practice of selecting optimal times and dates to begin or *incept* something. It's arguably one of the oldest and most accessible disciplines: farmers choose (elect) the full moon nearest to the autumnal equinox to  harvest their fall crops, for example.
 
 To elect a time with`ephem`, you will want to use the `ephem cal` and `ephem cast` commands. For something on the same day or near it, `ephem now` has its place here, too. Calling `ephem cal` is no different from referring to *The American Ephemeris* or [PDF versions of the Swiss Ephemeris](https://www.astro.com/swisseph/swepha_e.htm); you're just using the *actual* software library from which those PDFs were generated, and interacting with the information more quickly and easily.
 
-## High-stakes example: Planning a wedding with `ephem cal` and `ephem cast`
+### Planning a wedding with `ephem cal` and `ephem cast`
 Pretend you've been hired to elect a fall wedding that will take place outdoors in northern California, ideally in 2026. The climate means November is a serious possibility. The couple would prefer a weekend but clearly put enough stock in event astrology to ask you, so a weekday wedding is not out of the question.
 
 `ephem cal` takes a year followed by a month written either in full, as a 3-letter abbreviation, or as an integer (1-12), case insensitive:
@@ -25,7 +25,7 @@ $ ephem cast 2026-09-05 15:00 "Wedding" -z America/Los_Angeles -y 37 -x -122
 
 with various times until you get a pleasant ascendant and the malefics off the angles, of course keeping it reasonable. Outdoor weddings want daylight, generally speaking, especially with temperature differences, and I landed around 10-10:30 a.m. for Libra rising or 2-3:30 p.m. for Sagittarius rising. Realistically, this is just one date of several you would find.
 
-## Low-stakes example: Sending an email with `ephem now` and `ephem cast`
+### Sending an email with `ephem now` and `ephem cast`
 This is the much more boring way I use electional astrology and the reason for the `-s/--shift` optional argument specific to `ephem now`.
 
 Scenario: It's 11:45 p.m., and I've just drafted an email I mean to send the next day. If I run
