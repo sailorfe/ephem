@@ -22,6 +22,14 @@ def validate_coordinates(lat, lng):
 
 
 def get_locale(args):
+    # Handle the case where only one coordinate is set (likely from defaults/config)
+    if args.lat is not None and args.lng is None:
+        # If lat is set but lng isn't, assume lat came from a default and ignore it
+        args.lat = None
+    elif args.lng is not None and args.lat is None:
+        # Same for lng
+        args.lng = None
+
     if args.lat is not None and args.lng is not None:
         try:
             lat = float(args.lat)
@@ -32,6 +40,9 @@ def get_locale(args):
             if isinstance(e, InvalidCoordinatesError):
                 raise e
             raise ValueError("Latitude and longitude must be numeric values")
+
+    if args.lat is not None or args.lng is not None:
+        raise ValueError("Both latitude and longitude must be provided together")
 
     config = load_config_defaults()
     if args.lat is None and args.lng is None:

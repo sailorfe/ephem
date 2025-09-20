@@ -169,8 +169,8 @@ def parse_arguments(args=None):
     # now
     now_parser = subparsers.add_parser('now', help="🌌 calculate the chart of the moment", parents=[parent_parser])
     now_parser.set_defaults(func=now.run)
-    now_parser.add_argument('--lat', '-y', type=float, default=config_defaults.get('lat'), help="latitude")
-    now_parser.add_argument('--lng', '-x', type=float, default=config_defaults.get('lng'), help="longitude")
+    now_parser.add_argument('--lat', '-y', type=float, help="latitude")
+    now_parser.add_argument('--lng', '-x', type=float, help="longitude")
     now_parser.add_argument('-s', '--shift', type=str,
                             help="shift time forward or backward, e.g. 2h, -30m, 1.5d, 4w (default is hours)")
     now_parser.add_argument('-z', '--timezone', type=str, help="IANA time zone name, e.g. 'America/New_York'")
@@ -183,8 +183,8 @@ def parse_arguments(args=None):
     cast_parser.set_defaults(func=cast.run)
     cast_parser.add_argument('event', nargs="*", metavar="DATE [TIME] [TITLE]",
                              help="date, optional time and chart title, e.g. '2025-08-09 7:54 Aquarius Full Moon'")
-    cast_parser.add_argument('--lat', '-y', type=float, default=config_defaults.get('lat'), help="latitude")
-    cast_parser.add_argument('--lng', '-x', type=float, default=config_defaults.get('lng'), help="longitude")
+    cast_parser.add_argument('--lat', '-y', type=float, help="latitude")
+    cast_parser.add_argument('--lng', '-x', type=float, help="longitude")
     cast_parser.add_argument('-z', '--timezone', type=str, help="IANA time zone name, e.g. 'America/New_York'")
     cast_parser.add_argument('--save', action='store_true', help="save to chart database")
     add_display_options(cast_parser, config_defaults)
