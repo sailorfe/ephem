@@ -286,7 +286,10 @@ def parse_arguments(args=None):
         help="month as an integer (1–12) or a string (e.g. 'Aug')",
     )
     cal_parser.add_argument(
-        "--ascii", action="store_true", help="use ASCII text instead of Unicode glyphs"
+        "-a",
+        "--ascii",
+        action="store_true",
+        help="use ASCII text instead of Unicode glyphs",
     )
     cal_parser.set_defaults(func=cal.run)
 
