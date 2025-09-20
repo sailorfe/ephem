@@ -11,7 +11,7 @@ name = "ephem-cli"
 dynamic = ["version"]
 description = "A minimal and configurable astrology CLI"
 readme = "README.md"
-requires-python = ">=3.0"
+requires-python = ">=3.8,<4.0"
 dependencies = [
     "pyswisseph",
 		"pyyaml",

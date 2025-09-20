@@ -2,7 +2,6 @@ full-docs.md
 .vscode
 dist
 ephem.db
-venv
 src/chart/__pycache__
 src/*.egg-info
 tests/__pycache__
