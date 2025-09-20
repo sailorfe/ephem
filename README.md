@@ -41,9 +41,16 @@ deliberately out of scope:
 
 ### stable
 
-the stable release of `ephem` can be installed directly from pypi:
+the stable release of `ephem` can be installed directly from [pypi](https://pypi.org/project/ephem-cli):
 
 ```sh
+# run directly without installing
+uvx ephem-cli now
+
+# or install globally
+uv tool install ephem-cli
+
+# traditional methods
 pip install --user ephem-cli    # if you use pip
 pipx install ephem-cli          # if you use pipx, especially debian/ubuntu
 ```
@@ -53,25 +60,23 @@ or you can build it from source from the `main` branch:
 ```sh
 git clone https://codeberg.org/sailorfe/ephem.git
 cd ephem
-python3 -m venv venv
-source venv/bin/activate
-pip install -e .
+uv run -m ephem.cli             # run directly
+# or
+uv sync && run -m ephem.cli     # for development
 ```
 
 ### testing
 
-you can install the current pre-release from codeberg packages:
+you can install the current pre-release from codeberg:
 
-```sh
-# with pip
-pip install ephem-cli \
-  --pip-args="--index-url https://codeberg.org/api/packages/sailorfe/pypi/simple/ --extra-index-url https://pypi.org/simple --pre"
 ```
+# run pre-release directly from codeberg
+uvx --from https://codeberg.org/sailorfe/ephem ephem-cli
 
-```sh
-# with pipx
-pipx install ephem-cli \
-  --pip-args="--index-url https://codeberg.org/api/packages/sailorfe/pypi/simple/ --extra-index-url https://pypi.org/simple --pre"
+# or install pre-release
+uv tool install ephem-cli \
+  --index https://codeberg.org/api/packages/sailorfe/pypi/simple/ \
+  --prerelease allow
 ```
 
 <a name="usage"></a>
@@ -107,10 +112,11 @@ get a monthly ephemeris:
 ```sh
 ephem cal 1989 dec
 ```
+
 <a name="tutorial"></a>
 ### tutorial
 
-for more detailed examples, see [the ephem tutorial](./docs/00-tutorial.md).
+for more detailed examples, see [the ephem tutorial](./docs/00-tutorial.md). (i think it's pretty good.)
 
 <a name="testing"></a>
 ## testing
@@ -121,7 +127,7 @@ for more detailed examples, see [the ephem tutorial](./docs/00-tutorial.md).
 make test
 ```
 
-these tests currently focus on CLI behavior and database interactions since core calculations are handled by the Swiss Ephemeris library. more tests are planned as the project grows.
+these tests currently focus on CLI behavior and database interactions since core calculations are handled by the Swiss Ephemeris library. more tests are planned as the project grows!
 
 <a name="contributing"></a>
 ## contributing
