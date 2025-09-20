@@ -8,6 +8,7 @@ import re
 
 TIME_RE = re.compile(r"^(?P<h>\d{1,2})(:(?P<m>\d{1,2}))?(:(?P<s>\d{1,2}))?$")
 
+
 def parse_time(time_str):
     """
     Parses a time string like "9", "9:5", "09:05", "09:05:30" into normalized "HH:MM:SS".
@@ -18,7 +19,9 @@ def parse_time(time_str):
 
     match = TIME_RE.match(time_str.strip())
     if not match:
-        raise ValueError(f"Time must be in H:MM, HH:MM, or HH:MM:SS format, got '{time_str}'")
+        raise ValueError(
+            f"Time must be in H:MM, HH:MM, or HH:MM:SS format, got '{time_str}'"
+        )
 
     hour = int(match.group("h"))
     minute = int(match.group("m") or 0)
@@ -99,27 +102,36 @@ def run(args):
     lat, lng, approx_locale, config_locale = get_locale(args)
 
     jd_now, jd_then, *_ = sweph.get_julian_days(dt_utc, args)
-    offset = getattr(args, 'offset', None)
+    offset = getattr(args, "offset", None)
     planets = sweph.get_planets(jd_now, jd_then, offset)
     angles = sweph.get_angles(jd_now, lat, lng, offset)
     horoscope = sweph.build_horoscope(planets, angles)
 
     output = format_chart(
-        args, display_title, lat, lng,
-        dt_local, dt_utc,
-        horoscope, planets,
-        approx_time, approx_locale, config_locale
+        args,
+        display_title,
+        lat,
+        lng,
+        dt_local,
+        dt_utc,
+        horoscope,
+        planets,
+        approx_time,
+        approx_locale,
+        config_locale,
     )
 
     if args.save:
         create_tables()
-        name_to_save = str(title).strip() if title and title.strip() else "Untitled Chart"
+        name_to_save = (
+            str(title).strip() if title and title.strip() else "Untitled Chart"
+        )
         chart_id = add_chart(
             name=name_to_save,
             timestamp_utc=dt_utc.isoformat(),
             timestamp_input=dt_local.isoformat(),
             latitude=args.lat,
-            longitude=args.lng
+            longitude=args.lng,
         )
         print()
         print(f"Chart saved at index {chart_id}.")

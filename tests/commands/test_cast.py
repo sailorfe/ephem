@@ -1,7 +1,7 @@
 import unittest
-from datetime import datetime
 from zoneinfo import ZoneInfo
 from ephem.commands import cast
+
 
 class TestCast(unittest.TestCase):
     def test_parse_event_empty(self):
@@ -34,5 +34,6 @@ class TestCast(unittest.TestCase):
         self.assertEqual(dt_utc, dt_local)  # Should be same since both UTC
         self.assertFalse(approx)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

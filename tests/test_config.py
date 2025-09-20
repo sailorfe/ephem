@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from ephem.config import run_save
 
+
 class TestRunSaveSmoke(unittest.TestCase):
     def test_run_save_no_values(self):
         """Smoke test: run_save should handle empty/no-saveable args."""

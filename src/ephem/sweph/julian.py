@@ -2,6 +2,7 @@ from datetime import datetime, timezone, timedelta
 import re
 import swisseph as swe
 
+
 def parse_shift_to_timedelta(shift_str):
     if not shift_str:
         return timedelta(0)

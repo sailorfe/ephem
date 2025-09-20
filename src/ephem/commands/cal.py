@@ -1,5 +1,6 @@
 from ephem.display.month import format_calendar
 
+
 def run(args):
     """Main entry point for calendar command."""
 

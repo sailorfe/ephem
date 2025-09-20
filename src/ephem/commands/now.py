@@ -5,6 +5,7 @@ from ephem import sweph
 from ephem.display import format_chart
 from ephem.db import add_chart, create_tables
 
+
 def get_moment(tz_str=None):
     # current time in user's timezone or UTC
     tz = ZoneInfo(tz_str) if tz_str else ZoneInfo("UTC")
@@ -22,7 +23,7 @@ def run(args):
     lat, lng, approx_locale, config_locale = get_locale(args)
 
     jd_now, jd_then, dt_utc_shifted = sweph.get_julian_days(dt_utc, args)
-    offset = getattr(args, 'offset', None)
+    offset = getattr(args, "offset", None)
 
     dt_local_shifted = dt_utc_shifted.astimezone(dt_local.tzinfo)
 
@@ -32,10 +33,17 @@ def run(args):
     title = "Chart of the Moment"
 
     output = format_chart(
-        args, title, lat, lng,
-        dt_local_shifted, dt_utc_shifted,
-        horoscope, planets,
-        approx_time, approx_locale, config_locale
+        args,
+        title,
+        lat,
+        lng,
+        dt_local_shifted,
+        dt_utc_shifted,
+        horoscope,
+        planets,
+        approx_time,
+        approx_locale,
+        config_locale,
     )
 
     if args.save:
@@ -46,7 +54,7 @@ def run(args):
             timestamp_utc=dt_utc.isoformat(),
             timestamp_input=dt_local.isoformat(),
             latitude=args.lat,
-            longitude=args.lng
+            longitude=args.lng,
         )
         print()
         print(f"Chart saved at index {chart_id}.")

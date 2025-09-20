@@ -1,18 +1,19 @@
-#import sqlite3
-#import os
+# import sqlite3
+# import os
 import yaml
 from pathlib import Path
 from datetime import datetime
 import re
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 from .db import get_db_path, view_charts, add_chart, create_tables
+
 
 def slugify(text: str) -> str:
     """Convert text to a filesystem-safe slug."""
     # Remove/replace problematic characters
-    text = re.sub(r'[^\w\s-]', '', text.lower())
-    text = re.sub(r'[-\s]+', '-', text)
-    return text.strip('-')
+    text = re.sub(r"[^\w\s-]", "", text.lower())
+    text = re.sub(r"[-\s]+", "-", text)
+    return text.strip("-")
 
 
 def get_charts_dir():
@@ -31,21 +32,21 @@ def ensure_charts_dir():
 def chart_to_yaml_dict(chart: Dict) -> Dict:
     """Convert database chart record to YAML-friendly dict (without SQL ID)."""
     yaml_dict = {
-        'name': chart['name'],
-        'timestamp_utc': chart['timestamp_utc'],
-        'timestamp_input': chart['timestamp_input'],
+        "name": chart["name"],
+        "timestamp_utc": chart["timestamp_utc"],
+        "timestamp_input": chart["timestamp_input"],
     }
 
     # Only include coordinates if they exist
-    if chart['latitude'] is not None and chart['longitude'] is not None:
-        yaml_dict['latitude'] = chart['latitude']
-        yaml_dict['longitude'] = chart['longitude']
+    if chart["latitude"] is not None and chart["longitude"] is not None:
+        yaml_dict["latitude"] = chart["latitude"]
+        yaml_dict["longitude"] = chart["longitude"]
 
     # Add metadata
-    yaml_dict['_metadata'] = {
-        'created': datetime.now().isoformat(),
-        'source': 'ephem_cli',
-        'tags': []
+    yaml_dict["_metadata"] = {
+        "created": datetime.now().isoformat(),
+        "source": "ephem_cli",
+        "tags": [],
     }
 
     return yaml_dict
@@ -54,14 +55,14 @@ def chart_to_yaml_dict(chart: Dict) -> Dict:
 def yaml_dict_to_chart(yaml_dict: Dict, filename: str) -> Dict:
     """Convert YAML dict back to chart record format."""
     # Extract name from YAML or fall back to filename
-    name = yaml_dict.get('name', Path(filename).stem.replace('-', ' ').title())
+    name = yaml_dict.get("name", Path(filename).stem.replace("-", " ").title())
 
     return {
-        'name': name,
-        'timestamp_utc': yaml_dict['timestamp_utc'],
-        'timestamp_input': yaml_dict['timestamp_input'],
-        'latitude': yaml_dict.get('latitude'),
-        'longitude': yaml_dict.get('longitude')
+        "name": name,
+        "timestamp_utc": yaml_dict["timestamp_utc"],
+        "timestamp_input": yaml_dict["timestamp_input"],
+        "latitude": yaml_dict.get("latitude"),
+        "longitude": yaml_dict.get("longitude"),
     }
 
 
@@ -76,12 +77,12 @@ def get_yaml_filename(name: str) -> str:
 def export_chart_to_yaml(chart: Dict) -> Path:
     """Export a single chart to YAML file."""
     charts_dir = ensure_charts_dir()
-    filename = get_yaml_filename(chart['name'])
+    filename = get_yaml_filename(chart["name"])
     filepath = charts_dir / filename
 
     yaml_dict = chart_to_yaml_dict(chart)
 
-    with open(filepath, 'w') as f:
+    with open(filepath, "w") as f:
         yaml.dump(yaml_dict, f, default_flow_style=False, sort_keys=False)
 
     return filepath
@@ -90,7 +91,7 @@ def export_chart_to_yaml(chart: Dict) -> Path:
 def load_yaml_chart(filepath: Path) -> Optional[Dict]:
     """Load a chart from YAML file."""
     try:
-        with open(filepath, 'r') as f:
+        with open(filepath, "r") as f:
             yaml_dict = yaml.safe_load(f)
         return yaml_dict_to_chart(yaml_dict, filepath.name)
     except Exception as e:
@@ -125,11 +126,13 @@ def bootstrap_yaml_from_db() -> List[Path]:
 def find_chart_by_content(chart_data: Dict, db_charts: List[Dict]) -> Optional[Dict]:
     """Find matching chart in database by content (name, timestamp, location)."""
     for db_chart in db_charts:
-        if (db_chart['name'] == chart_data['name'] and 
-            db_chart['timestamp_utc'] == chart_data['timestamp_utc'] and
-            db_chart['timestamp_input'] == chart_data['timestamp_input'] and
-            db_chart['latitude'] == chart_data['latitude'] and
-            db_chart['longitude'] == chart_data['longitude']):
+        if (
+            db_chart["name"] == chart_data["name"]
+            and db_chart["timestamp_utc"] == chart_data["timestamp_utc"]
+            and db_chart["timestamp_input"] == chart_data["timestamp_input"]
+            and db_chart["latitude"] == chart_data["latitude"]
+            and db_chart["longitude"] == chart_data["longitude"]
+        ):
             return db_chart
     return None
 
@@ -138,14 +141,11 @@ def get_file_mtime(filepath: Path) -> datetime:
     """Get file modification time."""
     return datetime.fromtimestamp(filepath.stat().st_mtime)
 
+
 def sync_yaml_to_db() -> Dict[str, List[str]]:
     """Sync YAML files to database. Returns summary of actions."""
 
-    results = {
-        'added': [],
-        'conflicts': [],
-        'errors': []
-    }
+    results = {"added": [], "conflicts": [], "errors": []}
 
     yaml_files = find_yaml_files()
     db_charts = view_charts()
@@ -164,20 +164,20 @@ def sync_yaml_to_db() -> Dict[str, List[str]]:
             if not existing:
                 # Add new chart to database
                 add_chart(
-                    yaml_chart['name'],
-                    yaml_chart['timestamp_utc'],
-                    yaml_chart['timestamp_input'],
-                    yaml_chart['latitude'],
-                    yaml_chart['longitude']
+                    yaml_chart["name"],
+                    yaml_chart["timestamp_utc"],
+                    yaml_chart["timestamp_input"],
+                    yaml_chart["latitude"],
+                    yaml_chart["longitude"],
                 )
-                results['added'].append(yaml_path.name)
+                results["added"].append(yaml_path.name)
                 print(f"Added to DB: {yaml_path.name}")
             else:
                 # Chart exists - could check for conflicts here if needed
                 print(f"Already in DB: {yaml_path.name}")
 
         except Exception as e:
-            results['errors'].append(f"{yaml_path.name}: {e}")
+            results["errors"].append(f"{yaml_path.name}: {e}")
             print(f"Error processing {yaml_path.name}: {e}")
 
     return results
@@ -196,7 +196,7 @@ def full_sync():
 
     missing_yamls = []
     for chart in db_charts:
-        expected_filename = get_yaml_filename(chart['name'])
+        expected_filename = get_yaml_filename(chart["name"])
         expected_stem = Path(expected_filename).stem
         if expected_stem not in yaml_files:
             missing_yamls.append(chart)
@@ -207,19 +207,21 @@ def full_sync():
             export_chart_to_yaml(chart)
 
     # Then sync any YAML-only entries back to DB
-    print(f"\nSyncing YAML files to database...")
+    print("\nSyncing YAML files to database...")
     results = sync_yaml_to_db()
 
-    print(f"\n🪐 Sync complete!")
-    if results['added']:
+    print("\n🪐 Sync complete!")
+    if results["added"]:
         print(f"Added {len(results['added'])} new entries to database")
-    if results['errors']:
+    if results["errors"]:
         print(f"Errors: {len(results['errors'])}")
-        for error in results['errors']:
+        for error in results["errors"]:
             print(f"  - {error}")
 
-def add_chart_with_yaml(name: str, timestamp_utc: str, timestamp_input: str,
-                       latitude=None, longitude=None):
+
+def add_chart_with_yaml(
+    name: str, timestamp_utc: str, timestamp_input: str, latitude=None, longitude=None
+):
     """Add chart to database AND create corresponding YAML file (automatic sync)."""
 
     # Add to database first (same as v1)
@@ -227,16 +229,16 @@ def add_chart_with_yaml(name: str, timestamp_utc: str, timestamp_input: str,
 
     # Create the chart dict for YAML export
     chart = {
-        'name': name,
-        'timestamp_utc': timestamp_utc,
-        'timestamp_input': timestamp_input,
-        'latitude': latitude,
-        'longitude': longitude
+        "name": name,
+        "timestamp_utc": timestamp_utc,
+        "timestamp_input": timestamp_input,
+        "latitude": latitude,
+        "longitude": longitude,
     }
 
     # Export to YAML
     yaml_path = export_chart_to_yaml(chart)
-    print(f"Saved to database (ID will be assigned)")
+    print("Saved to database (ID will be assigned)")
     print(f"Created: {yaml_path.name}")
 
     return yaml_path
