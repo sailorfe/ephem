@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./assets/logo.svg" width="240">
+<img src="./assets/vhs.gif">
 
 # ephem
 
