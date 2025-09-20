@@ -1,5 +1,6 @@
 import argparse
 import sqlite3
+import pydoc
 from . import cast
 from datetime import datetime
 from ephem.db import view_charts, get_chart, delete_chart
@@ -57,20 +58,25 @@ def print_charts(args=None):
         charts = view_charts()
     except sqlite3.OperationalError as e:
         if "no such table: charts" in str(e):
-            print("✨ No charts saved yet! Run `ephem cast --save` to add your first chart.")
+            pydoc.pager("✨ No charts saved yet! Run `ephem cast --save` to add your first chart.")
             return
         raise e
 
     if not charts:
-        print("✨ No charts saved yet! Run `ephem cast --save` to add your first chart.")
+        pydoc.pager("✨ No charts saved yet! Run `ephem cast --save` to add your first chart.")
         return
 
+    # Build all the output into a single string
+    lines = []
     for chart in charts:
-        print(f"[{chart['id']}] {chart['name']}")
-        print(f"   UTC:     {chart['timestamp_utc']}")
-        print(f"   Local:   {chart['timestamp_input']}")
-        print(f"   Lat:     {chart['latitude']}, Lng: {chart['longitude']}")
-        print()
+        lines.append(f"[{chart['id']}] {chart['name']}")
+        lines.append(f"   UTC:     {chart['timestamp_utc']}")
+        lines.append(f"   Local:   {chart['timestamp_input']}")
+        lines.append(f"   Lat:     {chart['latitude']}, Lng: {chart['longitude']}")
+        lines.append("")  # blank line
+
+    output = "\n".join(lines)
+    pydoc.pager(output)
 
 
 def delete_chart_cmd(args):
