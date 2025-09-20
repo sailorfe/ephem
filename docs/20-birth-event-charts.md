@@ -64,7 +64,7 @@ You can verify it was saved by running `ephem data view`:
 
 And recalculate it with `ephem data load 1`.
 
-There is a more detailed breakdown of how to interact with `ephem`'s saved data under [Database Management](./50-database-management).
+There is a more detailed breakdown of how to interact with `ephem`'s saved data under [Database Management](./50-database-management.md).
 
 ### Time zone support
 One of the biggest difference between `ephem now` and `ephem cast` is that `now` uses your computer's system time—printed in UTC by default—while `cast` works with local time.

@@ -45,7 +45,7 @@ ephem now -y -36.25 -x 142.416667 --save-config
 
 - Because this example is in the southern hemisphere, `-y/--lat` is negative.
 - Because this example is east of the prime meridian, `-x/--lng` is positive.
-- `--save-config` is an optional argument that can be run repeatedly to update your locale, display, and calculation preferences. You can read more about configuration under [Display & Configuration Options](#display-and-config)
+- `--save-config` is an optional argument that can be run repeatedly to update your locale, display, and calculation preferences. You can read more about configuration under [Display & Configuration Options](./70-display-config.md)
 
 Running this command with `--save-config`  should give you something like
 ```sh

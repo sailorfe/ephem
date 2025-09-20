@@ -43,7 +43,7 @@ rm ~/.config/ephem/ephem.toml
 
 ### Configuration options
 
-You already got a taste of `--save-config` when you [set your location defaults](./10-getting-started), but let's take a look at all the configuration options available for the three calculation commands.
+You already got a taste of `--save-config` when you [set your location defaults](./10-getting-started.md), but let's take a look at all the configuration options available for the three calculation commands.
 
 **`now`, `cast` and `cal`**
 - `-o N/--offset N`: sidereal ayanamsa offset or None for tropical. Run `--list-offsets` to see all 47 available ayanamsas and find the corresponding index `N`.

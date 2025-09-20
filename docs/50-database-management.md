@@ -5,7 +5,7 @@ Besides the `--save` option to `now` and `cast`, the `data` command lets you int
 - `data view`: View database.
 - `data load N`: Re-generate a chart from saved input data.
 - `data delete N`: Delete chart.
-- `data sync`: Sync YAML charts with database; see [Advanced Usage](./60-advanced-usage).
+- `data sync`: Sync YAML charts with database; see [Advanced Usage](./60-advanced-usage.md).
 
 Each chart in your database has a unique integer ID that you will need to know to interact with your charts. The first command you should run is `data view`.
 
