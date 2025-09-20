@@ -62,7 +62,7 @@ git clone https://codeberg.org/sailorfe/ephem.git
 cd ephem
 uv run -m ephem.cli             # run directly
 # or
-uv sync && run -m ephem.cli     # for development
+uv sync && uv run -m ephem.cli     # for development
 ```
 
 ### testing
