@@ -2,6 +2,7 @@ import sqlite3
 import os
 from pathlib import Path
 
+
 def get_db_path():
     """Get the XDG-compliant database path."""
     env_path = os.environ.get("EPHEM_DB")
@@ -35,13 +36,18 @@ def create_tables():
         conn.commit()
 
 
-def add_chart(name: str, timestamp_utc: str, timestamp_input: str, latitude=None, longitude=None):
+def add_chart(
+    name: str, timestamp_utc: str, timestamp_input: str, latitude=None, longitude=None
+):
     """Add a chart to the database."""
     with get_connection() as conn:
-        cursor = conn.execute("""
+        cursor = conn.execute(
+            """
             INSERT INTO charts (name, timestamp_utc, timestamp_input, latitude, longitude)
             VALUES (?, ?, ?, ?, ?)
-        """, (name, timestamp_utc, timestamp_input, latitude, longitude))
+        """,
+            (name, timestamp_utc, timestamp_input, latitude, longitude),
+        )
         conn.commit()
         return cursor.lastrowid
 
@@ -49,19 +55,22 @@ def add_chart(name: str, timestamp_utc: str, timestamp_input: str, latitude=None
 def get_chart(chart_id: int):
     """Get a specific chart by ID."""
     with get_connection() as conn:
-        cursor = conn.execute("""
+        cursor = conn.execute(
+            """
             SELECT id, name, timestamp_utc, timestamp_input, latitude, longitude 
             FROM charts WHERE id = ?
-        """, (chart_id,))
+        """,
+            (chart_id,),
+        )
         row = cursor.fetchone()
         if row:
             return {
-                'id': row[0],
-                'name': row[1],
-                'timestamp_utc': row[2],
-                'timestamp_input': row[3],
-                'latitude': row[4],
-                'longitude': row[5]
+                "id": row[0],
+                "name": row[1],
+                "timestamp_utc": row[2],
+                "timestamp_input": row[3],
+                "latitude": row[4],
+                "longitude": row[5],
             }
     return None
 
@@ -74,14 +83,17 @@ def view_charts():
             FROM charts ORDER BY id
         """)
         rows = cursor.fetchall()
-        return [{
-            'id': row[0],
-            'name': row[1],
-            'timestamp_utc': row[2],
-            'timestamp_input': row[3],
-            'latitude': row[4],
-            'longitude': row[5]
-        } for row in rows]
+        return [
+            {
+                "id": row[0],
+                "name": row[1],
+                "timestamp_utc": row[2],
+                "timestamp_input": row[3],
+                "latitude": row[4],
+                "longitude": row[5],
+            }
+            for row in rows
+        ]
 
 
 def delete_chart(chart_id: int):

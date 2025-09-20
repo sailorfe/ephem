@@ -1,5 +1,6 @@
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
+
 def validate_timezone(tz_name):
     """
     Validates if tz_name is a valid IANA timezone string.

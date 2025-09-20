@@ -3,6 +3,7 @@ from rich.table import Table
 from rich.text import Text
 from ephem.constants import AYANAMSAS, Colors
 
+
 def get_chart_title(title=None, approx_time=False, approx_locale=False, offset=None):
     """
     Returns chart title string with optional hyp. and zodiac info inline.
@@ -60,7 +61,7 @@ def get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale):
         time_part = f"{local_str} | {utc_str}"
 
     # Show location if allowed
-    no_geo = getattr(args, 'no_geo', False)
+    no_geo = getattr(args, "no_geo", False)
     if not no_geo and not approx_locale:
         location_part = f"@ {lat} {lng}"
     else:
@@ -73,8 +74,11 @@ def get_warnings(args, approx_time, approx_locale, config_locale):
     """Return warnings for incomplete data to display above chart."""
     warning_conditions = [
         (approx_time, "No time provided. Using UTC noon and not printing angles."),
-        (approx_locale, "No valid location provided or found in config. No angles will be printed."),
-        (config_locale and args.command == "cast", "Using location from config file.")
+        (
+            approx_locale,
+            "No valid location provided or found in config. No angles will be printed.",
+        ),
+        (config_locale and args.command == "cast", "Using location from config file."),
     ]
     return [msg for cond, msg in warning_conditions if cond]
 
@@ -82,8 +86,8 @@ def get_warnings(args, approx_time, approx_locale, config_locale):
 def get_mercury_sect_color(planets, default_color):
     """Check if Mercury is diurnal or nocturnal for sect color scheme (default)."""
     try:
-        hg_lng = planets[2]['lng']  # hg index
-        ae_lng = planets[0]['lng']  # sun index
+        hg_lng = planets[2]["lng"]  # hg index
+        ae_lng = planets[0]["lng"]  # sun index
     except (IndexError, KeyError):
         return default_color
     return "red" if hg_lng < ae_lng else "blue"
@@ -95,26 +99,27 @@ def get_spheres(horoscope, args, planets, approx_time, approx_locale):
         "fire": "red",
         "earth": "green",
         "air": "bright_black",
-        "water": "blue"
+        "water": "blue",
     }
-    MODE_COLORS = {
-        "cardinal": "magenta",
-        "fixed": "yellow",
-        "mutable": "cyan"
-    }
-    THEME_COLORS = {
-        "element": ELEMENT_COLORS,
-        "mode": MODE_COLORS,
-        "sect": None
-    }
+    MODE_COLORS = {"cardinal": "magenta", "fixed": "yellow", "mutable": "cyan"}
+    THEME_COLORS = {"element": ELEMENT_COLORS, "mode": MODE_COLORS, "sect": None}
 
     if args.theme == "sect":
         spheres = [
-            ("ae", "bright_red"), ("ag", "bright_blue"), ("hg", None),
-            ("cu", "blue"), ("fe", "blue"), ("sn", "red"), ("pb", "red"),
-            ("ura", None), ("nep", None), ("plu", None),
-            ("mean_node", None), ("true_node", None),
-            ("asc", None), ("mc", None)
+            ("ae", "bright_red"),
+            ("ag", "bright_blue"),
+            ("hg", None),
+            ("cu", "blue"),
+            ("fe", "blue"),
+            ("sn", "red"),
+            ("pb", "red"),
+            ("ura", None),
+            ("nep", None),
+            ("plu", None),
+            ("mean_node", None),
+            ("true_node", None),
+            ("asc", None),
+            ("mc", None),
         ]
         # hg sect
         final_spheres = []
@@ -169,9 +174,22 @@ def render_sphere_lines(spheres, horoscope, args, colors):
 
 console = Console()
 
-def format_chart(args, title, lat, lng, dt_local, dt_utc, horoscope, planets, approx_time, approx_locale, config_locale):
-    offset = getattr(args, 'offset', None)
-    no_color = getattr(args, 'no_color', False)
+
+def format_chart(
+    args,
+    title,
+    lat,
+    lng,
+    dt_local,
+    dt_utc,
+    horoscope,
+    planets,
+    approx_time,
+    approx_locale,
+    config_locale,
+):
+    offset = getattr(args, "offset", None)
+    no_color = getattr(args, "no_color", False)
 
     """If --no-color, print bare chart; otherwise print Rich table."""
     if no_color:
@@ -183,7 +201,9 @@ def format_chart(args, title, lat, lng, dt_local, dt_utc, horoscope, planets, ap
         lines.append(get_chart_title(title, approx_time, approx_locale, offset))
 
         # For bare mode, join subtitle parts into one line for simplicity
-        time_str, location_str = get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale)
+        time_str, location_str = get_chart_subtitle(
+            dt_local, dt_utc, lat, lng, args, approx_locale
+        )
         subtitle_line = time_str
         if location_str:
             subtitle_line += " " + location_str
@@ -203,7 +223,9 @@ def format_chart(args, title, lat, lng, dt_local, dt_utc, horoscope, planets, ap
             console.print(Text(warning, style="yellow"))
 
         chart_title = get_chart_title(title, approx_time, approx_locale, offset)
-        time_str, location_str = get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale)
+        time_str, location_str = get_chart_subtitle(
+            dt_local, dt_utc, lat, lng, args, approx_locale
+        )
 
         subtitle_line = time_str
         if location_str:
@@ -220,7 +242,6 @@ def format_chart(args, title, lat, lng, dt_local, dt_utc, horoscope, planets, ap
             table.add_column("Object", justify="right", style="bold")
         table.add_column("Placement", justify="left")
 
-
         spheres = get_spheres(horoscope, args, planets, approx_time, approx_locale)
         for key, color in spheres:
             data = horoscope.get(key, {})
@@ -230,7 +251,7 @@ def format_chart(args, title, lat, lng, dt_local, dt_utc, horoscope, planets, ap
                 obj_name = data.get("obj_name") or key
                 placement = f"{data.get('deg', 0):>2} {data.get('sign_trunc', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}{' r' if data.get('rx') else ''}"
             else:
-                # Default: glyphs for objects, full sign names  
+                # Default: glyphs for objects, full sign names
                 obj_name = data.get("obj_glyph") or key.upper()
                 placement = f"{data.get('deg', 0):>2} {data.get('sign', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}{' r' if data.get('rx') else ''}"
 

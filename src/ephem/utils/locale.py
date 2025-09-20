@@ -1,7 +1,9 @@
 from ephem.config import load_config_defaults
 
+
 class InvalidCoordinatesError(ValueError):
     """Raised when coordinates are outside valid ranges."""
+
     pass
 
 
@@ -16,9 +18,13 @@ def validate_coordinates(lat, lng):
         InvalidCoordinatesError: If coordinates are outside valid ranges
     """
     if not -90 <= lat <= 90:
-        raise InvalidCoordinatesError(f"Latitude must be between -90° and +90°, got {lat}°")
+        raise InvalidCoordinatesError(
+            f"Latitude must be between -90° and +90°, got {lat}°"
+        )
     if not -180 <= lng <= 180:
-        raise InvalidCoordinatesError(f"Longitude must be between -180° and +180°, got {lng}°")
+        raise InvalidCoordinatesError(
+            f"Longitude must be between -180° and +180°, got {lng}°"
+        )
 
 
 def get_locale(args):

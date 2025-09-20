@@ -3,8 +3,18 @@ from ephem.utils.signs import sign_from_index
 from .ayanamsas import get_calc_flag
 
 PLANET_KEYS = [
-    "ae", "ag", "hg", "cu", "fe", "sn", "pb",
-    "ura", "nep", "plu", "mean_node", "true_node"
+    "ae",
+    "ag",
+    "hg",
+    "cu",
+    "fe",
+    "sn",
+    "pb",
+    "ura",
+    "nep",
+    "plu",
+    "mean_node",
+    "true_node",
 ]
 
 
@@ -25,18 +35,20 @@ def get_planets(jd_now, jd_then, offset=None):
         dms = swe.split_deg(dd_now, 8)
         sign_name, sign_data = sign_from_index(dms[4])
 
-        planets.append({
-            'obj_key': obj_key,
-            'deg': dms[0],
-            'mnt': dms[1],
-            'sec': dms[2],
-            'sign': sign_name,
-            'trunc': sign_data['trunc'],
-            'glyph': sign_data['glyph'],
-            'trip': sign_data['trip'],
-            'quad': sign_data['quad'],
-            'rx': dd_then > dd_now,
-            'lng': dd_now
-        })
+        planets.append(
+            {
+                "obj_key": obj_key,
+                "deg": dms[0],
+                "mnt": dms[1],
+                "sec": dms[2],
+                "sign": sign_name,
+                "trunc": sign_data["trunc"],
+                "glyph": sign_data["glyph"],
+                "trip": sign_data["trip"],
+                "quad": sign_data["quad"],
+                "rx": dd_then > dd_now,
+                "lng": dd_now,
+            }
+        )
 
     return planets
