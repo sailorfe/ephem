@@ -2,7 +2,7 @@
 
 > Astrology is alive. It is whole, functional and independent.
 > It has been present in the human spirit from the first civilizations
-> when Man began his long search for meaning
+> when Man began his long search for meaning.
 > It has spanned eras and cultures,
 > yet always remains perfectly current and relevant.
 > It is clear, clean, and objective knowledge: containing nothing nebulous.
