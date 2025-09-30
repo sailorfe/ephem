@@ -76,4 +76,4 @@ For casting charts, especially verbatim from client intake, you'll need an IANA 
 - UTC-7: `America/Denver` (Mountain Standard Time)
 - UTC-8: `America/Los_Angeles` (Pacific Standard Time)
 
-Alternately, you can convert any time to UTC and avoid `-z/--timezone` altogether, but this gets weird near midnight or the International Date Line and takes you further from verbatim sources.
+Alternately, you can convert any time to UTC and avoid `-z/--timezone` altogether, but this gets weird near midnight or the International Date Line, and it's good practice to stay true to the data as given.
