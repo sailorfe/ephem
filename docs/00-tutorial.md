@@ -51,6 +51,7 @@ By the end, you will have set your default location, saved your own birth chart,
 
 ## Table of Contents
 
+- [Installation Guide](./05-installation.md)
 - [Getting Started](./10-getting-started.md)
 - [Birth and Event Charts](./20-birth-event-charts.md)
 - [Electional Examples](./30-electional-examples.md)

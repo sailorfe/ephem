@@ -9,3 +9,6 @@ sync:
 
 fetch:
 	rsync -avz --progress goingmerry:p/py/ephem/ .
+
+fulldoc:
+	pandoc -i docs/*.md -o full-docs.md --wrap=none && rsync full-docs.md goingmerry:d/flor/writing/tutorial_ephem.md
