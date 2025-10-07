@@ -107,8 +107,8 @@ Midheaven  19 Leo 59 12
 
 | Sect                                      | Mode                                      | Element                                   |
 | ----------------------------------------- | ----------------------------------------- | ----------------------------------------- |
-| ![sect](../assets/sect.png)               | ![mode](../assets/mode.png)               | ![element](../assets/element.png)         |
-| ![ascii](../assets/sect-ascii.png)        | ![ascii](../assets/mode-ascii.png)        | ![ascii](../assets/element-ascii.png)     |
+| ![sect](./assets/sect.png)               | ![mode](./assets/mode.png)               | ![element](./assets/element.png)         |
+| ![ascii](./assets/sect-ascii.png)        | ![ascii](./assets/mode-ascii.png)        | ![ascii](./assets/element-ascii.png)     |
 
 - `--theme sect`, the default, mimics Astrodienst's Hellenistic wheel style of coloring the visible planets by sect, including Mercury, whose sect is relative to the Sun.
 - `--theme mode` colors the planets by the modality of their sign. This is a useful way to look for squares and oppositions.
