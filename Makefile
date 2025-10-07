@@ -22,3 +22,8 @@ fulldoc:
     docs/70-display-config.md \
 		--wrap=none \
     -o full-docs.md
+
+pubcb:
+	unset UV_PUBLISH_TOKEN
+	unset UV_CODEBERG_TOKEN
+	uv publish --publish-url https://codeberg.org/api/packages/sailorfe/pypi/
