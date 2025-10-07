@@ -116,7 +116,7 @@ ephem cal 1989 dec
 <a name="tutorial"></a>
 ### tutorial
 
-for more detailed examples, see [the ephem tutorial](./docs/00-tutorial.md). (i think it's pretty good.)
+for more detailed examples, see [the ephem tutorial](https://sailorfe.codeberg.page/ephem). (i think it's pretty good.)
 
 <a name="testing"></a>
 ## testing
