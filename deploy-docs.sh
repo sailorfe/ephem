@@ -2,11 +2,14 @@
 set -e
 
 echo "Building docs..."
+uv venv
+source .venv/bin/activate
+uv pip install mkdocs mkdocs-material
 mkdocs build
 
 echo "Deploying to pages branch..."
 git checkout pages
-rm -rf !(site)  # keep site dir temporarily
+rm -rf !site
 cp -r site/* .
 rm -rf site .venv
 git add .
