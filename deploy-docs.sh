@@ -6,7 +6,7 @@ mkdocs build
 
 echo "Deploying to pages branch..."
 git checkout pages
-rm -rf !(site)  # keep site dir temporarily
+rm -rf !site  # keep site dir temporarily
 cp -r site/* .
 rm -rf site .venv
 git add .
