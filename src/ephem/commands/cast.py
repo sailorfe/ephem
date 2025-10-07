@@ -5,15 +5,13 @@ from ephem import sweph
 from ephem.display import format_chart
 from ephem.db import add_chart, create_tables
 import re
+import sys
 
 TIME_RE = re.compile(r"^(?P<h>\d{1,2})(:(?P<m>\d{1,2}))?(:(?P<s>\d{1,2}))?$")
 
 
 def parse_time(time_str):
-    """
-    Parses a time string like "9", "9:5", "09:05", "09:05:30" into normalized "HH:MM:SS".
-    Defaults missing minutes and seconds to 00. Returns None if time_str is None.
-    """
+    """Returns (hour, minute, second) tuple or None if time_str is None."""
     if not time_str:
         return None
 
@@ -25,12 +23,12 @@ def parse_time(time_str):
 
     hour = int(match.group("h"))
     minute = int(match.group("m") or 0)
-    second = int(match.group("s") or 0)  # Default to 0 if not provided
+    second = int(match.group("s") or 0)
 
     if not (0 <= hour <= 23 and 0 <= minute <= 59 and 0 <= second <= 59):
         raise ValueError(f"Time out of range: {hour:02d}:{minute:02d}:{second:02d}")
 
-    return f"{hour:02d}:{minute:02d}:{second:02d}"
+    return hour, minute, second
 
 
 def parse_event(event_args):
@@ -59,44 +57,38 @@ def parse_event(event_args):
 
 
 def get_moment(date_str, time_str=None, tz_str=None):
-    approx_time = False
+    approx_time = time_str is None
 
-    # default time to noon if missing
-    if not time_str:
-        time_str = "12:00:00"
-        approx_time = True
+    # parse time or use noon default
+    if time_str:
+        hour, minute, second = parse_time(time_str)
+    else:
+        hour, minute, second = 12, 0, 0
 
-    # parse date parts
+    # parse date
     try:
         year, month, day = map(int, date_str.split("-"))
     except ValueError:
         raise ValueError(f"Date must be in YYYY-MM-DD format, got '{date_str}'")
 
-    # parse time parts - now expecting HH:MM:SS
-    time_parts = time_str.split(":")
-    hour = int(time_parts[0])
-    minute = int(time_parts[1])
-    second = int(time_parts[2]) if len(time_parts) > 2 else 0
+    if not (-13000 <= year <= 3999):
+        raise ValueError(f"Year must be between 13000 BCE and 3999 CE, got {year}")
 
-    # build naive datetime with seconds
+    # build datetime
     dt_naive = datetime(year, month, day, hour, minute, second)
-
-    # assign timezone (or UTC default)
     tz = ZoneInfo(tz_str) if tz_str else ZoneInfo("UTC")
     dt_local = dt_naive.replace(tzinfo=tz)
-
-    # convert to UTC
     dt_utc = dt_local.astimezone(ZoneInfo("UTC"))
 
     return dt_local, dt_utc, approx_time
 
 
-def run(args):
-    date, time, title = parse_event(args.event)
+def main(args):
+    date, time, raw_title = parse_event(args.event)
     time = parse_time(time)  # normalize or default
 
     # title remains None for display if empty
-    display_title = title if title and title.strip() else None
+    title = raw_title.strip() if raw_title else None
 
     dt_local, dt_utc, approx_time = get_moment(date, time, args.timezone)
     lat, lng, approx_locale, config_locale = get_locale(args)
@@ -109,7 +101,7 @@ def run(args):
 
     output = format_chart(
         args,
-        display_title,
+        title,
         lat,
         lng,
         dt_local,
@@ -139,3 +131,11 @@ def run(args):
     if output is not None:
         for line in output:
             print(line)
+
+
+def run(args):
+    try:
+        main(args)
+    except ValueError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
