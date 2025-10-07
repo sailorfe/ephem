@@ -24,9 +24,7 @@ def validate_coordinates(lat, lng):
         lat = float(lat)
         lng = float(lng)
     except (ValueError, TypeError):
-        raise InvalidCoordinatesError(
-            "Latitude and longitude must be numeric values"
-        )
+        raise InvalidCoordinatesError("Latitude and longitude must be numeric values")
 
     if not -90 <= lat <= 90:
         raise InvalidCoordinatesError(
