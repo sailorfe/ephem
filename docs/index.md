@@ -1,4 +1,4 @@
-# The Ephem Tutorial
+# Introduction
 
 > Astrology is alive. It is whole, functional and independent.
 > It has been present in the human spirit from the first civilizations
@@ -48,16 +48,5 @@ This tutorial assumes astrological literacy but not necessarily command-line exp
 - [Introduction to the command line](https://tutorials.codebar.io/command-line/introduction/tutorial.html)
 
 By the end, you will have set your default location, saved your own birth chart, elected an event, and answered a horary question, all in the terminal.
-
-## Table of Contents
-
-- [Installation Guide](./05-installation.md)
-- [Getting Started](./10-getting-started.md)
-- [Birth and Event Charts](./20-birth-event-charts.md)
-- [Electional Examples](./30-electional-examples.md)
-- [Horary Workflows](./40-horary-workflows.md)
-- [Database Management](./50-database-management.md)
-- [Advanced Usage](./60-advanced-usage.md)
-- [Display and Configuration](./70-display-config.md)
 
 [^1]: Helena Avelar and Luis Ribeiro, *On the Heavenly Spheres*, 2010.

@@ -8,3 +8,4 @@ src/*.egg-info
 tests/__pycache__
 tests/commands/__pycache__
 __pycache__
+.venv

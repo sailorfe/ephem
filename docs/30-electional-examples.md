@@ -1,10 +1,10 @@
-## Electional Examples
+# Electional Examples
 
 Electional astrology, also known as inceptional astrology, is the practice of selecting optimal times and dates to begin or *incept* something. It's arguably one of the oldest and most accessible disciplines: farmers choose (elect) the full moon nearest to the autumnal equinox to  harvest their fall crops, for example.
 
 To elect a time with`ephem`, you will want to use the `ephem cal` and `ephem cast` commands. For something on the same day or near it, `ephem now` has its place here, too. Calling `ephem cal` is no different from referring to *The American Ephemeris* or [PDF versions of the Swiss Ephemeris](https://www.astro.com/swisseph/swepha_e.htm); you're just using the *actual* software library from which those PDFs were generated, and interacting with the information more quickly and easily.
 
-### Planning a wedding with `ephem cal` and `ephem cast`
+## Planning a wedding with `ephem cal` and `ephem cast`
 Pretend you've been hired to elect a fall wedding that will take place outdoors in northern California, ideally in 2026. The climate means November is a serious possibility. The couple would prefer a weekend but clearly put enough stock in event astrology to ask you, so a weekday wedding is not out of the question.
 
 `ephem cal` takes a year followed by a month written either in full, as a 3-letter abbreviation, or as an integer (1-12), case insensitive:
@@ -15,7 +15,7 @@ $ ephem cal 2026 september
 $ ephem cal 2026 9
 ```
 
-In September 2026, Venus (planet of love [~~was destroyed by global warming~~](https://www.youtube.com/watch?v=qooWnw5rEcI)) ingresses from Libra (its domicile) into Scorpio (its detriment) on Sept. 11. Running `ephem cal 2026 10` shows that it will actually turn retrograde on Oct. 4, re-entering Libra on Oct. 26 before stationing direct on Nov. 15. It's up to you whether Venus' condition by sign matters to you more than its direction.
+In September 2026, Venus ([planet of love](https://www.youtube.com/watch?v=qooWnw5rEcI)) ingresses from Libra (its domicile) into Scorpio (its detriment) on Sept. 11. Running `ephem cal 2026 10` shows that it will actually turn retrograde on Oct. 4, re-entering Libra on Oct. 26 before stationing direct on Nov. 15. It's up to you whether Venus' condition by sign matters to you more than its direction.
 
 For the sake of this example, let's say you're looking at November 15-17 for the very end of warm daytime weather and to catch the Moon in Aquarius trining Venus in Libra. Venus is late enough in Libra that it doesn't oppose Saturn in Aries... but you run the risk of Jupiter opposing the Moon and forming a T-square with the Sun since they're all in fixed signs. Oh no. You can probably go back to early September or jump all the way to December to avoid the Sun-Jupiter square of late Scorpio season, but then it wouldn't be a good outdoor wedding, would it? So we've narrowed it down to Sept. 5 for a different air Moon-Venus trine, and added Mars fallen in Cancer to minimize conflict. Here you can just run
 
@@ -25,7 +25,7 @@ $ ephem cast 2026-09-05 15:00 "Wedding" -z America/Los_Angeles -y 37 -x -122
 
 with various times until you get a pleasant ascendant and the malefics off the angles, of course keeping it reasonable. Outdoor weddings want daylight, generally speaking, especially with temperature differences, and I landed around 10-10:30 a.m. for Libra rising or 2-3:30 p.m. for Sagittarius rising. Realistically, this is just one date of several you would find.
 
-### Sending an email with `ephem now` and `ephem cast`
+## Sending an email with `ephem now` and `ephem cast`
 This is the much more boring way I use electional astrology and the reason for the `-s/--shift` optional argument specific to `ephem now`.
 
 Scenario: It's 11:45 p.m., and I've just drafted an email I mean to send the next day. If I run

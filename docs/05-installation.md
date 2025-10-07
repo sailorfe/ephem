@@ -1,4 +1,4 @@
-## Installation Guide
+# Installation Guide
 
 This guide will help you install `ephem` on macOS, Windows, or Linux. Choose the section that matches your operating system.
 
@@ -7,9 +7,9 @@ This guide will help you install `ephem` on macOS, Windows, or Linux. Choose the
 - [Linux](#linux)
 
 <a name="macos"></a>
-### macOS
+## macOS
 
-#### Prerequisites
+### Prerequisites
 
 First, you need Python 3.8 or later. Check if you have it:
 
@@ -19,11 +19,11 @@ python3 --version
 
 If you see a version number like `Python 3.11.x` or higher, you're good to go! If not, install Python from [python.org](https://www.python.org/downloads/).
 
-#### Installing with pipx
+### Installing with pipx
 
 `pipx` installs Python CLI applications in isolated environments, which is perfect for tools like `ephem`.
 
-##### Step 1: Install pipx
+#### Step 1: Install pipx
 
 If you have Homebrew (recommended):
 
@@ -41,13 +41,13 @@ python3 -m pipx ensurepath
 
 After installation, **close and reopen your terminal** for the changes to take effect.
 
-##### Step 2: Install ephem
+#### Step 2: Install ephem
 
 ```sh
 pipx install ephem-cli
 ```
 
-##### Step 3: Verify installation
+#### Step 3: Verify installation
 
 ```sh
 ephem --version
@@ -56,9 +56,9 @@ ephem --version
 You should see the version number printed out. Now you can run `ephem now` to cast your first chart!
 
 <a name="windows"></a>
-### Windows Installation
+## Windows
 
-#### Prerequisites
+### Prerequisites
 
 You need Python 3.8 or later. Check if you have it by opening **PowerShell** or **Command Prompt** and running:
 
@@ -70,9 +70,9 @@ If Python isn't installed, download it from [python.org](https://www.python.org/
 
 **Important:** During installation, check the box that says "Add Python to PATH".
 
-#### Installation with pipx
+### Installation with pipx
 
-##### Step 1: Install pipx
+#### Step 1: Install pipx
 
 Open PowerShell or Command Prompt and run:
 
@@ -83,13 +83,13 @@ python -m pipx ensurepath
 
 **Close and reopen PowerShell/Command Prompt** after this step.
 
-##### Step 2: Install ephem
+#### Step 2: Install ephem
 
 ```powershell
 pipx install ephem-cli
 ```
 
-##### Step 3: Verify installation
+#### Step 3: Verify installation
 
 ```powershell
 ephem --version
@@ -97,7 +97,7 @@ ephem --version
 
 You should see the version number. Now try `ephem now` to cast your first chart!
 
-#### Troubleshooting Windows
+### Troubleshooting Windows
 
 **If you get "command not found" errors:**
 
@@ -107,9 +107,9 @@ You should see the version number. Now try `ephem now` to cast your first chart!
 
 
 <a name="linux"></a>
-### Linux
+## Linux
 
-#### Stable release
+### Stable release
 
 The stable release of `ephem` can be installed directly from [PyPI](https://pypi.org/project/ephem-cli):
 
@@ -125,7 +125,7 @@ pip install --user ephem-cli    # if you use pip
 pipx install ephem-cli          # if you use pipx, especially Debian/Ubuntu
 ```
 
-#### Building from source
+### Building from source
 
 To build from the `main` branch:
 
@@ -137,7 +137,7 @@ uv run -m ephem.cli             # run directly
 uv sync && uv run -m ephem.cli  # for development
 ```
 
-#### Testing pre-releases
+### Testing pre-releases
 
 You can install the current pre-release from Codeberg:
 
@@ -152,7 +152,7 @@ uv tool install ephem-cli \
 ```
 
 
-### What's next?
+## What's next?
 
 Once installed, continue to [Getting Started](./10-getting-started.md) to cast your first chart and configure your default location!
 

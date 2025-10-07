@@ -1,4 +1,6 @@
-## Birth and Event Charts
+# Birth and Event Charts
+
+## `ephem cast`
 
 The command structure for `ephem cast` goes:
 
@@ -66,7 +68,7 @@ And recalculate it with `ephem data load 1`.
 
 There is a more detailed breakdown of how to interact with `ephem`'s saved data under [Database Management](./50-database-management.md).
 
-### Time zone support
+## Time zone support
 One of the biggest difference between `ephem now` and `ephem cast` is that `now` uses your computer's system time—printed in UTC by default—while `cast` works with local time.
 
 For casting charts, especially verbatim from client intake, you'll need an IANA time zone string. `ephem` uses the Python standard library module [`zoneinfo`](https://docs.python.org/3/library/zoneinfo.html), which rules because it handles daylight savings for you. You can list all available zone strings alphabetically with `ephem --list-zones`, but this list is nearly 500 items long. There are various online sources where you can look up tz strings instead, but I like [Datetime.app](https://datetime.app/iana-timezones). As a quick, US-centric guide:

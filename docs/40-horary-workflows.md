@@ -1,4 +1,4 @@
-## Horary Workflows
+# Horary Workflows
 
 Horary astrology is divination from a horoscope. In *Horary Examples: Traditional Horary Astrology*, Kathryn Silvestre writes: "Someone asks a question on a matter of importance to them. When the question reaches the ears or eyes of an astrologer with the knowledge to judge the chart, the question is born." However, you may take a different approach:
 

@@ -1,6 +1,6 @@
-## Display & Configuration
+# Display & Configuration
 
-### The configuration file
+## The configuration file
 
 The `ephem` config lives at `~/.config/ephem/ephem.toml`. If you open it in a text editor, it might look something like:
 
@@ -41,7 +41,7 @@ Display preferences:
 rm ~/.config/ephem/ephem.toml
 ```
 
-### Configuration options
+## Configuration options
 
 You already got a taste of `--save-config` when you [set your location defaults](./10-getting-started.md), but let's take a look at all the configuration options available for the three calculation commands.
 
@@ -57,9 +57,9 @@ You already got a taste of `--save-config` when you [set your location defaults]
 - `-A/--no-angles`: don't print Ascendant or Midheaven.
 - `-G/--no-geo`: don't print coordinates.
 
-#### Display: format and color
+### Display: format and color
 
-##### Unicode vs ASCII output
+#### Unicode vs ASCII output
 
 By default, ephem prints planetary glyphs and full sign names for `now` and `cast`, and sign glyphs for `cal`. Appending `-a/--ascii` changes the format to full planet names and abbreviated signs:
 
@@ -103,7 +103,7 @@ Ascendant  15 Sco 56 49
 Midheaven  19 Leo 59 12
 ```
 
-##### Themes
+#### Themes
 
 | Sect                                      | Mode                                      | Element                                   |
 | ----------------------------------------- | ----------------------------------------- | ----------------------------------------- |
@@ -114,7 +114,7 @@ Midheaven  19 Leo 59 12
 - `--theme mode` colors the planets by the modality of their sign. This is a useful way to look for squares and oppositions.
 - `--theme element` colors the planets by the element of their sign. This is a useful way to look for trines.
 
-#### Suppressing geodata
+### Suppressing geodata
 
 Two flags, `-G/--no-geo` and `-A/--no-angles`, serve to hold back information from the output. You may consider using them in the following situations:
 

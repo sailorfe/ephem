@@ -1,0 +1,15 @@
+site_name: The Ephem Tutorial
+theme:
+  name: material
+  palette:
+    - scheme: custom-light
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: custom-dark
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+extra_css:
+  - stylesheets/extra.css
