@@ -162,4 +162,4 @@ If you run into issues:
 
 - Check that Python 3.8+ is installed: `python --version` or `python3 --version`
 - Make sure the installation directory is in your PATH
-- Hit up the Discord or [file an issue](https://codeberg.org/sailorfe/ephem/issues) OS details and error messages
+- Hit up [the Discord](https://discord.gg/b3vA5ZhSu2) or [file an issue](https://codeberg.org/sailorfe/ephem/issues) with your OS details and any error messages.
