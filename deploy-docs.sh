@@ -2,9 +2,6 @@
 set -e
 
 echo "Building docs..."
-uv venv
-source .venv/bin/activate
-uv pip install mkdocs mkdocs-material
 mkdocs build
 
 echo "Deploying to pages branch..."
