@@ -1,4 +1,8 @@
 site_name: The Ephem Tutorial
+
+repo_url: https://codeberg.org/sailorfe/ephem
+repo_name: ephem
+
 theme:
   name: material
   palette:

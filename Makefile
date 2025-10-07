@@ -27,3 +27,8 @@ pubcb:
 	unset UV_PUBLISH_TOKEN
 	unset UV_CODEBERG_TOKEN
 	uv publish --publish-url https://codeberg.org/api/packages/sailorfe/pypi/
+
+mkd:
+	uv venv
+	source .venv/bin/activate
+	uv pip install mkdocs mkdocs-material
