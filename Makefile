@@ -9,3 +9,16 @@ sync:
 
 fetch:
 	rsync -avz --progress goingmerry:p/py/ephem/ .
+
+fulldoc:
+	pandoc docs/index.md \
+    docs/00-installation.md \
+    docs/10-getting-started.md \
+    docs/20-birth-event-charts.md \
+    docs/30-electional-examples.md \
+    docs/40-horary-workflows.md \
+    docs/50-database-management.md \
+    docs/60-advanced-usage.md \
+    docs/70-display-config.md \
+		--wrap=none \
+    -o full-docs.md
