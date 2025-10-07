@@ -6,6 +6,7 @@ from rich.text import Text
 from ephem.constants import OBJECTS, AYANAMSAS
 from ephem.sweph import get_planets, build_horoscope
 from ephem.utils.signs import sign_from_index
+from ephem.utils.year import validate_year
 import swisseph as swe
 
 
@@ -61,6 +62,8 @@ def format_planet_position(entry, ascii_mode=False):
 
 def format_calendar(args):
     """Generate ephemeris calendar for given month/year."""
+    validate_year(args.year)
+
     offset = getattr(args, "offset", None)
     ascii_mode = getattr(args, "ascii", False)
 

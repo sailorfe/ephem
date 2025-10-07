@@ -1,9 +1,10 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from ephem.utils.locale import get_locale
+from ephem.utils.locale import get_locale, InvalidCoordinatesError
 from ephem import sweph
 from ephem.display import format_chart
 from ephem.db import add_chart, create_tables
+import sys
 
 
 def get_moment(tz_str=None):
@@ -18,7 +19,7 @@ def get_moment(tz_str=None):
     return dt_local, dt_utc, approx_time
 
 
-def run(args):
+def main(args):
     dt_local, dt_utc, approx_time = get_moment(args.timezone)
     lat, lng, approx_locale, config_locale = get_locale(args)
 
@@ -62,3 +63,11 @@ def run(args):
     if output is not None:
         for line in output:
             print(line)
+
+
+def run(args):
+    try:
+        main(args)
+    except (ValueError, InvalidCoordinatesError) as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)

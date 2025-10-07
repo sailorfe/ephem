@@ -1,6 +1,7 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from ephem.utils.locale import get_locale
+from ephem.utils.locale import get_locale, InvalidCoordinatesError
+from ephem.utils.year import validate_year
 from ephem import sweph
 from ephem.display import format_chart
 from ephem.db import add_chart, create_tables
@@ -71,8 +72,7 @@ def get_moment(date_str, time_str=None, tz_str=None):
     except ValueError:
         raise ValueError(f"Date must be in YYYY-MM-DD format, got '{date_str}'")
 
-    if not (-13000 <= year <= 3999):
-        raise ValueError(f"Year must be between 13000 BCE and 3999 CE, got {year}")
+    validate_year(year)
 
     # build datetime
     dt_naive = datetime(year, month, day, hour, minute, second)
@@ -136,6 +136,6 @@ def main(args):
 def run(args):
     try:
         main(args)
-    except ValueError as e:
+    except (ValueError, InvalidCoordinatesError) as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
