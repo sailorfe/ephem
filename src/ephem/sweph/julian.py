@@ -34,13 +34,13 @@ def get_julian_days(dt_utc, args):
 
     dt_shifted = dt_utc + shift_td
 
-    frac_hour = (
-        dt_shifted.hour
-        + dt_shifted.minute / 60
-        + dt_shifted.second / 3600
-        + dt_shifted.microsecond / 3_600_000_000
-    )
-    jd_now = swe.julday(dt_shifted.year, dt_shifted.month, dt_shifted.day, frac_hour)
+    jd_now = swe.utc_to_jd(
+            dt_shifted.year,
+            dt_shifted.month,
+            dt_shifted.day,
+            dt_shifted.hour,
+            dt_shifted.minute,
+            dt_shifted.second + dt_shifted.microsecond / 1000000.0)[1]
     jd_then = jd_now - (1 / 1440)
 
     return jd_now, jd_then, dt_shifted  # return shifted datetime for display too
