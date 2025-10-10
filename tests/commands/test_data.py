@@ -69,24 +69,28 @@ class TestDataCommands(unittest.TestCase):
             )
 
     @patch("ephem.commands.data.view_charts")
-    def test_print_charts_success(self, mock_view_charts):
+    @patch("pydoc.pager")
+    def test_print_charts_success(self, mock_pager, mock_view_charts):
         """Test successful chart listing."""
         mock_view_charts.return_value = [self.sample_chart]
-
-        with patch("builtins.print") as mock_print:
-            data.print_charts()
-            mock_print.assert_any_call("[1] Test Chart")
+        data.print_charts() 
+        expected_output = (
+            "[1] Test Chart\n"
+            "   UTC:     2025-09-10T12:00:00\n"
+            "   Local:   2025-09-10 08:00:00-04:00\n"
+            "   Lat:     40.7128, Lng: -74.006\n"
+        )
+        mock_pager.assert_called_once_with(expected_output)
 
     @patch("ephem.commands.data.view_charts")
-    def test_print_charts_empty(self, mock_view_charts):
+    @patch("pydoc.pager")
+    def test_print_charts_empty(self, mock_pager, mock_view_charts):
         """Test empty chart database."""
         mock_view_charts.return_value = []
-
-        with patch("builtins.print") as mock_print:
-            data.print_charts()
-            mock_print.assert_called_once_with(
-                "✨ No charts saved yet! Run `ephem cast --save` to add your first chart."
-            )
+        data.print_charts() 
+        mock_pager.assert_called_once_with(
+            "✨ No charts saved yet! Run `ephem cast --save` to add your first chart."
+        )
 
     @patch("ephem.commands.data.delete_chart")
     def test_delete_chart_success(self, mock_delete):

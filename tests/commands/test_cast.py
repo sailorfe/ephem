@@ -14,11 +14,11 @@ class TestCast(unittest.TestCase):
 
     def test_parse_event_date_and_time(self):
         result = cast.parse_event(["2025-08-18", "15:30:00"])
-        self.assertEqual(result, ("2025-08-18", "15:30:00", None))
+        self.assertEqual(result, ("2025-08-18", (15, 30, 0), None))
 
     def test_parse_event_with_title(self):
         result = cast.parse_event(["2025-08-18", "15:30:00", "Test", "Chart"])
-        self.assertEqual(result, ("2025-08-18", "15:30:00", "Test Chart"))
+        self.assertEqual(result, ("2025-08-18", (15, 30, 0), "Test Chart"))
 
     def test_get_moment_utc(self):
         dt_local, dt_utc, approx = cast.get_moment("2025-08-18", "15:30:00")
