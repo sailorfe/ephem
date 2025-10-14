@@ -28,11 +28,6 @@ fulldoc:
 		--wrap=none \
 		-o full-docs.md
 
-mkd:
-	uv venv
-	. .venv/bin/activate && \
-	uv pip install mkdocs mkdocs-material
-
 # deployment
 deploy-docs: mkd
 	. .venv/bin/activate && \
