@@ -5,7 +5,7 @@
 The command structure for `ephem cast` goes:
 
 ```sh
-ephem cast DATE [TIME] [NAME STRING] [options]
+$ ephem cast DATE [TIME] [NAME STRING] [options]
 ```
  
  After you've typed however much time data you have and an optional chart name, every argument—latitude, longitude, and time zone—can follow in any order.  These all result in the same chart:
@@ -35,7 +35,7 @@ $ ephem cast 1996-08-26 17:20 "Jeon Soyeon" -z Asia/Seoul -y 37.488167 -x 127.08
 ```
 
 This prints a confirmation message after the chart output:
-```sh
+```
 Jeon Soyeon (Tropical)
 1996-08-26 17:20:00 KST | 1996-08-26 08:20:00 UTC @ 37.488167 127.085472
 
@@ -57,7 +57,7 @@ Chart saved at index 1.
 ```
 
 You can verify it was saved by running `ephem data view`:
-```sh
+```
 [1] Jeon Soyeon
    UTC:     1996-08-26T08:20:00+00:00
    Local:   1996-08-26T17:20:00+09:00

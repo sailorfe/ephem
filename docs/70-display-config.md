@@ -21,7 +21,7 @@ offset = 0
 
 While running `ephem --show-config` prints the same information as:
 
-```sh
+```
 Location defaults:
   Latitude:  -36.25
   Longitude: 142.416667
@@ -38,18 +38,18 @@ Display preferences:
 `--save-config` tracks changes to single fields declared through optional flags, but not necessarily their omission, e.g. you accidentally configured a sidereal offset and can't change it back to tropical. In such cases, you may want to delete the old `ephem.toml` before making major changes:
 
 ```sh
-rm ~/.config/ephem/ephem.toml
+$ rm ~/.config/ephem/ephem.toml
 ```
 
 ## Configuration options
 
 You already got a taste of `--save-config` when you [set your location defaults](./10-getting-started.md), but let's take a look at all the configuration options available for the three calculation commands.
 
-**`now`, `cast` and `cal`**
+**`now`, `cast` and `cal`**:
 - `-o N/--offset N`: sidereal ayanamsa offset or None for tropical. Run `--list-offsets` to see all 47 available ayanamsas and find the corresponding index `N`.
 - `-a/--ascii`: use ASCII text instead of Unicode glyphs. This can smooth over terminal incompatibilities, like strangely formatted `cal` tables.
  
-**`now` and `cast only`**
+**`now` and `cast only`**:
 - `-t/--theme {sect,mode,element}`: choose colorscheme by planetary sect, or sign mode or element. Defaults to sect.
 - `-c/--no-color`: disable ANSI colors.
 - `-c/--classical`: exclude Uranus through Pluto.
@@ -63,7 +63,7 @@ You already got a taste of `--save-config` when you [set your location defaults]
 
 By default, ephem prints planetary glyphs and full sign names for `now` and `cast`, and sign glyphs for `cal`. Appending `-a/--ascii` changes the format to full planet names and abbreviated signs:
 
-```sh
+```
 # default format
 ephem (Tropical)
 2025-08-06 17:57:13 UTC
@@ -83,7 +83,7 @@ AC  15 Scorpio 56 49
 MC  19 Leo 59 12
 ```
 
-```sh
+```
 # --ascii flag
 ephem (Tropical)
 2025-08-06 17:57:13 UTC

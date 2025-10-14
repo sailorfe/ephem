@@ -32,10 +32,10 @@ _metadata:
 ## Creating new charts with YAML
 
 ```sh
-cd ~/.local/share/ephem/charts
-cp some-chart.yaml new-chart.yaml
-$EDITOR new-chart.yaml
-ephem data sync
+$ cd ~/.local/share/ephem/charts
+$ cp some-chart.yaml new-chart.yaml
+$ $EDITOR new-chart.yaml
+$ ephem data sync
 ```
 
 This workflow can be faster than running `ephem cast --save`, but the one tradeoff I can think of is **you'll need to perform a local time -> UTC conversion yourself**. You can also remove or add as many `_metadata` fields as you want.
@@ -43,18 +43,18 @@ This workflow can be faster than running `ephem cast --save`, but the one tradeo
 ## Editing existing YAML charts
 
 ```sh
-cd ~/.local/share/ephem/charts
-$EDITOR some-chart.yaml
-ephem data sync
+$ cd ~/.local/share/ephem/charts
+$ $EDITOR some-chart.yaml
+$ ephem data sync
 ```
 
 Charts created with `ephem now --save` get timestamped names like "Chart 2025-09-17 14:30:25 UTC". To give them meaningful names, edit both the filename and the `name:` field inside:
 
 ```sh
-cd ~/.local/share/ephem/charts
-mv chart-2025-09-17-14-30-25-utc.yaml mercury-retrograde.yaml
-$EDITOR mercury-retrograde.yaml                                 # Change name: field
-ephem data sync                                                 # Creates backup of original timestamped version
+$ cd ~/.local/share/ephem/charts
+$ mv chart-2025-09-17-14-30-25-utc.yaml mercury-retrograde.yaml
+$ $EDITOR mercury-retrograde.yaml                                   # Change name: field
+$ ephem data sync                                                   # Creates backup of original timestamped version
 ```
 
 Note: `ephem data sync` will recreate the original timestamped .yaml file because the chart still exists in ephem.db. This functions as a backup! It's generally poor science to discard data. But if you *really* want to go nuclear...
@@ -64,5 +64,5 @@ Note: `ephem data sync` will recreate the original timestamped .yaml file becaus
 Combine these commands:
 
 ```sh
-ephem data delete N && rm ~/.local/share/ephem/charts/some-chart.yaml
+$ ephem data delete N && rm ~/.local/share/ephem/charts/some-chart.yaml
 ```

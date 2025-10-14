@@ -10,7 +10,7 @@ $ ephem now
 
 The output should look like
 
-```sh
+```
 No valid location provided or found in config. No angles will be printed.
 Chart of the Moment hyp. (Tropical)
 2025-09-15 22:05 UTC
@@ -40,7 +40,7 @@ This purposely mimics Astrodienst's [Chart of the Moment](https://www.astro.com/
 
 ```sh
 # example: Warracknabeal, Australia
-ephem now -y -36.25 -x 142.416667 --save-config
+$ ephem now -y -36.25 -x 142.416667 --save-config
 ```
 
 - Because this example is in the southern hemisphere, `-y/--lat` is negative.
@@ -48,7 +48,8 @@ ephem now -y -36.25 -x 142.416667 --save-config
 - `--save-config` is an optional argument that can be run repeatedly to update your locale, display, and calculation preferences. You can read more about configuration under [Display & Configuration Options](./70-display-config.md)
 
 Running this command with `--save-config`  should give you something like
-```sh
+
+```
 Saved location settings to /home/user/.config/ephem/ephem.toml
 Chart of the Moment (Tropical)
 2025-09-15 22:05 UTC @ -36.25 142.416667

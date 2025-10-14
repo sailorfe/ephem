@@ -13,7 +13,7 @@ Everything has a horoscope, and computing makes it exceptionally easy to keep tr
 
 For example, this application's first Git commit can be considered its birth or inception:
 
-```sh
+```
 commit 7587dc9634fd682a5a1b40da0f4e54498d34adde
 Author: sailorfe <sailorfe@proton.me>
 Date:   Wed Aug 6 13:57:13 2025 -0400
@@ -22,7 +22,7 @@ Date:   Wed Aug 6 13:57:13 2025 -0400
 
 Its chart generated with *itself* (whew) is
 
-```sh
+```
 ephem (Tropical)
 2025-08-06 13:57:13 EDT | 2025-08-06 17:57:13 UTC
 
