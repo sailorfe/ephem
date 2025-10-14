@@ -29,8 +29,7 @@ fulldoc:
 		-o full-docs.md
 
 # deployment
-deploy-docs: mkd
-	. .venv/bin/activate && \
+deploy-docs:
 	mkdocs build -d /tmp/mkdocs-site
 	git fetch origin pages || git checkout --orphan pages
 	git checkout pages
