@@ -115,7 +115,7 @@ The stable release of `ephem` can be installed directly from [PyPI](https://pypi
 
 ```sh
 # Run directly without installing
-uvx ephem-cli
+uvx --from ephem-cli ephem
 
 # Or install globally
 uv tool install ephem-cli
@@ -132,9 +132,9 @@ To build from the `main` branch:
 ```sh
 git clone https://codeberg.org/sailorfe/ephem.git
 cd ephem
-uv run -m ephem.cli             # run directly
+uv run ephem                    # run directly
 # or
-uv sync && uv run -m ephem.cli  # for development
+uv sync && uv run ephem         # for development
 ```
 
 ### Testing pre-releases
