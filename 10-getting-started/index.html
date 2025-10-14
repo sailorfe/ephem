@@ -573,7 +573,7 @@
 <pre><code class="language-sh">$ ephem now
 </code></pre>
 <p>The output should look like</p>
-<pre><code class="language-sh">No valid location provided or found in config. No angles will be printed.
+<pre><code>No valid location provided or found in config. No angles will be printed.
 Chart of the Moment hyp. (Tropical)
 2025-09-15 22:05 UTC
 
@@ -599,7 +599,7 @@ T☊  18 Pisces 19 53
 <li>Rerun the <code>now</code> command with these additions:</li>
 </ol>
 <pre><code class="language-sh"># example: Warracknabeal, Australia
-ephem now -y -36.25 -x 142.416667 --save-config
+$ ephem now -y -36.25 -x 142.416667 --save-config
 </code></pre>
 <ul>
 <li>Because this example is in the southern hemisphere, <code>-y/--lat</code> is negative.</li>
@@ -607,7 +607,7 @@ ephem now -y -36.25 -x 142.416667 --save-config
 <li><code>--save-config</code> is an optional argument that can be run repeatedly to update your locale, display, and calculation preferences. You can read more about configuration under <a href="../70-display-config/">Display &amp; Configuration Options</a></li>
 </ul>
 <p>Running this command with <code>--save-config</code>  should give you something like</p>
-<pre><code class="language-sh">Saved location settings to /home/user/.config/ephem/ephem.toml
+<pre><code>Saved location settings to /home/user/.config/ephem/ephem.toml
 Chart of the Moment (Tropical)
 2025-09-15 22:05 UTC @ -36.25 142.416667
 

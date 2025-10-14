@@ -621,27 +621,27 @@ _metadata:
   tags: [famous, musician, adb, rodden-c]
 </code></pre>
 <h2 id="creating-new-charts-with-yaml">Creating new charts with YAML</h2>
-<pre><code class="language-sh">cd ~/.local/share/ephem/charts
-cp some-chart.yaml new-chart.yaml
-$EDITOR new-chart.yaml
-ephem data sync
+<pre><code class="language-sh">$ cd ~/.local/share/ephem/charts
+$ cp some-chart.yaml new-chart.yaml
+$ $EDITOR new-chart.yaml
+$ ephem data sync
 </code></pre>
 <p>This workflow can be faster than running <code>ephem cast --save</code>, but the one tradeoff I can think of is <strong>you'll need to perform a local time -&gt; UTC conversion yourself</strong>. You can also remove or add as many <code>_metadata</code> fields as you want.</p>
 <h2 id="editing-existing-yaml-charts">Editing existing YAML charts</h2>
-<pre><code class="language-sh">cd ~/.local/share/ephem/charts
-$EDITOR some-chart.yaml
-ephem data sync
+<pre><code class="language-sh">$ cd ~/.local/share/ephem/charts
+$ $EDITOR some-chart.yaml
+$ ephem data sync
 </code></pre>
 <p>Charts created with <code>ephem now --save</code> get timestamped names like "Chart 2025-09-17 14:30:25 UTC". To give them meaningful names, edit both the filename and the <code>name:</code> field inside:</p>
-<pre><code class="language-sh">cd ~/.local/share/ephem/charts
-mv chart-2025-09-17-14-30-25-utc.yaml mercury-retrograde.yaml
-$EDITOR mercury-retrograde.yaml                                 # Change name: field
-ephem data sync                                                 # Creates backup of original timestamped version
+<pre><code class="language-sh">$ cd ~/.local/share/ephem/charts
+$ mv chart-2025-09-17-14-30-25-utc.yaml mercury-retrograde.yaml
+$ $EDITOR mercury-retrograde.yaml                                   # Change name: field
+$ ephem data sync                                                   # Creates backup of original timestamped version
 </code></pre>
 <p>Note: <code>ephem data sync</code> will recreate the original timestamped .yaml file because the chart still exists in ephem.db. This functions as a backup! It's generally poor science to discard data. But if you <em>really</em> want to go nuclear...</p>
 <h3 id="deleting-charts-permanently">Deleting charts permanently ⚠️</h3>
 <p>Combine these commands:</p>
-<pre><code class="language-sh">ephem data delete N &amp;&amp; rm ~/.local/share/ephem/charts/some-chart.yaml
+<pre><code class="language-sh">$ ephem data delete N &amp;&amp; rm ~/.local/share/ephem/charts/some-chart.yaml
 </code></pre>
 
 

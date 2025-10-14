@@ -1012,7 +1012,7 @@ python -m pipx ensurepath
 <h3 id="stable-release">Stable release</h3>
 <p>The stable release of <code>ephem</code> can be installed directly from <a href="https://pypi.org/project/ephem-cli">PyPI</a>:</p>
 <pre><code class="language-sh"># Run directly without installing
-uvx ephem-cli
+uvx --from ephem-cli ephem
 
 # Or install globally
 uv tool install ephem-cli
@@ -1025,9 +1025,9 @@ pipx install ephem-cli          # if you use pipx, especially Debian/Ubuntu
 <p>To build from the <code>main</code> branch:</p>
 <pre><code class="language-sh">git clone https://codeberg.org/sailorfe/ephem.git
 cd ephem
-uv run -m ephem.cli             # run directly
+uv run ephem                    # run directly
 # or
-uv sync &amp;&amp; uv run -m ephem.cli  # for development
+uv sync &amp;&amp; uv run ephem         # for development
 </code></pre>
 <h3 id="testing-pre-releases">Testing pre-releases</h3>
 <p>You can install the current pre-release from Codeberg:</p>

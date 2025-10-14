@@ -678,7 +678,7 @@ lng = 142.416667
 offset = 0
 </code></pre>
 <p>While running <code>ephem --show-config</code> prints the same information as:</p>
-<pre><code class="language-sh">Location defaults:
+<pre><code>Location defaults:
   Latitude:  -36.25
   Longitude: 142.416667
 
@@ -691,14 +691,14 @@ Display preferences:
   ASCII mode (no Unicode glyphs): enabled
 </code></pre>
 <p><code>--save-config</code> tracks changes to single fields declared through optional flags, but not necessarily their omission, e.g. you accidentally configured a sidereal offset and can't change it back to tropical. In such cases, you may want to delete the old <code>ephem.toml</code> before making major changes:</p>
-<pre><code class="language-sh">rm ~/.config/ephem/ephem.toml
+<pre><code class="language-sh">$ rm ~/.config/ephem/ephem.toml
 </code></pre>
 <h2 id="configuration-options">Configuration options</h2>
 <p>You already got a taste of <code>--save-config</code> when you <a href="../10-getting-started/">set your location defaults</a>, but let's take a look at all the configuration options available for the three calculation commands.</p>
-<p><strong><code>now</code>, <code>cast</code> and <code>cal</code></strong>
+<p><strong><code>now</code>, <code>cast</code> and <code>cal</code></strong>:
 - <code>-o N/--offset N</code>: sidereal ayanamsa offset or None for tropical. Run <code>--list-offsets</code> to see all 47 available ayanamsas and find the corresponding index <code>N</code>.
 - <code>-a/--ascii</code>: use ASCII text instead of Unicode glyphs. This can smooth over terminal incompatibilities, like strangely formatted <code>cal</code> tables.</p>
-<p><strong><code>now</code> and <code>cast only</code></strong>
+<p><strong><code>now</code> and <code>cast only</code></strong>:
 - <code>-t/--theme {sect,mode,element}</code>: choose colorscheme by planetary sect, or sign mode or element. Defaults to sect.
 - <code>-c/--no-color</code>: disable ANSI colors.
 - <code>-c/--classical</code>: exclude Uranus through Pluto.
@@ -708,7 +708,7 @@ Display preferences:
 <h3 id="display-format-and-color">Display: format and color</h3>
 <h4 id="unicode-vs-ascii-output">Unicode vs ASCII output</h4>
 <p>By default, ephem prints planetary glyphs and full sign names for <code>now</code> and <code>cast</code>, and sign glyphs for <code>cal</code>. Appending <code>-a/--ascii</code> changes the format to full planet names and abbreviated signs:</p>
-<pre><code class="language-sh"># default format
+<pre><code># default format
 ephem (Tropical)
 2025-08-06 17:57:13 UTC
 
@@ -726,7 +726,7 @@ T☊  18 Pisces 46 07 r
 AC  15 Scorpio 56 49
 MC  19 Leo 59 12
 </code></pre>
-<pre><code class="language-sh"># --ascii flag
+<pre><code># --ascii flag
 ephem (Tropical)
 2025-08-06 17:57:13 UTC
 
