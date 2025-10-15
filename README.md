@@ -39,13 +39,23 @@ deliberately out of scope:
 <a name="installation"></a>
 ## installation
 
+### build dependencies
+
+because [pyswisseph](https://github.com/astrorigin/pyswisseph) wraps the Swiss Ephemeris C library, you'll need to run the following:
+
+- **Debian/Ubuntu**: `sudo update && sudo apt install build-essential python3-dev`
+- **Fedora/RHEL**: `sudo dnf install @development-tools python3-devel`
+- **Arch Linux**: `sudo pacman -Syu base-devel python`
+- **Alpine Linux**: `doas apk add base python3-dev`
+- **macOS**: install **XCode Command Line Tools** (`xcode select --install`)
+
 ### stable
 
 the stable release of `ephem` can be installed directly from [pypi](https://pypi.org/project/ephem-cli):
 
 ```sh
 # run directly without installing
-uvx ephem-cli
+uvx --from ephem-cli ephem
 
 # or install globally
 uv tool install ephem-cli
