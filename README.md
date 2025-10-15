@@ -45,7 +45,7 @@ the stable release of `ephem` can be installed directly from [pypi](https://pypi
 
 ```sh
 # run directly without installing
-uvx ephem-cli
+uvx --from ephem-cli ephem
 
 # or install globally
 uv tool install ephem-cli
