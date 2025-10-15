@@ -113,10 +113,12 @@ You should see the version number. Now try `ephem now` to cast your first chart!
 
 Because Ephem's core dependency is a C extension, you'll need C and Python build tools installed on your system. These are likely already present in any desktop-geared distribution, but if you're using a minimal environment, you may need to run:
 
-- **Debian/Ubuntu/WSL**: `sudo update && sudo apt install build-essential python3-dev`
-- **Fedora/RHEL**: `sudo dnf install @development-tools python3-devel`
-- **Arch**: `sudo pacman -Syu base-devel python`
-- **Alpine Linux**: `doas apk add base python3-dev`
+- **Debian/Ubuntu/WSL**: `sudo update && sudo apt install build-essential python3-dev pipx`
+- **Fedora/RHEL**: `sudo dnf install @development-tools python3-devel pipx`
+- **Arch**: `sudo pacman -Syu base-devel python python-pipx`
+- **Alpine Linux**: `doas apk add base python3-dev pipx`
+
+**Note**: pipx is optional here if you use [uv](https://astral.sh/uv).
 
 ### Stable release
 

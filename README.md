@@ -43,10 +43,10 @@ deliberately out of scope:
 
 because [pyswisseph](https://github.com/astrorigin/pyswisseph) wraps the Swiss Ephemeris C library, you'll need to run the following:
 
-- **debian-based**: `sudo update && sudo apt install build-essential python3-dev **pipx**`
-- **fedora/rhel**: `sudo dnf install @development-tools python3-devel **pipx**`
-- **arch**: `sudo pacman -Syu base-devel python **python-pipx**`
-- **alpine**: `doas apk add base python3-dev **py3-pipx**`
+- **debian-based**: `sudo update && sudo apt install build-essential python3-dev pipx`
+- **fedora/rhel**: `sudo dnf install @development-tools python3-devel pipx`
+- **arch**: `sudo pacman -Syu base-devel python python-pipx`
+- **alpine**: `doas apk add base python3-dev pipx`
 
 **note:** if you use [uv](https://astral.sh/uv), feel free to exclude pipx.
 
