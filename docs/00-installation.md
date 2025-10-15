@@ -128,10 +128,7 @@ uvx --from ephem-cli ephem
 
 # Or install globally
 uv tool install ephem-cli
-
-# Traditional methods
-pip install --user ephem-cli    # if you use pip
-pipx install ephem-cli          # if you use pipx, especially Debian/Ubuntu
+pipx install ephem-cli
 ```
 
 ### Building from source
