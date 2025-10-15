@@ -43,34 +43,39 @@ deliberately out of scope:
 
 because [pyswisseph](https://github.com/astrorigin/pyswisseph) wraps the Swiss Ephemeris C library, you'll need to run the following:
 
-- **debian-based**: `sudo update && sudo apt install build-essential python3-dev`
-- **fedora/rhel**: `sudo dnf install @development-tools python3-devel`
-- **arch**: `sudo pacman -Syu base-devel python`
-- **alpine**: `doas apk add base python3-dev`
-- **macOS**: install **XCode Command Line Tools** (`xcode select --install`)
+- **debian-based**: `sudo update && sudo apt install build-essential python3-dev **pipx**`
+- **fedora/rhel**: `sudo dnf install @development-tools python3-devel **pipx**`
+- **arch**: `sudo pacman -Syu base-devel python **python-pipx**`
+- **alpine**: `doas apk add base python3-dev **py3-pipx**`
+
+**note:** if you use [uv](https://astral.sh/uv), feel free to exclude pipx.
 
 ### stable
 
 the stable release of `ephem` can be installed directly from [pypi](https://pypi.org/project/ephem-cli):
 
+#### global installation
+```sh
+# using pipx
+pipx install ephem-cli
+
+# using uv
+uv tool install ephem-cli
+```
+
+#### run directly
 ```sh
 # run directly without installing
 uvx --from ephem-cli ephem
-
-# global installation
-uv tool install ephem-cli
-# or
-pipx install ephem-cli
 ```
 
-or you can build it from source from the `main` branch:
-
+#### build from source
 ```sh
 git clone https://codeberg.org/sailorfe/ephem.git
 cd ephem
-uv run -m ephem.cli             # run directly
+uv run ephem                        # run directly
 # or
-uv sync && uv run -m ephem.cli     # for development
+uv sync && uv run ephem             # for development
 ```
 
 ### testing
