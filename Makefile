@@ -40,3 +40,9 @@ deploy-docs:
 	git commit -m "Deploy: $$(date -I)" || echo "No changes to commit"
 	git push origin pages
 	git checkout -
+
+unset:
+	unset UV_PUBLISH_TOKEN && unset UV_CODEBERG_TOKEN
+
+codeberg: unset
+	uv publish --publish-url https://codeberg.org/api/packages/sailorfe/pypi/
