@@ -479,6 +479,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#prerequisites_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#stable-release" class="md-nav__link">
     <span class="md-ellipsis">
       Stable release
@@ -874,6 +883,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#prerequisites_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#stable-release" class="md-nav__link">
     <span class="md-ellipsis">
       Stable release
@@ -1009,6 +1027,14 @@ python -m pipx ensurepath
 </ol>
 <p><a name="linux"></a></p>
 <h2 id="linux">Linux</h2>
+<h3 id="prerequisites_2">Prerequisites</h3>
+<p>Because Ephem's core dependency is a C extension, you'll need C and Python build tools installed on your system. These are likely already present in any desktop-geared distribution, but if you're using a minimal environment, you may need to run:</p>
+<ul>
+<li><strong>Debian/Ubuntu/WSL</strong>: <code>sudo update &amp;&amp; sudo apt install build-essential python3-dev</code></li>
+<li><strong>Fedora/RHEL</strong>: <code>sudo dnf install @development-tools python3-devel</code></li>
+<li><strong>Arch</strong>: <code>sudo pacman -Syu base-devel python</code></li>
+<li><strong>Alpine Linux</strong>: <code>doas apk add base python3-dev</code></li>
+</ul>
 <h3 id="stable-release">Stable release</h3>
 <p>The stable release of <code>ephem</code> can be installed directly from <a href="https://pypi.org/project/ephem-cli">PyPI</a>:</p>
 <pre><code class="language-sh"># Run directly without installing
