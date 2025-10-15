@@ -43,10 +43,10 @@ deliberately out of scope:
 
 because [pyswisseph](https://github.com/astrorigin/pyswisseph) wraps the Swiss Ephemeris C library, you'll need to run the following:
 
-- **Debian/Ubuntu**: `sudo update && sudo apt install build-essential python3-dev`
-- **Fedora/RHEL**: `sudo dnf install @development-tools python3-devel`
-- **Arch Linux**: `sudo pacman -Syu base-devel python`
-- **Alpine Linux**: `doas apk add base python3-dev`
+- **debian-based**: `sudo update && sudo apt install build-essential python3-dev`
+- **fedora/rhel**: `sudo dnf install @development-tools python3-devel`
+- **arch**: `sudo pacman -Syu base-devel python`
+- **alpine**: `doas apk add base python3-dev`
 - **macOS**: install **XCode Command Line Tools** (`xcode select --install`)
 
 ### stable
