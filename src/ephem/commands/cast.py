@@ -57,12 +57,16 @@ def parse_event(event_args):
     return date, time, title
 
 
-def get_moment(date_str, time_str=None, tz_str=None):
-    approx_time = time_str is None
+def get_moment(date_str, time_arg=None, tz_str=None):
+    approx_time = time_arg is None
 
     # parse time or use noon default
-    if time_str:
-        hour, minute, second = parse_time(time_str)
+    if time_arg:
+        # Check if already parsed (tuple) or needs parsing (string)
+        if isinstance(time_arg, tuple):
+            hour, minute, second = time_arg
+        else:
+            hour, minute, second = parse_time(time_arg)
     else:
         hour, minute, second = 12, 0, 0
 
@@ -85,7 +89,6 @@ def get_moment(date_str, time_str=None, tz_str=None):
 
 def main(args):
     date, time, raw_title = parse_event(args.event)
-    time = parse_time(time)  # normalize or default
 
     # title remains None for display if empty
     title = raw_title.strip() if raw_title else None
