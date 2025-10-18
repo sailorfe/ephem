@@ -1,7 +1,6 @@
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
-from rich import box
 from ephem.constants import AYANAMSAS, Colors
 
 
@@ -45,30 +44,28 @@ def get_chart_title(title=None, approx_time=False, approx_locale=False, offset=N
     return f"{title_str} ({zodiac_info})"
 
 
-def get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale):
-    """
-    Returns a tuple of (time_line, location_line) for chart subtitles.
-
-    - Shows UTC only if it differs from local time.
-    - Optionally hides location if no_geo or approximate.
-    """
+def get_time_data(dt_local, dt_utc):
     local_str = dt_local.strftime("%Y-%m-%d %H:%M:%S %Z")  # e.g. 2025-08-09 07:54 EDT
     utc_str = dt_utc.strftime("%Y-%m-%d %H:%M:%S UTC")
 
     # Show UTC only if it differs
     if local_str == utc_str:
-        time_part = f"{local_str}"
+        time_data = f"{local_str}"
     else:
-        time_part = f"{local_str} | {utc_str}"
+        time_data = f"{local_str} | {utc_str}"
 
+    return time_data
+
+
+def get_geodata(lat, lng, args, approx_locale):
     # Show location if allowed
     no_geo = getattr(args, "no_geo", False)
     if not no_geo and not approx_locale:
-        location_part = f"@ {lat} {lng}"
+        geodata = f"@ {lat}, {lng}"
     else:
-        location_part = ""
+        geodata = ""
 
-    return time_part, location_part
+    return geodata
 
 
 def get_warnings(args, approx_time, approx_locale, config_locale):
@@ -238,6 +235,7 @@ def format_chart(
     horoscope,
     planets,
     houses,
+    hsys_name,
     approx_time,
     approx_locale,
     config_locale,
@@ -253,15 +251,8 @@ def format_chart(
         # title + warnings
         lines.extend(get_warnings(args, approx_time, approx_locale, config_locale))
         lines.append(get_chart_title(title, approx_time, approx_locale, offset))
-
-        # For bare mode, join subtitle parts into one line for simplicity
-        time_str, location_str = get_chart_subtitle(
-            dt_local, dt_utc, lat, lng, args, approx_locale
-        )
-        subtitle_line = time_str
-        if location_str:
-            subtitle_line += " " + location_str
-        lines.append(subtitle_line)
+        lines.append(get_time_data(dt_local, dt_utc))
+        lines.append(get_geodata(lat, lng, args, approx_locale))
 
         # body - planets/points
         spheres = get_spheres(horoscope, args, planets, approx_time, approx_locale)
@@ -281,16 +272,12 @@ def format_chart(
             console.print(Text(warning, style="yellow"))
 
         chart_title = get_chart_title(title, approx_time, approx_locale, offset)
-        time_str, location_str = get_chart_subtitle(
-            dt_local, dt_utc, lat, lng, args, approx_locale
-        )
 
-        subtitle_line = time_str
-        if location_str:
-            subtitle_line += " " + location_str
+        time_data = get_time_data(dt_local, dt_utc)
+        geodata = get_geodata(lat, lng, args, approx_locale)
 
         # Combine title and subtitle for table title
-        full_title = f"{chart_title}\n{subtitle_line}"
+        full_title = f"{chart_title}\n{time_data}\n{geodata}"
 
         # Create main table with two columns and title
         main_table = Table(
@@ -299,7 +286,7 @@ def format_chart(
             pad_edge=False,
             title=full_title,
             title_style="bold",
-            title_justify="left",
+            title_justify="center",
         )
         main_table.add_column("Planets", justify="left")
 
@@ -339,7 +326,7 @@ def format_chart(
 
         # Build houses table (right column) if applicable
         if show_houses:
-            houses_table = Table(show_header=False, box=None, padding=(0, 1, 0, 1))
+            houses_table = Table(show_header=False, box=None, padding=(0, 1, 0, 1), title=hsys_name)
             if args.ascii:
                 houses_table.add_column("House", justify="left", style="bold")
             else:

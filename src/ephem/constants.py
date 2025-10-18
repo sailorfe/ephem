@@ -85,6 +85,44 @@ AYANAMSAS = {
 }
 
 
+HOUSE_SYSTEMS = {
+    0: "Placidus",
+    1: "Koch",
+    2: "Porphyrius",
+    3: "Regiomontanus",
+    4: "Campanus",
+    5: "Equal (Asc)",
+    6: "Vehlow Equal",
+    7: "Whole Sign",
+    8: "Meridian",
+    9: "Azimuthal/Horizontal",
+    10: "Polich/Page (Topocentric)",
+    11: "Alcabitus",
+    12: "Morinus",
+    13: "Equal (MC)",
+    14: "Porphyry (Ptolemaic)",
+}
+
+
+HSYS_CODES = {
+    0: b'P',   # Placidus
+    1: b'K',   # Koch
+    2: b'O',   # Porphyrius
+    3: b'R',   # Regiomontanus
+    4: b'C',   # Campanus
+    5: b'A',   # Equal (Asc)
+    6: b'V',   # Vehlow Equal
+    7: b'W',   # Whole Sign
+    8: b'X',   # Meridian
+    9: b'H',   # Azimuthal/Horizontal
+    10: b'T',  # Topocentric
+    11: b'B',  # Alcabitus
+    12: b'M',  # Morinus
+    13: b'E',  # Equal (MC)
+    14: b'O',  # Porphyry (alternate)
+}
+
+
 class Colors:
     def __init__(self, use_color=True):
         self.use_color = use_color

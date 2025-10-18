@@ -1,5 +1,6 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from ephem.constants import HSYS_CODES
 from ephem.utils.locale import get_locale, InvalidCoordinatesError
 from ephem.utils.year import validate_year
 from ephem import sweph
@@ -98,8 +99,9 @@ def main(args):
 
     jd_now, jd_then, *_ = sweph.get_julian_days(dt_utc, args)
     offset = getattr(args, "offset", None)
+    hsys_code = HSYS_CODES[getattr(args, "hsys", 0)]
     planets = sweph.get_planets(jd_now, jd_then, offset)
-    angles, houses = sweph.get_houses_and_angles(jd_now, lat, lng, offset)
+    angles, houses, hsys_name = sweph.get_houses_and_angles(jd_now, lat, lng, offset, hsys=hsys_code)
     horoscope = sweph.build_horoscope(planets, angles)
 
     output = format_chart(
@@ -112,6 +114,7 @@ def main(args):
         horoscope,
         planets,
         houses,
+        hsys_name,
         approx_time,
         approx_locale,
         config_locale,

@@ -4,7 +4,7 @@ import sys
 from datetime import date
 from .commands import now, cast, cal, data
 from .config import load_config_defaults, run_save, run_show
-from .constants import AYANAMSAS
+from .constants import AYANAMSAS, HOUSE_SYSTEMS
 
 
 def splash_text():
@@ -90,6 +90,13 @@ def add_display_options(parser, config_defaults=None):
         default=config_defaults.get("no_geo", False),
         help="don't print coordinates",
     )
+    display.add_argument(
+        "-H",
+        "--hsys",
+        type=int,
+        default=config_defaults.get("hsys", 7),
+        help="house system index (0-14, default: 7=Whole Sign)",
+    )
 
 
 def add_config_options(parser):
@@ -137,6 +144,12 @@ def handle_global_actions(args_list):
         run_show(ConfigArgs())
         sys.exit(0)
 
+    if "--list-house-systems" in args_list:
+        print("\nAvailable house systems:\n")
+        for i, name in HOUSE_SYSTEMS.items():
+            print(f"{i:2}: {name}")
+        sys.exit(0)
+
 
 def offset_type(value):
     """Select ayanamsa from index 0-46; no string support possibly ever."""
@@ -147,6 +160,19 @@ def offset_type(value):
     if not (0 <= ivalue <= 46):
         raise argparse.ArgumentTypeError(
             f"Offset must be between 0 and 46, got {ivalue}."
+        )
+    return ivalue
+
+
+def hsys_type(value):
+    """Select house system from index 0-14."""
+    try:
+        ivalue = int(value)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"House system must be an integer, got '{value}'.")
+    if not (0 <= ivalue <= 14):
+        raise argparse.ArgumentTypeError(
+            f"House system must be between 0 and 14, got {ivalue}."
         )
     return ivalue
 
@@ -204,6 +230,11 @@ def parse_arguments(args=None):
         "--list-offsets",
         action="store_true",
         help="list all ayanamsa offsets as index:key pairs",
+    )
+    parser.add_argument(
+        "--list-house-systems",
+        action="store_true",
+        help="list all available house systems as index:key pairs",
     )
     parser.add_argument(
         "--list-zones",
@@ -333,6 +364,14 @@ def parse_arguments(args=None):
         and not (0 <= int(parsed.offset) <= 46)
     ):
         print("\n❌ Error: --offset must be between 0 and 46.", file=sys.stderr)
+        sys.exit(1)
+
+    if (
+        hasattr(parsed, "hsys")
+        and parsed.hsys is not None
+        and not (0 <= int(parsed.hsys) <= 14)
+    ):
+        print("\n❌ Error: --hsys must be between 0 and 14.", file=sys.stderr)
         sys.exit(1)
 
     # validate 'cast' requires at least 1 event arg (DATE)
