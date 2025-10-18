@@ -52,18 +52,16 @@ def get_time_data(dt_local, dt_utc):
     if local_str == utc_str:
         time_data = f"{local_str}"
     else:
-        time_data = f"{local_str} | {utc_str}"
+        time_data = f"{local_str}\n{utc_str}"
 
     return time_data
 
 
-def get_geodata(lat, lng, args, approx_locale):
-    # Show location if allowed
-    no_geo = getattr(args, "no_geo", False)
-    if not no_geo and not approx_locale:
+def get_geodata(lat, lng, approx_locale):
+    if not approx_locale:
         geodata = f"@ {lat}, {lng}"
     else:
-        geodata = ""
+        geodata = None
 
     return geodata
 
@@ -242,6 +240,7 @@ def format_chart(
 ):
     offset = getattr(args, "offset", None)
     no_color = getattr(args, "no_color", False)
+    no_geo = getattr(args, "no_geo", False)
 
     """If --no-color, print bare chart; otherwise print Rich table."""
     if no_color:
@@ -252,7 +251,12 @@ def format_chart(
         lines.extend(get_warnings(args, approx_time, approx_locale, config_locale))
         lines.append(get_chart_title(title, approx_time, approx_locale, offset))
         lines.append(get_time_data(dt_local, dt_utc))
-        lines.append(get_geodata(lat, lng, args, approx_locale))
+        geodata = get_geodata(lat, lng, approx_locale)
+        if geodata is None or approx_locale or no_geo:
+            pass
+        else:
+            lines.append(f"{geodata}")
+
 
         # body - planets/points
         spheres = get_spheres(horoscope, args, planets, approx_time, approx_locale)
@@ -260,6 +264,7 @@ def format_chart(
 
         # houses
         if houses and not (approx_time or approx_locale or args.no_angles or args.no_houses):
+            lines.append(f"\n{hsys_name}")
             lines.extend(render_house_lines(houses, args, colors))
 
         return lines
@@ -274,10 +279,13 @@ def format_chart(
         chart_title = get_chart_title(title, approx_time, approx_locale, offset)
 
         time_data = get_time_data(dt_local, dt_utc)
-        geodata = get_geodata(lat, lng, args, approx_locale)
+        geodata = get_geodata(lat, lng, approx_locale)
 
         # Combine title and subtitle for table title
-        full_title = f"{chart_title}\n{time_data}\n{geodata}"
+        if geodata is None or approx_locale or no_geo:
+            full_title = f"{chart_title}\n{time_data}"
+        else:
+            full_title = f"{chart_title}\n{time_data}\n{geodata}"
 
         # Create main table with two columns and title
         main_table = Table(

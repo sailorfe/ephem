@@ -15,13 +15,14 @@ a minimal, opinionated astrology CLI tool
 
 currently supports:
 - all 47 sidereal offsets from the [Swiss Ephemeris](https://www.astro.com/swisseph/swephprg.htm)
+- 15 house systems for cusp calculation
 - the sun, moon, and eight planets (mercury–pluto)
 - choice of lunar node calculation method
 - clear table output for charts and ephemerides
 - graceful handling of incomplete data
 
 deliberately out of scope:
-- house cusps and placements
+- house placements
 - graphical charts
 - asteroids
 
