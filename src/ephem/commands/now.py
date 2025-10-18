@@ -29,7 +29,7 @@ def main(args):
     dt_local_shifted = dt_utc_shifted.astimezone(dt_local.tzinfo)
 
     planets = sweph.get_planets(jd_now, jd_then, offset)
-    angles = sweph.get_angles(jd_now, lat, lng, offset)
+    angles, houses = sweph.get_houses_and_angles(jd_now, lat, lng, offset)
     horoscope = sweph.build_horoscope(planets, angles)
     title = "Chart of the Moment"
 

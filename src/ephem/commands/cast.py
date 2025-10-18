@@ -96,7 +96,7 @@ def main(args):
     jd_now, jd_then, *_ = sweph.get_julian_days(dt_utc, args)
     offset = getattr(args, "offset", None)
     planets = sweph.get_planets(jd_now, jd_then, offset)
-    angles = sweph.get_angles(jd_now, lat, lng, offset)
+    angles, houses = sweph.get_houses_and_angles(jd_now, lat, lng, offset)
     horoscope = sweph.build_horoscope(planets, angles)
 
     output = format_chart(

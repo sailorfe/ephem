@@ -1,6 +1,7 @@
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
+from rich import box
 from ephem.constants import AYANAMSAS, Colors
 
 
@@ -235,7 +236,7 @@ def format_chart(
         console.print(Text(f" {subtitle_line}", style="bold"))
         console.print()
 
-        table = Table(show_header=False, box=None, pad_edge=True)
+        table = Table(show_header=False, box=box.SQUARE, pad_edge=True)
         if args.ascii:
             table.add_column("Object", justify="left", style="bold")
         else:
