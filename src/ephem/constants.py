@@ -17,21 +17,18 @@ SIGNS = {
 
 
 OBJECTS = {
-    "ae": {"name": "Sun", "glyph": "☉"},
-    "ag": {"name": "Moon", "glyph": "☽"},
-    "hg": {"name": "Mercury", "glyph": "☿"},
-    "cu": {"name": "Venus", "glyph": "♀"},
-    "fe": {
-        "name": "Mars",
-        "glyph": "♂",
-    },
-    "sn": {"name": "Jupiter", "glyph": "♃"},
-    "pb": {"name": "Saturn", "glyph": "♄"},
-    "ura": {"name": "Uranus", "glyph": "♅"},
-    "nep": {"name": "Neptune", "glyph": "♆"},
-    "plu": {"name": "Pluto", "glyph": "♇"},
-    "mean_node": {"name": "Mean Node", "glyph": "M☊"},
-    "true_node": {"name": "True Node", "glyph": "T☊"},
+    "ae": {"name": "Sun", "glyph": "☉", "se_id": swe.SUN},
+    "ag": {"name": "Moon", "glyph": "☽", "se_id": swe.MOON},
+    "hg": {"name": "Mercury", "glyph": "☿", "se_id": swe.MERCURY},
+    "cu": {"name": "Venus", "glyph": "♀", "se_id": swe.VENUS},
+    "fe": {"name": "Mars", "glyph": "♂", "se_id": swe.MARS},
+    "sn": {"name": "Jupiter", "glyph": "♃", "se_id": swe.JUPITER},
+    "pb": {"name": "Saturn", "glyph": "♄", "se_id": swe.SATURN},
+    "ura": {"name": "Uranus", "glyph": "♅", "se_id": swe.URANUS},
+    "nep": {"name": "Neptune", "glyph": "♆", "se_id": swe.NEPTUNE},
+    "plu": {"name": "Pluto", "glyph": "♇", "se_id": swe.PLUTO},
+    "mean_node": {"name": "Mean Node", "glyph": "M☊", "se_id": swe.MEAN_NODE},
+    "true_node": {"name": "True Node", "glyph": "T☊", "se_id": swe.TRUE_NODE},
     "asc": {"name": "Ascendant", "glyph": "AC"},
     "mc": {"name": "Midheaven", "glyph": "MC"},
 }

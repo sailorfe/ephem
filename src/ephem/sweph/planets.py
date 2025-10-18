@@ -1,21 +1,7 @@
 import swisseph as swe
 from ephem.utils.signs import sign_from_index
+from ephem.constants import OBJECTS
 from .ayanamsas import get_calc_flag
-
-PLANET_KEYS = [
-    "ae",
-    "ag",
-    "hg",
-    "cu",
-    "fe",
-    "sn",
-    "pb",
-    "ura",
-    "nep",
-    "plu",
-    "mean_node",
-    "true_node",
-]
 
 
 def get_planets(jd_now, jd_then, offset=None):
@@ -28,16 +14,21 @@ def get_planets(jd_now, jd_then, offset=None):
     calc_flag = get_calc_flag(offset)
     planets = []
 
-    for planet_id, obj_key in enumerate(PLANET_KEYS):
-        dd_now = swe.calc_ut(jd_now, planet_id, calc_flag)[0][0]
-        dd_then = swe.calc_ut(jd_then, planet_id, calc_flag)[0][0]
+    for alias, obj_data in OBJECTS.items():
+        # Skip objects that don't have an se_id
+        if "se_id" not in obj_data:
+            continue
+
+        se_id = obj_data["se_id"]
+        dd_now = swe.calc_ut(jd_now, se_id, calc_flag)[0][0]
+        dd_then = swe.calc_ut(jd_then, se_id, calc_flag)[0][0]
 
         dms = swe.split_deg(dd_now, 8)
         sign_name, sign_data = sign_from_index(dms[4])
 
         planets.append(
             {
-                "obj_key": obj_key,
+                "obj_key": alias,
                 "deg": dms[0],
                 "mnt": dms[1],
                 "sec": dms[2],
