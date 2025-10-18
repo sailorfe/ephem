@@ -42,6 +42,7 @@ def main(args):
         dt_utc_shifted,
         horoscope,
         planets,
+        houses,
         approx_time,
         approx_locale,
         config_locale,

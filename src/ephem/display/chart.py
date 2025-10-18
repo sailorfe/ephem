@@ -130,7 +130,7 @@ def get_spheres(horoscope, args, planets, approx_time, approx_locale):
             else:
                 color = default_color
             final_spheres.append((key, color))
-            spheres = final_spheres
+        spheres = final_spheres
 
     else:
         color_map = THEME_COLORS.get(args.theme)
@@ -150,6 +150,35 @@ def get_spheres(horoscope, args, planets, approx_time, approx_locale):
         spheres = [(k, c) for k, c in spheres if k != "true_node"]
 
     return spheres
+
+
+def get_houses_display(houses, args):
+    """Assemble list of house cusps to display with element/mode colors."""
+    ELEMENT_COLORS = {
+        "fire": "red",
+        "earth": "green",
+        "air": "bright_black",
+        "water": "blue",
+    }
+    MODE_COLORS = {"cardinal": "magenta", "fixed": "yellow", "mutable": "cyan"}
+
+    house_list = []
+    for house_data in houses:
+        key = house_data.get("obj_key")
+
+        if args.theme == "sect":
+            # Houses don't have sect, so no color
+            color = None
+        elif args.theme == "element":
+            color = ELEMENT_COLORS.get(house_data.get("trip"))
+        elif args.theme == "mode":
+            color = MODE_COLORS.get(house_data.get("quad"))
+        else:
+            color = None
+
+        house_list.append((key, color, house_data))
+
+    return house_list
 
 
 def render_sphere_lines(spheres, horoscope, args, colors):
@@ -173,6 +202,29 @@ def render_sphere_lines(spheres, horoscope, args, colors):
     return lines
 
 
+def render_house_lines(houses, args, colors):
+    """Render house cusp lines in ASCII format."""
+    lines = []
+    house_list = get_houses_display(houses, args)
+
+    for key, color, data in house_list:
+        if args.ascii:
+            # ASCII mode: full names, abbreviated signs
+            obj_name = key.ljust(12)
+            placement = f"{data.get('deg', 0):>2} {data.get('trunc', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}"
+        else:
+            # Default: house number, full sign names
+            obj_name = key.ljust(3)
+            placement = f"{data.get('deg', 0):>2} {data.get('sign', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}"
+
+        line = f"{obj_name} {placement}"
+        if colors and color:
+            line = colors.colorize(line, color)
+        lines.append(line)
+
+    return lines
+
+
 console = Console()
 
 
@@ -185,6 +237,7 @@ def format_chart(
     dt_utc,
     horoscope,
     planets,
+    houses,
     approx_time,
     approx_locale,
     config_locale,
@@ -210,9 +263,13 @@ def format_chart(
             subtitle_line += " " + location_str
         lines.append(subtitle_line)
 
-        # body
+        # body - planets/points
         spheres = get_spheres(horoscope, args, planets, approx_time, approx_locale)
         lines.extend(render_sphere_lines(spheres, horoscope, args, colors))
+
+        # houses
+        if houses and not (approx_time or approx_locale or args.no_angles):
+            lines.extend(render_house_lines(houses, args, colors))
 
         return lines
 
@@ -232,16 +289,32 @@ def format_chart(
         if location_str:
             subtitle_line += " " + location_str
 
-        console.print(Text(f" {chart_title}", style="bold"))
-        console.print(Text(f" {subtitle_line}", style="bold"))
-        console.print()
+        # Combine title and subtitle for table title
+        full_title = f"{chart_title}\n{subtitle_line}"
 
-        table = Table(show_header=False, box=box.SQUARE, pad_edge=True)
+        # Create main table with two columns and title
+        main_table = Table(
+            show_header=False,
+            box=None,
+            pad_edge=False,
+            title=full_title,
+            title_style="bold",
+            title_justify="left",
+        )
+        main_table.add_column("Planets", justify="left")
+
+        # Only add houses column if we have houses to display
+        show_houses = houses and not (approx_time or approx_locale or args.no_angles)
+        if show_houses:
+            main_table.add_column("Houses", justify="left")
+
+        # Build planets table (left column)
+        planets_table = Table(show_header=False, box=None, padding=(0, 1, 0, 1))
         if args.ascii:
-            table.add_column("Object", justify="left", style="bold")
+            planets_table.add_column("Object", justify="left", style="bold")
         else:
-            table.add_column("Object", justify="right", style="bold")
-        table.add_column("Placement", justify="left")
+            planets_table.add_column("Object", justify="right", style="bold")
+        planets_table.add_column("Placement", justify="left")
 
         spheres = get_spheres(horoscope, args, planets, approx_time, approx_locale)
         for key, color in spheres:
@@ -256,12 +329,42 @@ def format_chart(
                 obj_name = data.get("obj_glyph") or key.upper()
                 placement = f"{data.get('deg', 0):>2} {data.get('sign', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}{' r' if data.get('rx') else ''}"
 
-            obj_name = str(obj_name)
-            placement = str(placement)
+            # Apply color using Rich Text object
+            if color:
+                obj_name = Text(str(obj_name), style=color)
+            else:
+                obj_name = Text(str(obj_name))
 
-            if colors and color:
-                obj_name = colors.colorize(obj_name, color)
+            planets_table.add_row(obj_name, placement)
 
-            table.add_row(obj_name, placement)
+        # Build houses table (right column) if applicable
+        if show_houses:
+            houses_table = Table(show_header=False, box=None, padding=(0, 1, 0, 1))
+            if args.ascii:
+                houses_table.add_column("House", justify="left", style="bold")
+            else:
+                houses_table.add_column("House", justify="right", style="bold")
+            houses_table.add_column("Cusp", justify="left")
 
-        console.print(table)
+            house_list = get_houses_display(houses, args)
+            for key, color, data in house_list:
+                if args.ascii:
+                    obj_name = key
+                    placement = f"{data.get('deg', 0):>2} {data.get('trunc', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}"
+                else:
+                    obj_name = key
+                    placement = f"{data.get('deg', 0):>2} {data.get('sign', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}"
+
+                # Apply color to obj_name using Rich Text object
+                if color:
+                    obj_name = Text(obj_name, style=color)
+                else:
+                    obj_name = Text(obj_name)
+
+                houses_table.add_row(obj_name, placement)
+
+            main_table.add_row(planets_table, houses_table)
+        else:
+            main_table.add_row(planets_table)
+
+        console.print(main_table)
