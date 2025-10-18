@@ -46,16 +46,18 @@ $ rm ~/.config/ephem/ephem.toml
 You already got a taste of `--save-config` when you [set your location defaults](./10-getting-started.md), but let's take a look at all the configuration options available for the three calculation commands.
 
 **`now`, `cast` and `cal`**:
-- `-o N/--offset N`: sidereal ayanamsa offset or None for tropical. Run `--list-offsets` to see all 47 available ayanamsas and find the corresponding index `N`.
-- `-a/--ascii`: use ASCII text instead of Unicode glyphs. This can smooth over terminal incompatibilities, like strangely formatted `cal` tables.
+- `-o N/--offset N`: Sidereal ayanamsa offset or None for tropical. Run `--list-offsets` to see all 47 available ayanamsas and find the corresponding index `N`.
+- `-a/--ascii`: Use ASCII text instead of Unicode glyphs. This can smooth over terminal incompatibilities, like strangely formatted `cal` tables.
  
 **`now` and `cast only`**:
-- `-t/--theme {sect,mode,element}`: choose colorscheme by planetary sect, or sign mode or element. Defaults to sect.
-- `-c/--no-color`: disable ANSI colors.
-- `-c/--classical`: exclude Uranus through Pluto.
-- `-n/--node {true,mean}`: choose lunar node calculation method.
-- `-A/--no-angles`: don't print Ascendant or Midheaven.
-- `-G/--no-geo`: don't print coordinates.
+- `-d N/--hsys N`: Choose house system. Defaults to Whole Sign Houses.
+- `-t/--theme {sect,mode,element}`: Choose colorscheme by planetary sect, or sign mode or element. Defaults to sect.
+- `-c/--no-color`: Disable ANSI colors.
+- `-c/--classical`: Exclude Uranus through Pluto.
+- `-n/--node {true,mean}`: Choose lunar node calculation method.
+- `-A/--no-angles`: Don't print Ascendant or Midheaven.
+- `-G/--no-geo`: Don't print coordinates.
+- `-D/--no-houses`: Don't print house cusps.
 
 ### Display: format and color
 
