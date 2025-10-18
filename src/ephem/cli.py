@@ -42,6 +42,13 @@ def add_display_options(parser, config_defaults=None):
 
     display = parser.add_argument_group("display options")
     display.add_argument(
+        "-d",
+        "--hsys",
+        type=int,
+        default=config_defaults.get("hsys", 7),
+        help="house division system index (0-14, default: 7=Whole Sign)",
+    )
+    display.add_argument(
         "-a",
         "--ascii",
         action="store_true",
@@ -91,13 +98,12 @@ def add_display_options(parser, config_defaults=None):
         help="don't print coordinates",
     )
     display.add_argument(
-        "-H",
-        "--hsys",
-        type=int,
-        default=config_defaults.get("hsys", 7),
-        help="house system index (0-14, default: 7=Whole Sign)",
+        "-D",
+        "--no-houses",
+        action="store_true",
+        default=config_defaults.get("no_houses", False),
+        help="don't print house cusps",
     )
-
 
 def add_config_options(parser):
     """Add configuration options to parser (only --save-config now)."""

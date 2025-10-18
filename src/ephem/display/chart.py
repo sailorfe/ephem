@@ -259,7 +259,7 @@ def format_chart(
         lines.extend(render_sphere_lines(spheres, horoscope, args, colors))
 
         # houses
-        if houses and not (approx_time or approx_locale or args.no_angles):
+        if houses and not (approx_time or approx_locale or args.no_angles or args.no_houses):
             lines.extend(render_house_lines(houses, args, colors))
 
         return lines
@@ -291,7 +291,7 @@ def format_chart(
         main_table.add_column("Planets", justify="left")
 
         # Only add houses column if we have houses to display
-        show_houses = houses and not (approx_time or approx_locale or args.no_angles)
+        show_houses = houses and not (approx_time or approx_locale or args.no_angles or args.no_houses)
         if show_houses:
             main_table.add_column("Houses", justify="left")
 

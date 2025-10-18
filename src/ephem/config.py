@@ -49,10 +49,22 @@ def validate_offset_field(value: Any) -> Optional[int]:
         return None
 
 
+def validate_hsys_field(value: Any) -> Optional[int]:
+    """Validate house system field (0-14 or None)."""
+    if value is None:
+        return None
+    try:
+        offset_val = int(value)
+        return offset_val if 0 <= offset_val <= 14 else None
+    except (ValueError, TypeError):
+        return None
+
+
 FIELD_PARSERS = {
     ("location", "lat"): parse_float_field,
     ("location", "lng"): parse_float_field,
     ("zodiac", "offset"): validate_offset_field,
+    ("house system", "hsys"): validate_hsys_field,
     ("display", "node"): validate_choice_field(["true", "mean"]),
     ("display", "theme"): validate_choice_field(["sect", "mode", "element"]),
     ("display", "no-geo"): parse_bool_field,
@@ -60,6 +72,7 @@ FIELD_PARSERS = {
     ("display", "classical"): parse_bool_field,
     ("display", "ascii"): parse_bool_field,
     ("display", "no-color"): parse_bool_field,
+    ("display", "no-houses"): parse_bool_field,
 }
 
 
@@ -67,6 +80,7 @@ CLI_TO_CONFIG_MAPPING = {
     "no_geo": ("display", "no-geo"),
     "no_angles": ("display", "no-angles"),
     "no_color": ("display", "no-color"),
+    "no_houses": ("display", "no-houses"),
     "classical": ("display", "classical"),
     "ascii": ("display", "ascii"),
     "node": ("display", "node"),
@@ -74,6 +88,7 @@ CLI_TO_CONFIG_MAPPING = {
     "lat": ("location", "lat"),
     "lng": ("location", "lng"),
     "offset": ("zodiac", "offset"),
+    "hsys": ("house system", "hsys"),
 }
 
 
@@ -211,6 +226,7 @@ def run_save(args):
         section_names = {
             "location": "location settings",
             "zodiac": "zodiac preferences",
+            "house system": "house system preference",
             "display": "display preferences",
         }
         saved_items = [section_names[section] for section in saved_sections]
@@ -264,6 +280,21 @@ def run_show(args):
                     print(f"  System: Sidereal — Unknown ayanamsa (index {offset_val})")
         has_settings = True
 
+    if "house system" in config and config["house system"]:
+        print("\nHouse system:")
+        hsys_section = config["house system"]
+        if "hsys" in hsys_section:
+            hsys_val = hsys_section["hsys"]
+            # Import here to avoid circular imports
+            from .constants import HOUSE_SYSTEMS
+
+            try:
+                hsys_name = HOUSE_SYSTEMS[hsys_val]
+                print(f"  System: {hsys_name} (index {hsys_val})")
+            except KeyError:
+                print(f"  System: Unknown house system (index {hsys_val})")
+        has_settings = True
+
     if "display" in config and config["display"]:
         print("\nDisplay preferences:")
         display = config["display"]
@@ -273,6 +304,7 @@ def run_show(args):
             "no-geo": "Hide coordinates",
             "no-angles": "Hide angles",
             "no-color": "Disable ANSI colors",
+            "no-houses": "Hide house cusps",
             "classical": "Classical planets only",
             "ascii": "ASCII mode (no Unicode glyphs)",
         }
