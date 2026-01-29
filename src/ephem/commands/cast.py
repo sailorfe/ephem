@@ -12,7 +12,6 @@ TIME_RE = re.compile(r"^(?P<h>\d{1,2})(:(?P<m>\d{1,2}))?(:(?P<s>\d{1,2}))?$")
 
 
 def parse_time(time_str):
-    """Returns (hour, minute, second) tuple or None if time_str is None."""
     if not time_str:
         return None
 
@@ -33,10 +32,6 @@ def parse_time(time_str):
 
 
 def parse_event(event_args):
-    """
-    Reads event positional arg output based on length.
-    Supports DATE [TIME] [TITLE].
-    """
     if len(event_args) == 0:
         return None, None, None
 
@@ -62,7 +57,7 @@ def get_moment(date_str, time_arg=None, tz_str=None):
 
     # parse time or use noon default
     if time_arg:
-        # Check if already parsed (tuple) or needs parsing (string)
+        # check if already parsed (tuple) or needs parsing (string)
         if isinstance(time_arg, tuple):
             hour, minute, second = time_arg
         else:

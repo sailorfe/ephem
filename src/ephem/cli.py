@@ -36,7 +36,6 @@ class EphemParser(argparse.ArgumentParser):
 
 
 def add_display_options(parser, config_defaults=None):
-    """Display options for cast, now, and data load."""
     if config_defaults is None:
         config_defaults = {}
 
@@ -93,7 +92,6 @@ def add_display_options(parser, config_defaults=None):
 
 
 def add_config_options(parser):
-    """Add configuration options to parser (only --save-config now)."""
     config = parser.add_argument_group("configuration")
     config.add_argument(
         "--save-config",
@@ -103,34 +101,28 @@ def add_config_options(parser):
 
 
 def handle_save_config_action(args):
-    """Handle --save-config action for subcommands that support it."""
     if hasattr(args, "save_config") and args.save_config:
         run_save(args)
 
 
 def handle_global_actions(args_list):
-    """Handle global actions that should exit before subcommand parsing."""
-    # Handle --list-offsets
     if "--list-offsets" in args_list:
         print("\nAyanamsa offsets:\n")
         for i, key in enumerate(AYANAMSAS.keys()):
             print(f"{i:2}: {key}")
         sys.exit(0)
 
-    # Handle --list-zones
     if "--list-zones" in args_list:
         import zoneinfo
 
         print("\nAvailable IANA time zones:\n")
-        # Get all available zones, sorted
         zones = sorted(zoneinfo.available_timezones())
         for zone in zones:
             print(zone)
         sys.exit(0)
 
-    # Handle --show-config
     if "--show-config" in args_list:
-        # Create a minimal args object for run_show
+        # create a minimal args object for run_show
         class ConfigArgs:
             pass
 
@@ -139,7 +131,6 @@ def handle_global_actions(args_list):
 
 
 def offset_type(value):
-    """Select ayanamsa from index 0-46; no string support possibly ever."""
     try:
         ivalue = int(value)
     except ValueError:
@@ -152,8 +143,7 @@ def offset_type(value):
 
 
 def parse_month(value: str):
-    """For cal command"""
-    # Try numeric
+    # try numeric
     try:
         month_num = int(value)
         if 1 <= month_num <= 12:
@@ -161,7 +151,7 @@ def parse_month(value: str):
     except ValueError:
         pass
 
-    # Try name or abbreviation (case-insensitive)
+    # try name or abbreviation (case-insensitive)
     value = value.lower()
     months = {name.lower(): i for i, name in enumerate(calendar.month_name) if name}
     abbrevs = {name.lower(): i for i, name in enumerate(calendar.month_abbr) if name}
@@ -180,7 +170,7 @@ def parse_arguments(args=None):
     if args is None:
         args = sys.argv[1:]
 
-    # Handle global actions BEFORE any parsing
+    # handle global actions BEFORE any parsing
     handle_global_actions(args)
 
     # global flags for locale and ayanamsa
@@ -199,7 +189,7 @@ def parse_arguments(args=None):
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
-    # Add global options
+    # add global options
     parser.add_argument(
         "--list-offsets",
         action="store_true",
@@ -350,16 +340,12 @@ def main():
     args = parse_arguments()
 
     if hasattr(args, "func"):
-        # Handle --save-config BEFORE running the main command
+        # handle --save-config BEFORE running the main command
         if args.command in ["now", "cast"]:
             handle_save_config_action(args)
-
-        # Dispatch to the subcommand's run function
         args.func(args)
     else:
-        # No subcommand provided; show help and exit with error
         print(splash_text())
-        # Re-parse with just help, so you still get the global help text
         EphemParser(prog="ephem").print_help()
         sys.exit(1)
 

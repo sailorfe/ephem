@@ -7,8 +7,6 @@ def main(args):
 
 
 def run(args):
-    """Main entry point for calendar command."""
-
     try:
         main(args)
     except ValueError as e:

@@ -5,30 +5,14 @@ from ephem.constants import AYANAMSAS, Colors
 
 
 def get_chart_title(title=None, approx_time=False, approx_locale=False, offset=None):
-    """
-    Returns chart title string with optional hyp. and zodiac info inline.
-
-    Args:
-        title (str | None): User-provided chart title.
-        approx_time (bool): Whether the time is approximate.
-        approx_locale (bool): Whether the location is approximate.
-        offset (int | str | None): Sidereal offset (None = Tropical).
-
-    Returns:
-        str: Formatted chart title line.
-    """
-    # Base title
     title_str = title or ""
 
-    # Approximation marker
     if approx_time or approx_locale:
         title_str += " hyp."
 
-    # Zodiac mode
     if offset is None:
         zodiac_info = "Tropical"
     else:
-        # Convert numeric index to key
         if isinstance(offset, int) or (isinstance(offset, str) and offset.isdigit()):
             idx = int(offset)
             try:
@@ -40,27 +24,18 @@ def get_chart_title(title=None, approx_time=False, approx_locale=False, offset=N
 
         zodiac_info = f"Sidereal — {key}"
 
-    # Inline final title
     return f"{title_str} ({zodiac_info})"
 
 
 def get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale):
-    """
-    Returns a tuple of (time_line, location_line) for chart subtitles.
-
-    - Shows UTC only if it differs from local time.
-    - Optionally hides location if no_geo or approximate.
-    """
-    local_str = dt_local.strftime("%Y-%m-%d %H:%M:%S %Z")  # e.g. 2025-08-09 07:54 EDT
+    local_str = dt_local.strftime("%Y-%m-%d %H:%M:%S %Z")
     utc_str = dt_utc.strftime("%Y-%m-%d %H:%M:%S UTC")
 
-    # Show UTC only if it differs
     if local_str == utc_str:
         time_part = f"{local_str}"
     else:
         time_part = f"{local_str} | {utc_str}"
 
-    # Show location if allowed
     no_geo = getattr(args, "no_geo", False)
     if not no_geo and not approx_locale:
         location_part = f"@ {lat} {lng}"
@@ -71,7 +46,6 @@ def get_chart_subtitle(dt_local, dt_utc, lat, lng, args, approx_locale):
 
 
 def get_warnings(args, approx_time, approx_locale, config_locale):
-    """Return warnings for incomplete data to display above chart."""
     warning_conditions = [
         (approx_time, "No time provided. Using UTC noon and not printing angles."),
         (
@@ -84,7 +58,6 @@ def get_warnings(args, approx_time, approx_locale, config_locale):
 
 
 def get_mercury_sect_color(planets, default_color):
-    """Check if Mercury is diurnal or nocturnal for sect color scheme (default)."""
     try:
         hg_lng = planets[2]["lng"]  # hg index
         ae_lng = planets[0]["lng"]  # sun index
@@ -94,7 +67,6 @@ def get_mercury_sect_color(planets, default_color):
 
 
 def get_spheres(horoscope, args, planets, approx_time, approx_locale):
-    """Assemble list of objects to display and their element/mode colors."""
     ELEMENT_COLORS = {
         "fire": "red",
         "earth": "green",
@@ -157,11 +129,9 @@ def render_sphere_lines(spheres, horoscope, args, colors):
         data = horoscope.get(key, {})
 
         if args.ascii:
-            # ASCII mode: full names, abbreviated signs
             obj_name = data.get("obj_name", key).ljust(12)
             placement = f"{data.get('deg', 0):>2} {data.get('sign_trunc', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}{'r' if data.get('rx') else ''}"
         else:
-            # Default: glyphs for objects, full sign names
             obj_name = data.get("obj_glyph", key.upper()).ljust(3)
             placement = f"{data.get('deg', 0):>2} {data.get('sign', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}{' r' if data.get('rx') else ''}"
 
@@ -191,7 +161,6 @@ def format_chart(
     offset = getattr(args, "offset", None)
     no_color = getattr(args, "no_color", False)
 
-    """If --no-color, print bare chart; otherwise print Rich table."""
     if no_color:
         colors = Colors(False if args.no_color else True)
         lines = []
@@ -200,7 +169,7 @@ def format_chart(
         lines.extend(get_warnings(args, approx_time, approx_locale, config_locale))
         lines.append(get_chart_title(title, approx_time, approx_locale, offset))
 
-        # For bare mode, join subtitle parts into one line for simplicity
+        # for bare mode, join subtitle parts into one line
         time_str, location_str = get_chart_subtitle(
             dt_local, dt_utc, lat, lng, args, approx_locale
         )
@@ -247,11 +216,9 @@ def format_chart(
             data = horoscope.get(key, {})
 
             if args.ascii:
-                # ASCII mode: full names, abbreviated signs
                 obj_name = data.get("obj_name") or key
                 placement = f"{data.get('deg', 0):>2} {data.get('sign_trunc', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}{' r' if data.get('rx') else ''}"
             else:
-                # Default: glyphs for objects, full sign names
                 obj_name = data.get("obj_glyph") or key.upper()
                 placement = f"{data.get('deg', 0):>2} {data.get('sign', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}{' r' if data.get('rx') else ''}"
 

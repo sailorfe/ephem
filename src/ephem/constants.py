@@ -117,5 +117,4 @@ class Colors:
         rich_color = self.COLOR_MAP.get(color_name)
         if not rich_color:
             return text
-        # Wrap text in Rich markup tags
         return f"[{rich_color}]{text}[/{rich_color}]"

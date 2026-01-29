@@ -3,10 +3,6 @@ from ephem.constants import AYANAMSAS
 
 
 def get_calc_flag(offset):
-    """
-    Return Swiss Ephemeris calculation flag including sidereal mode if requested.
-    offset: None = tropical, int = sidereal ayanamsha index
-    """
     calc_flag = swe.FLG_SWIEPH
 
     if offset is None:

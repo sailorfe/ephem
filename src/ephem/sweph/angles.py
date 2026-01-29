@@ -4,12 +4,11 @@ from .ayanamsas import get_calc_flag
 
 
 def get_angles(jd_now, lat, lng, offset=None):
-    """Fetch ASC and MC for given date and location, optionally in sidereal mode."""
     calc_flag = get_calc_flag(offset)
     angles = []
     angle_keys = ["asc", "mc"]
 
-    # Use houses_ex to pass calc_flag for sidereal if needed
+    # use houses_ex to pass calc_flag for sidereal if needed
     asc_mc = swe.houses_ex(jd_now, lat, lng, b"W", calc_flag)[1]
 
     for angle_val, obj_key in zip(asc_mc[:2], angle_keys):

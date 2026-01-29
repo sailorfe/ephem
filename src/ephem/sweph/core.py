@@ -2,10 +2,6 @@ from ephem.constants import OBJECTS
 
 
 def build_horoscope(planets, angles):
-    """
-    Build horoscope dictionary with data for location in DMS,
-    including sign qualities/elements and retrograde info.
-    """
     horoscope = {}
     all_bodies = planets + angles
 

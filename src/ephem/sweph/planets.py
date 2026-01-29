@@ -19,12 +19,6 @@ PLANET_KEYS = [
 
 
 def get_planets(jd_now, jd_then, offset=None):
-    """
-    Fetch planetary positions using Swiss Ephemeris.
-    jd_now: current Julian day
-    jd_then: previous/next Julian day (for retrograde)
-    offset: None = tropical, int = sidereal ayanamsha index
-    """
     calc_flag = get_calc_flag(offset)
     planets = []
 

@@ -4,7 +4,6 @@ from pathlib import Path
 
 
 def get_db_path():
-    """Get the XDG-compliant database path."""
     env_path = os.environ.get("EPHEM_DB")
     if env_path:
         return Path(env_path)
@@ -14,14 +13,12 @@ def get_db_path():
 
 
 def get_connection():
-    """Get a database connection."""
     db_path = get_db_path()
     os.makedirs(db_path.parent, exist_ok=True)
     return sqlite3.connect(db_path)
 
 
 def create_tables():
-    """Create database tables if they don't exist."""
     with get_connection() as conn:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS charts (
@@ -39,7 +36,6 @@ def create_tables():
 def add_chart(
     name: str, timestamp_utc: str, timestamp_input: str, latitude=None, longitude=None
 ):
-    """Add a chart to the database."""
     with get_connection() as conn:
         cursor = conn.execute(
             """
@@ -53,7 +49,6 @@ def add_chart(
 
 
 def get_chart(chart_id: int):
-    """Get a specific chart by ID."""
     with get_connection() as conn:
         cursor = conn.execute(
             """
@@ -76,7 +71,6 @@ def get_chart(chart_id: int):
 
 
 def view_charts():
-    """View all saved charts."""
     with get_connection() as conn:
         cursor = conn.execute("""
             SELECT id, name, timestamp_utc, timestamp_input, latitude, longitude 
@@ -97,7 +91,6 @@ def view_charts():
 
 
 def delete_chart(chart_id: int):
-    """Delete a chart by ID."""
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("DELETE FROM charts WHERE id = ?", (chart_id,))

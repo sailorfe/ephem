@@ -11,7 +11,6 @@ import swisseph as swe
 
 
 def get_sidereal_time(jd):
-    """Calculate sidereal time for given Julian day (UTC midnight)."""
     gst = swe.sidtime(jd) % 24
     total_seconds = int(round(gst * 3600))
     hours = (total_seconds // 3600) % 24
@@ -21,7 +20,6 @@ def get_sidereal_time(jd):
 
 
 def get_moon_positions(jd_midnight, jd_noon, offset=None, ascii_mode=False):
-    """Get Moon positions at 0hr and noon for the same day."""
     calc_flag = swe.FLG_SWIEPH
     if offset is not None:
         try:
@@ -46,7 +44,6 @@ def get_moon_positions(jd_midnight, jd_noon, offset=None, ascii_mode=False):
 
 
 def format_planet_position(entry, ascii_mode=False):
-    """Fixed-width DMS string for Rich table columns."""
     deg_str = f"{entry['deg']:2d}"
     mnt_str = f"{entry['mnt']:02d}"
     sec_str = f"{entry.get('sec', 0):02d}"
@@ -61,7 +58,6 @@ def format_planet_position(entry, ascii_mode=False):
 
 
 def format_calendar(args):
-    """Generate ephemeris calendar for given month/year."""
     validate_year(args.year)
 
     offset = getattr(args, "offset", None)
@@ -128,14 +124,11 @@ def format_calendar(args):
             no_wrap=True,
         )
 
-    # Day abbreviation mapping
     day_abbrevs = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
 
     for day in range(1, days_in_month + 1):
         current_date = datetime(args.year, args.month, day)
-        day_abbrev = day_abbrevs[
-            current_date.weekday()
-        ]  # weekday() returns 0=Monday, 6=Sunday
+        day_abbrev = day_abbrevs[current_date.weekday()]
 
         jd_midnight = swe.julday(args.year, args.month, day, 0.0)
         jd_noon = swe.julday(args.year, args.month, day, 12.0)
@@ -149,7 +142,6 @@ def format_calendar(args):
             jd_midnight, jd_noon, offset, ascii_mode=ascii_mode
         )
 
-        # Format day with abbreviation
         day_str = f"{day:2d} {day_abbrev}"
 
         row_data = [day_str, sid_time]
