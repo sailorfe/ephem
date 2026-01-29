@@ -1,4 +1,4 @@
-pyswisseph==2.10.3.2
+pysweph==2.10.3.3
 PyYAML==6.0.2
 PyYAML==6.0.2
 rich==14.1.0

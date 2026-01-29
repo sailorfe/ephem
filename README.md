@@ -41,7 +41,7 @@ deliberately out of scope:
 
 ### build dependencies
 
-because [pyswisseph](https://github.com/astrorigin/pyswisseph) wraps the Swiss Ephemeris C library, you'll need to run the following:
+because [pysweph](https://github.com/sailorfe/pysweph) wraps the Swiss Ephemeris C library, you'll need to run the following:
 
 - **debian-based**: `sudo update && sudo apt install build-essential python3-dev pipx`
 - **fedora/rhel**: `sudo dnf install @development-tools python3-devel pipx`
