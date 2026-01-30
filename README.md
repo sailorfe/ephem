@@ -16,6 +16,7 @@ a minimal, opinionated astrology CLI tool
 currently supports:
 - all 47 sidereal offsets from the [Swiss Ephemeris](https://www.astro.com/swisseph/swephprg.htm)
 - the sun, moon, and eight planets (mercury–pluto)
+- the part of fortune
 - choice of lunar node calculation method
 - clear table output for charts and ephemerides
 - graceful handling of incomplete data
@@ -118,7 +119,7 @@ ephem now -y 30 -x -80 --save-config
 
 cast a chart for a specific date and time:
 ```sh
-ephem cast 1996-08-26 17:20 "Jeon Soyeon" -z Asia/Seoul -y 37.488167 -x 127.085472
+ephem cast 1998-08-26 17:20 "Jeon Soyeon" -z Asia/Seoul -y 37.488167 -x 127.085472
 ```
 
 get a monthly ephemeris:
