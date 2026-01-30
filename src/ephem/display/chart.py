@@ -85,6 +85,7 @@ def get_spheres(horoscope, args, planets, approx_time, approx_locale):
             ("fe", "blue"),
             ("sn", "red"),
             ("pb", "red"),
+            ("for", None),
             ("ura", None),
             ("nep", None),
             ("plu", None),

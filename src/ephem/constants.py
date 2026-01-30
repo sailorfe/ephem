@@ -27,6 +27,7 @@ OBJECTS = {
     },
     "sn": {"name": "Jupiter", "glyph": "♃"},
     "pb": {"name": "Saturn", "glyph": "♄"},
+    "for": {"name": "Part of Fortune", "glyph": "🝴"},
     "ura": {"name": "Uranus", "glyph": "♅"},
     "nep": {"name": "Neptune", "glyph": "♆"},
     "plu": {"name": "Pluto", "glyph": "♇"},

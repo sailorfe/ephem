@@ -136,7 +136,7 @@ def format_calendar(args):
 
         sid_time = get_sidereal_time(jd_midnight)
         planets = get_planets(jd_midnight, jd_prev, offset)
-        horoscope = build_horoscope(planets, [])
+        horoscope = build_horoscope(planets, [], [])
 
         moon_0hr, moon_noon = get_moon_positions(
             jd_midnight, jd_noon, offset, ascii_mode=ascii_mode

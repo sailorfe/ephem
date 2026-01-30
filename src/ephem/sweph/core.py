@@ -1,9 +1,9 @@
 from ephem.constants import OBJECTS
 
 
-def build_horoscope(planets, angles):
+def build_horoscope(planets, angles, part_of_fortune):
     horoscope = {}
-    all_bodies = planets + angles
+    all_bodies = planets + angles + part_of_fortune
 
     for body in all_bodies:
         obj_data = OBJECTS[body["obj_key"]]

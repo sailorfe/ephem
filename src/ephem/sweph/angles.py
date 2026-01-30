@@ -25,6 +25,7 @@ def get_angles(jd_now, lat, lng, offset=None):
                 "glyph": sign_data["glyph"],
                 "trip": sign_data["trip"],
                 "quad": sign_data["quad"],
+                "lng": asc_mc[0],
             }
         )
 

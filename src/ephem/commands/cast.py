@@ -95,7 +95,8 @@ def main(args):
     offset = getattr(args, "offset", None)
     planets = sweph.get_planets(jd_now, jd_then, offset)
     angles = sweph.get_angles(jd_now, lat, lng, offset)
-    horoscope = sweph.build_horoscope(planets, angles)
+    part_of_fortune = sweph.get_pars_fortunae(angles, planets)
+    horoscope = sweph.build_horoscope(planets, angles, part_of_fortune)
 
     output = format_chart(
         args,
