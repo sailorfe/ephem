@@ -28,8 +28,8 @@ $ ephem data view
    Lat:     47.6, Lng: -122.33
 
 [4] Jeon Soyeon
-   UTC:     1996-08-26T08:20:00+00:00
-   Local:   1996-08-26T17:20:00+09:00
+   UTC:     1998-08-26T08:20:00+00:00
+   Local:   1998-08-26T17:20:00+09:00
    Lat:     37.488167, Lng: 127.085472
 
 [5] Nick Cave
@@ -39,5 +39,4 @@ $ ephem data view
 ```
 
 - You can store as many charts as your local storage allows, but scrolling through the output can get tedious.
-- The ID #'s are permanent. If you delete charts 2-4, the sequence will look like `1, 5`. This is fine! (she said with a Virgo moon)
-
+- The ID #'s are permanent. If you delete charts 2-4, the sequence will look like `1, 5`. This is fine!

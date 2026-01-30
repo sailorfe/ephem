@@ -23,23 +23,23 @@ Date:   Wed Aug 6 13:57:13 2025 -0400
 Its chart generated with *itself* (whew) is
 
 ```
-ephem (Tropical)
-2025-08-06 13:57:13 EDT | 2025-08-06 17:57:13 UTC
+ ephem (Tropical)
+ 2025-08-06 17:57:13 UTC @ 27.45 -82.3775
 
- ☉  14 Leo 31 29
- ☽  13 Capricorn 04 49
- ☿   5 Leo 21 05 r
- ♀   7 Cancer 38 44
- ♂  29 Virgo 51 32
- ♃  12 Cancer 55 45
- ♄   1 Aries 26 07 r
- ♅   1 Gemini 04 37
- ♆   1 Aries 53 44 r
- ♇   2 Aquarius 17 54 r
-T☊  18 Pisces 46 07 r
-AC  15 Scorpio 59 37
-MC  20 Leo 02 32
-```
+  ☉  14 Leo 31 29        
+  ☽  13 Capricorn 04 49  
+  ☿   5 Leo 21 05 r      
+  ♀   7 Cancer 38 44     
+  ♂  29 Virgo 51 32      
+  ♃  12 Cancer 55 45     
+  ♄   1 Aries 26 07 r    
+  🝴  14 Aries 33 00      
+  ♅   1 Gemini 04 37     
+  ♆   1 Aries 53 44 r    
+  ♇   2 Aquarius 17 54 r 
+ T☊  18 Pisces 46 07 r   
+ AC  15 Scorpio 59 40    
+ MC  20 Leo 02 35        ```
 
 
 This tutorial assumes astrological literacy but not necessarily command-line experience. Some resources I recommend:

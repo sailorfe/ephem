@@ -1,6 +1,6 @@
 # Electional Examples
 
-Electional astrology, also known as inceptional astrology, is the practice of selecting optimal times and dates to begin or *incept* something. It's arguably one of the oldest and most accessible disciplines: farmers choose (elect) the full moon nearest to the autumnal equinox to  harvest their fall crops, for example.
+Electional astrology, also known as inceptional astrology, is the practice of selecting optimal times and dates to begin or *incept* something. It's arguably one of the oldest and most accessible disciplines: farmers choose (elect) the full moon nearest to the autumnal equinox to harvest their fall crops, for example.
 
 To elect a time with`ephem`, you will want to use the `ephem cal` and `ephem cast` commands. For something on the same day or near it, `ephem now` has its place here, too. Calling `ephem cal` is no different from referring to *The American Ephemeris* or [PDF versions of the Swiss Ephemeris](https://www.astro.com/swisseph/swepha_e.htm); you're just using the *actual* software library from which those PDFs were generated, and interacting with the information more quickly and easily.
 
@@ -43,19 +43,21 @@ and fine tune it with minutes. I've switched to `ephem cast` because `--shift` o
 
 ```sh
 $ ephem cast 2025-09-16 7:32 "email" -z America/New_York
-email (Tropical)
-2025-09-16 07:32:00 EDT | 2025-09-16 11:32:00 UTC
-☉   23 Virgo 51 40
-☽   20 Cancer 01 46
-☿   26 Virgo 29 58
-♀   26 Leo 17 01
-♂   26 Libra 05 19
-♃   20 Cancer 27 25
-♄   28 Pisces 52 42 r
-♅    1 Gemini 25 10 r
-♆    0 Aries 57 09 r
-♇    1 Aquarius 32 31 r
-T☊  18 Pisces 20 00
-AC  26 Virgo 42 11
-MC  26 Gemini 35 55
+ email (Tropical)
+ 2025-09-16 07:32:00 EDT | 2025-09-16 11:32:00 UTC @ 27.465 -82.43
+
+  ☉  23 Virgo 51 40      
+  ☽  20 Cancer 01 46     
+  ☿  26 Virgo 29 58      
+  ♀  26 Leo 17 01        
+  ♂  26 Libra 05 19      
+  ♃  20 Cancer 27 25     
+  ♄  28 Pisces 52 42 r   
+  🝴  22 Cancer 49 34     
+  ♅   1 Gemini 25 10 r   
+  ♆   0 Aries 57 09 r    
+  ♇   1 Aquarius 32 31 r 
+ T☊  18 Pisces 20 00     
+ AC  26 Virgo 39 28      
+ MC  26 Gemini 33 05
 ```
