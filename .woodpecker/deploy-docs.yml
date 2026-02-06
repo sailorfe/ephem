@@ -1,6 +1,3 @@
-kind: pipeline
-name: deploy-docs
-
 when:
   - event: [push, manual]
     branch: ${CI_REPO_DEFAULT_BRANCH}

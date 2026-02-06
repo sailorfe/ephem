@@ -13,10 +13,10 @@ description = "A minimal and configurable astrology CLI"
 readme = "README.md"
 requires-python = ">=3.8,<4.0"
 dependencies = [
-    "pysweph",
-		"pyyaml",
+    "pysweph>=2.10.3.5",
+    "pyyaml",
     "rich",
-    "tomli_w"
+    "tomli_w",
 ]
 authors = [
     {name = "sailorfe", email = "sailorf@proton.me"}
