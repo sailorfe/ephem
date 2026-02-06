@@ -6,13 +6,7 @@ test:
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
-
-# syncrhonization
-sync:
-	rsync -avz --progress . goingmerry:p/py/ephem/
-
-fetch:
-	rsync -avz --progress goingmerry:p/py/ephem/ .
+	rm -rf dist/*
 
 # documentation
 fulldoc:

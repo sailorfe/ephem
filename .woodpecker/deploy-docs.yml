@@ -1,0 +1,24 @@
+kind: pipeline
+name: deploy-docs
+
+steps:
+  - name: build
+    image: ghcr.io/astral-sh/uv:alpine
+    commands:
+      - uv sync
+      - uv run mkdocs build -d site-build
+
+  - name: deploy
+    image: appleboy/drone-git-push
+    settings:
+      branch: pages
+      remote: git@codeberg.org:${CI_REPO}.git
+      force: true
+      commit: true
+      commit_message: "Deploy: ${CI_COMMIT_AUTHOR} (Woodpecker CI)"
+      path: site-build
+      ssh_key:
+        from_secret: deploy_ssh_key
+    when:
+      event: push
+      branch: main
