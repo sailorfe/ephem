@@ -1,9 +1,9 @@
 [build-system]
-requires = ["setuptools>=61", "setuptools-scm>=8", "wheel"]
+requires = ["setuptools>=61", "setuptools-scm>=9", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
-version_scheme = "post-release"
+version_scheme = "guess-next-dev"
 local_scheme = "no-local-version"
 
 [project]
@@ -41,3 +41,6 @@ ephem = "ephem.cli:main"
 
 [project.urls]
 Repository = "https://codeberg.org/sailorfe/ephem"
+
+[dependency-groups]
+docs = ["mkdocs", "mkdocs-material"]
