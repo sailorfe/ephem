@@ -6,6 +6,7 @@ steps:
   - name: build
     image: ghcr.io/astral-sh/uv:python3.12-bookworm-slim
     commands:
+      - apt-get update && apt-get install -y git
       - uv sync
       - uv run mkdocs build -d site-build
 
