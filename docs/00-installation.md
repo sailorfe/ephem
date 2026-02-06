@@ -17,7 +17,7 @@ First, you need Python 3.8 or later. Check if you have it:
 python3 --version
 ```
 
-If you see a version number like `Python 3.11.x` or higher, you're good to go! If not, install Python from [python.org](https://www.python.org/downloads/).
+If you see a version number like `Python 3.11.x` or higher, you're good to go. If not, install Python from [python.org](https://www.python.org/downloads/).
 
 ### Installing with pipx
 

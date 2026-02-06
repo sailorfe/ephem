@@ -12,23 +12,23 @@ The output should look like
 
 ```
 No valid location provided or found in config. No angles will be printed.
-Chart of the Moment hyp. (Tropical)
-2025-09-15 22:05 UTC
+ Chart of the Moment hyp. (Tropical)
+ 2026-02-06 21:28:02 UTC
 
-☉   23 Virgo 18 54
-☽   12 Cancer 24 27
-☿   25 Virgo 28 38
-♀   25 Leo 36 06
-♂   25 Libra 42 58
-♃   20 Cancer 22 15
-♄   28 Pisces 55 17 r
-♅    1 Gemini 25 27 r
-♆    0 Aries 58 04 r
-♇    1 Aquarius 32 56 r
-T☊  18 Pisces 19 53
+  ☉  18 Aquarius 06 02
+  ☽  18 Libra 52 58
+  ☿  29 Aquarius 54 08
+  ♀  25 Aquarius 34 11
+  ♂  11 Aquarius 20 49
+  ♃  16 Cancer 44 28 r
+  ♄  29 Pisces 14 16
+  ♅  27 Taurus 27 47
+  ♆   0 Aries 18 33
+  ♇   3 Aquarius 52 57
+ T☊   9 Pisces 05 47
 ```
 
-This purposely mimics Astrodienst's [Chart of the Moment](https://www.astro.com/cgi/chart.cgi?lang=e&act=chm&sdat=&ishkch=1), which prints a chart without geographical information—no angles, no houses. This is plenty useful on its own if you know your own birth chart by heart or use techniques like essential dignity, but the ascendant and midheaven are the two most rapidly changing and geocentric (well, geo-dependent) points of any horoscope.
+This purposely mimics Astrodienst's [Chart of the Moment](https://www.astro.com/cgi/chart.cgi?lang=e&act=chm&sdat=&ishkch=1), which prints a chart without geographical information—no angles, no houses. This is plenty useful on its own if you know your own birth chart by heart or use techniques like essential dignity, but the ascendant and midheaven are the two most rapidly changing and geocentric points of any horoscope.
 
 ## Setting location defaults
 `ephem` uses decimal degrees for coordinates, which you can find with the following:
@@ -50,26 +50,27 @@ $ ephem now -y -36.25 -x 142.416667 --save-config
 Running this command with `--save-config`  should give you something like
 
 ```
-Saved location settings to /home/user/.config/ephem/ephem.toml
-Chart of the Moment (Tropical)
-2025-09-15 22:05 UTC @ -36.25 142.416667
+ Saved location settings to /home/user/.config/ephem/ephem.toml
+ Chart of the Moment (Tropical)
+ 2026-02-06 21:30:33 UTC @ 36.25 142.416667
 
-☉   23 Virgo 18 55
-☽   12 Cancer 24 42
-☿   25 Virgo 28 40
-♀   25 Leo 36 07
-♂   25 Libra 42 59
-♃   20 Cancer 22 15
-♄   28 Pisces 55 17 r
-♅    1 Gemini 25 27 r
-♆    0 Aries 58 04 r
-♇    1 Aquarius 32 56 r
-T☊  18 Pisces 19 53
-AC  29 Libra 30 45
-MC  17 Cancer 33 04
+  ☉  18 Aquarius 06 09
+  ☽  18 Libra 54 16
+  ☿  29 Aquarius 54 19
+  ♀  25 Aquarius 34 19
+  ♂  11 Aquarius 20 54
+  ♃  16 Cancer 44 27 r
+  ♄  29 Pisces 14 16
+  🝴  18 Aquarius 06 09
+  ♅  27 Taurus 27 47
+  ♆   0 Aries 18 33
+  ♇   3 Aquarius 52 57
+ T☊   9 Pisces 05 47
+ AC  17 Aquarius 57 25
+ MC   4 Sagittarius 04 44
 ```
 
-See! Now we have the ascendant and midheaven, `AC` and `MC`.
+Now we have the ascendant and midheaven, `AC` and `MC`, and the Part of Fortune `🝴`, which is calculated using the ascendant.
 
 You can check your current configuration by running `ephem --show-config`. At this point, it should output
 

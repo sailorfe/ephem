@@ -42,22 +42,22 @@ $ ephem now -s 6h
 and fine tune it with minutes. I've switched to `ephem cast` because `--shift` only takes weeks, days, hours, and minutes—and land on
 
 ```sh
-$ ephem cast 2025-09-16 7:32 "email" -z America/New_York
+$ ephem cast 2025-09-16 7:32 "email" -z America/New_York -G
  email (Tropical)
- 2025-09-16 07:32:00 EDT | 2025-09-16 11:32:00 UTC @ 27.465 -82.43
+ 2025-09-16 07:32:00 EDT | 2025-09-16 11:32:00 UTC
 
-  ☉  23 Virgo 51 40      
-  ☽  20 Cancer 01 46     
-  ☿  26 Virgo 29 58      
-  ♀  26 Leo 17 01        
-  ♂  26 Libra 05 19      
-  ♃  20 Cancer 27 25     
-  ♄  28 Pisces 52 42 r   
-  🝴  22 Cancer 49 34     
-  ♅   1 Gemini 25 10 r   
-  ♆   0 Aries 57 09 r    
-  ♇   1 Aquarius 32 31 r 
- T☊  18 Pisces 20 00     
- AC  26 Virgo 39 28      
+  ☉  23 Virgo 51 40
+  ☽  20 Cancer 01 46
+  ☿  26 Virgo 29 58
+  ♀  26 Leo 17 01
+  ♂  26 Libra 05 19
+  ♃  20 Cancer 27 25
+  ♄  28 Pisces 52 42 r
+  🝴  23 Cancer 13 21
+  ♅   1 Gemini 25 10 r
+  ♆   0 Aries 57 09 r
+  ♇   1 Aquarius 32 31 r
+ T☊  18 Pisces 20 00
+ AC  27 Virgo 03 15
  MC  26 Gemini 33 05
 ```
