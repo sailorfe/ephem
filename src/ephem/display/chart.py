@@ -115,7 +115,7 @@ def get_spheres(horoscope, args, planets, approx_time, approx_locale):
     if args.classical:
         spheres = [(k, c) for k, c in spheres if k not in ("ura", "nep", "plu")]
     if approx_time or approx_locale or args.no_angles:
-        spheres = [(k, c) for k, c in spheres if k not in ("asc", "mc")]
+        spheres = [(k, c) for k, c in spheres if k not in ("asc", "mc", "for")]
     if args.node == "true":
         spheres = [(k, c) for k, c in spheres if k != "mean_node"]
     else:
