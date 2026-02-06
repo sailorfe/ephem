@@ -1,9 +1,13 @@
 kind: pipeline
 name: deploy-docs
 
+when:
+  - event: [push, manual]
+    branch: ${CI_REPO_DEFAULT_BRANCH}
+
 steps:
   - name: build
-    image: ghcr.io/astral-sh/uv:alpine
+    image: ghcr.io/astral-sh/uv:python3.12-bookworm-slim
     commands:
       - uv sync
       - uv run mkdocs build -d site-build
@@ -15,10 +19,9 @@ steps:
       remote: git@codeberg.org:${CI_REPO}.git
       force: true
       commit: true
-      commit_message: "Deploy: ${CI_COMMIT_AUTHOR} (Woodpecker CI)"
+      commit_message: "Deploy: ${CI_COMMIT_SHA:0:7}"
       path: site-build
       ssh_key:
-        from_secret: deploy_ssh_key
+        from_secret: SSH_KEY
     when:
-      event: push
-      branch: main
+      - branch: ${CI_REPO_DEFAULT_BRANCH}
