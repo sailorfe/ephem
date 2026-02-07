@@ -39,7 +39,8 @@ Its chart generated with *itself* (whew) is
   ♇   2 Aquarius 17 54 r 
  T☊  18 Pisces 46 07 r   
  AC  15 Scorpio 59 40    
- MC  20 Leo 02 35        ```
+ MC  20 Leo 02 35
+```
 
 
 This tutorial assumes astrological literacy but not necessarily command-line experience. Some resources I recommend:
