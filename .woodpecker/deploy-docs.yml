@@ -11,16 +11,18 @@ steps:
       - uv run mkdocs build -d site-build
 
   - name: deploy
-    image: appleboy/drone-git-push
-    settings:
-      branch: pages
-      remote: git@codeberg.org:${CI_REPO}.git
-      force: true
-      commit: true
-      commit_message: "Deploy: ${CI_COMMIT_SHA:0:7}"
-      path: site-build
-      skip_host_key_check: true
-      password:
-        from_secret: EPHEM_PAGES
-    when:
-      - branch: ${CI_REPO_DEFAULT_BRANCH}
+      image: appleboy/drone-git-push
+      settings:
+        branch: pages
+        remote: git@codeberg.org:sailorfe/ephem.git
+        force: true
+        commit: true
+        commit_message: "Deploy: ${CI_COMMIT_SHA:0:7}"
+        path: site-dist
+        ssh_key:
+          from_secret: deploy_ssh_key
+        safe_directory: "*"
+      environment:
+        GIT_SSH_COMMAND: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+      when:
+        - branch: ${CI_REPO_DEFAULT_BRANCH}
