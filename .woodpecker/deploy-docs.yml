@@ -18,7 +18,7 @@ steps:
       force: true
       commit: true
       commit_message: "Deploy: ${CI_COMMIT_SHA:0:7}"
-      path: site-dist
+      path: site-build
       ssh_key:
         from_secret: deploy_ssh_key
       safe_directory: "*"
