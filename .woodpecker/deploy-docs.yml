@@ -19,7 +19,7 @@ steps:
       commit: true
       commit_message: "Deploy: ${CI_COMMIT_SHA:0:7}"
       path: site-build
-      ssh_key:
-        from_secret: deploy_ssh_key
+      password:
+        from_secret: EPHEM_PAGES
     when:
       - branch: ${CI_REPO_DEFAULT_BRANCH}
