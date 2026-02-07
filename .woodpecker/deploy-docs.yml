@@ -15,6 +15,7 @@ steps:
     settings:
       branch: pages
       remote: https://codeberg.org/sailorfe/ephem.git
+      username: sailorfe
       password:
         from_secret: EPHEM_PAGES
       force: true
