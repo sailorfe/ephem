@@ -44,3 +44,6 @@ Repository = "https://codeberg.org/sailorfe/ephem"
 
 [dependency-groups]
 docs = ["mkdocs", "mkdocs-material"]
+
+[tool.uv]
+default-groups = "all"
