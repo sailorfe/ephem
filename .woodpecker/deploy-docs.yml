@@ -11,13 +11,15 @@ steps:
       - uv run mkdocs build -d site-build
 
   - name: deploy
-    image: appleboy/drone-git-push
-    settings:
-      branch: pages
-      remote: https://codeberg.org/sailorfe/ephem.git
-      username: sailorfe
-      password:
+    image: alpine/git
+    environment:
+      CB_TOKEN:
         from_secret: EPHEM_PAGES
-      force: true
-      commit: true
-      path: site-build
+    commands:
+      - cd site-build
+      - git init
+      - git config user.name "sailorfe"
+      - git config user.email "sailorfe@noreply.codeberg.org"
+      - git add .
+      - git commit -m "Deploy docs [skip ci]"
+      - git push --force https://sailorfe:$${CB_TOKEN}@codeberg.org/sailorfe/ephem.git main:pages
