@@ -17,7 +17,7 @@ steps:
         from_secret: EPHEM_PAGES
     commands:
       - cd site-build
-      - git init
+      - git init -b main
       - git config user.name "sailorfe"
       - git config user.email "sailorfe@noreply.codeberg.org"
       - git add .
