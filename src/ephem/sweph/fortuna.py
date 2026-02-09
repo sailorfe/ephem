@@ -1,10 +1,13 @@
 import swisseph as swe
 from ephem.utils.signs import sign_from_index
+from ephem.constants import OBJECTS, SIGNS
+from ephem.models import Position
+
 
 def get_pars_fortunae(angles, planets):
-    ascendant = angles[0]["lng"]
-    sun = planets[0]["lng"]
-    moon = planets[1]["lng"]
+    ascendant = angles[0].lng
+    sun = planets[0].lng
+    moon = planets[1].lng
 
     # determine sect
     if ascendant > sun:
@@ -12,29 +15,20 @@ def get_pars_fortunae(angles, planets):
     else:
         raw_fortuna = ascendant - moon + sun
 
-    # normalize
-    if raw_fortuna > 360.0:
-        fortuna = raw_fortuna - 360.0
-    else:
-        fortuna = raw_fortuna
+    # normalize to 0-360 range
+    fortuna = raw_fortuna % 360
 
     dms = swe.split_deg(fortuna, 8)
-    sign_name, sign_data = sign_from_index(dms[4])
+    sign_name, _ = sign_from_index(dms[4])
 
-    part_of_fortune = []
-    part_of_fortune.append(
-            {
-            "obj_key": "for",
-            "deg": dms[0],
-            "mnt": dms[1],
-            "sec": dms[2],
-            "sign": sign_name,
-            "trunc": sign_data["trunc"],
-            "glyph": sign_data["glyph"],
-            "trip": sign_data["trip"],
-            "quad": sign_data["quad"],
-            "lng": fortuna,
-            }
-            )
+    position = Position(
+        obj=OBJECTS["for"],
+        sign=SIGNS[sign_name],
+        deg=dms[0],
+        mnt=dms[1],
+        sec=dms[2],
+        rx=False,  # Part of Fortune doesn't retrograde
+    )
+    position.lng = fortuna
 
-    return part_of_fortune
+    return [position]

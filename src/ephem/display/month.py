@@ -3,7 +3,7 @@ from rich.console import Console
 from rich.table import Table, box
 from rich.align import Align
 from rich.text import Text
-from ephem.constants import OBJECTS, AYANAMSAS
+from ephem.constants import OBJECTS, AYANAMSAS, SIGNS
 from ephem.sweph import get_planets, build_horoscope
 from ephem.utils.signs import sign_from_index
 from ephem.utils.year import validate_year
@@ -34,25 +34,31 @@ def get_moon_positions(jd_midnight, jd_noon, offset=None, ascii_mode=False):
 
     def format_moon_pos(lng):
         dms = swe.split_deg(lng, 8)
-        _, sign_data = sign_from_index(dms[4])
+        sign_name, _ = sign_from_index(dms[4])
+        sign = SIGNS[sign_name]
+
         if ascii_mode:
-            return f"{dms[0]:2d} {sign_data['trunc']:<3} {dms[1]:02d} {dms[2]:02d}"
+            return f"{dms[0]:2d} {sign.trunc:<3} {dms[1]:02d} {dms[2]:02d}"
         else:
-            return f"{dms[0]:2d} {sign_data['glyph']:<3} {dms[1]:02d} {dms[2]:02d}"
+            return f"{dms[0]:2d} {sign.glyph:<3} {dms[1]:02d} {dms[2]:02d}"
 
     return format_moon_pos(moon_0hr), format_moon_pos(moon_noon)
 
 
-def format_planet_position(entry, ascii_mode=False):
-    deg_str = f"{entry['deg']:2d}"
-    mnt_str = f"{entry['mnt']:02d}"
-    sec_str = f"{entry.get('sec', 0):02d}"
-    rx_str = " r" if entry.get("rx") else ""
+def format_planet_position(position, ascii_mode=False):
+    """
+    Format a Position object for display.
+    position is a Position instance with obj, sign, deg, mnt, sec, rx attributes.
+    """
+    deg_str = f"{position.deg:2d}"
+    mnt_str = f"{position.mnt:02d}"
+    sec_str = f"{position.sec:02d}"
+    rx_str = " r" if position.rx else ""
 
     if ascii_mode:
-        sign_str = f"{entry['sign_trunc']:<3}"
+        sign_str = f"{position.sign.trunc:<3}"
     else:
-        sign_str = f"{entry['sign_glyph']:<3}"
+        sign_str = f"{position.sign.glyph:<3}"
 
     return f"{deg_str} {sign_str} {mnt_str} {sec_str}{rx_str}"
 
@@ -107,14 +113,14 @@ def format_calendar(args):
     table = Table(show_header=True, box=box.SQUARE)
     for col_name, cell_justify, style in EPHEMERIS_COLUMNS:
         if col_name == "ag":
-            header_str = "0hr Moon" if ascii_mode else "0hr " + OBJECTS["ag"]["glyph"]
+            header_str = "0hr Moon" if ascii_mode else "0hr " + OBJECTS["ag"].glyph
         elif col_name == "ag_noon":
-            header_str = "Noon Moon" if ascii_mode else "Noon " + OBJECTS["ag"]["glyph"]
+            header_str = "Noon Moon" if ascii_mode else "Noon " + OBJECTS["ag"].glyph
         elif col_name in OBJECTS:
             if ascii_mode:
-                header_str = OBJECTS[col_name]["name"]
+                header_str = OBJECTS[col_name].name
             else:
-                header_str = OBJECTS[col_name]["glyph"]
+                header_str = OBJECTS[col_name].glyph
         else:
             header_str = col_name
         table.add_column(

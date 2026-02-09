@@ -1,42 +1,39 @@
 import swisseph as swe
+from ephem.models import Sign, CelestialObject
 
 SIGNS = {
-    "Aries": {"trunc": "Ari", "glyph": "♈︎", "trip": "fire", "quad": "cardinal"},
-    "Taurus": {"trunc": "Tau", "glyph": "♉︎", "trip": "earth", "quad": "fixed"},
-    "Gemini": {"trunc": "Gem", "glyph": "♊︎", "trip": "air", "quad": "mutable"},
-    "Cancer": {"trunc": "Can", "glyph": "♋︎", "trip": "water", "quad": "cardinal"},
-    "Leo": {"trunc": "Leo", "glyph": "♌︎", "trip": "fire", "quad": "fixed"},
-    "Virgo": {"trunc": "Vir", "glyph": "♍︎", "trip": "earth", "quad": "mutable"},
-    "Libra": {"trunc": "Lib", "glyph": "♎︎", "trip": "air", "quad": "cardinal"},
-    "Scorpio": {"trunc": "Sco", "glyph": "♏︎", "trip": "water", "quad": "fixed"},
-    "Sagittarius": {"trunc": "Sag", "glyph": "♐︎", "trip": "fire", "quad": "mutable"},
-    "Capricorn": {"trunc": "Cap", "glyph": "♑︎", "trip": "earth", "quad": "cardinal"},
-    "Aquarius": {"trunc": "Aqu", "glyph": "♒︎", "trip": "air", "quad": "fixed"},
-    "Pisces": {"trunc": "Pis", "glyph": "♓︎", "trip": "water", "quad": "mutable"},
+    "Aries": Sign("Aries", "Ari", "♈︎", "fire", "cardinal"),
+    "Taurus": Sign("Taurus", "Tau", "♉︎", "earth", "fixed"),
+    "Gemini": Sign("Gemini", "Gem", "♊︎", "air", "mutable"),
+    "Cancer": Sign("Cancer", "Can", "♋︎", "water", "cardinal"),
+    "Leo": Sign("Leo", "Leo", "♌︎", "fire", "fixed"),
+    "Virgo": Sign("Virgo", "Vir", "♍︎", "earth", "mutable"),
+    "Libra": Sign("Libra", "Lib", "♎︎", "air", "cardinal"),
+    "Scorpio": Sign("Scorpio", "Sco", "♏︎", "water", "fixed"),
+    "Sagittarius": Sign("Sagittarius", "Sag", "♐︎", "fire", "mutable"),
+    "Capricorn": Sign("Capricorn", "Cap", "♑︎", "earth", "cardinal"),
+    "Aquarius": Sign("Aquarius", "Aqu", "♒︎", "air", "fixed"),
+    "Pisces": Sign("Pisces", "Pis", "♓︎", "water", "mutable"),
 }
 
 
 OBJECTS = {
-    "ae": {"name": "Sun", "glyph": "☉"},
-    "ag": {"name": "Moon", "glyph": "☽"},
-    "hg": {"name": "Mercury", "glyph": "☿"},
-    "cu": {"name": "Venus", "glyph": "♀"},
-    "fe": {
-        "name": "Mars",
-        "glyph": "♂",
-    },
-    "sn": {"name": "Jupiter", "glyph": "♃"},
-    "pb": {"name": "Saturn", "glyph": "♄"},
-    "for": {"name": "Part of Fortune", "glyph": "🝴"},
-    "ura": {"name": "Uranus", "glyph": "♅"},
-    "nep": {"name": "Neptune", "glyph": "♆"},
-    "plu": {"name": "Pluto", "glyph": "♇"},
-    "mean_node": {"name": "Mean Node", "glyph": "M☊"},
-    "true_node": {"name": "True Node", "glyph": "T☊"},
-    "asc": {"name": "Ascendant", "glyph": "AC"},
-    "mc": {"name": "Midheaven", "glyph": "MC"},
+    "ae": CelestialObject("ae", "Sun", "☉"),
+    "ag": CelestialObject("ag", "Moon", "☽"),
+    "hg": CelestialObject("hg", "Mercury", "☿"),
+    "cu": CelestialObject("cu", "Venus", "♀"),
+    "fe": CelestialObject("fe", "Mars", "♂"),
+    "sn": CelestialObject("sn", "Jupiter", "♃"),
+    "pb": CelestialObject("pb", "Saturn", "♄"),
+    "for": CelestialObject("for", "Part of Fortune", "🝴"),
+    "ura": CelestialObject("ura", "Uranus", "♅"),
+    "nep": CelestialObject("nep", "Neptune", "♆"),
+    "plu": CelestialObject("plu", "Pluto", "♇"),
+    "mean_node": CelestialObject("mean_node", "Mean Node", "M☊"),
+    "true_node": CelestialObject("true_node", "True Node", "T☊"),
+    "asc": CelestialObject("asc", "Ascendant", "AC"),
+    "mc": CelestialObject("mc", "Midheaven", "MC"),
 }
-
 
 AYANAMSAS = {
     "Fagan-Bradley": swe.SIDM_FAGAN_BRADLEY,  # 0

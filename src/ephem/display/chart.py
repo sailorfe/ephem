@@ -59,11 +59,11 @@ def get_warnings(args, approx_time, approx_locale, config_locale):
 
 def get_mercury_sect_color(planets, default_color):
     try:
-        hg_lng = planets[2]["lng"]  # hg index
-        ae_lng = planets[0]["lng"]  # sun index
-    except (IndexError, KeyError):
+        hg = planets[2]
+        ae = planets[0]
+        return "red" if hg.lng < ae.lng else "blue"
+    except (IndexError, AttributeError):
         return default_color
-    return "red" if hg_lng < ae_lng else "blue"
 
 
 def get_spheres(horoscope, args, planets, approx_time, approx_locale):
@@ -102,14 +102,17 @@ def get_spheres(horoscope, args, planets, approx_time, approx_locale):
             else:
                 color = default_color
             final_spheres.append((key, color))
-            spheres = final_spheres
+        spheres = final_spheres
 
     else:
         color_map = THEME_COLORS.get(args.theme)
-        spheres = [
-            (key, color_map.get(data["trip" if args.theme == "element" else "quad"]))
-            for key, data in horoscope.items()
-        ]
+        spheres = []
+        for key, position in horoscope.items():
+            if args.theme == "element":
+                color = color_map.get(position.sign.trip)
+            else:  # mode
+                color = color_map.get(position.sign.quad)
+            spheres.append((key, color))
 
     # apply filtering flags
     if args.classical:
@@ -127,14 +130,16 @@ def get_spheres(horoscope, args, planets, approx_time, approx_locale):
 def render_sphere_lines(spheres, horoscope, args, colors):
     lines = []
     for key, color in spheres:
-        data = horoscope.get(key, {})
+        position = horoscope.get(key)
+        if not position:
+            continue
 
         if args.ascii:
-            obj_name = data.get("obj_name", key).ljust(12)
-            placement = f"{data.get('deg', 0):>2} {data.get('sign_trunc', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}{'r' if data.get('rx') else ''}"
+            obj_name = position.obj.name.ljust(12)
+            placement = position.short
         else:
-            obj_name = data.get("obj_glyph", key.upper()).ljust(3)
-            placement = f"{data.get('deg', 0):>2} {data.get('sign', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}{' r' if data.get('rx') else ''}"
+            obj_name = position.obj.glyph.ljust(3)
+            placement = position.full
 
         line = f"{obj_name} {placement}"
         if colors and color:
@@ -163,14 +168,14 @@ def format_chart(
     no_color = getattr(args, "no_color", False)
 
     if no_color:
-        colors = Colors(False if args.no_color else True)
+        colors = Colors(False)
         lines = []
 
         # title + warnings
         lines.extend(get_warnings(args, approx_time, approx_locale, config_locale))
         lines.append(get_chart_title(title, approx_time, approx_locale, offset))
 
-        # for bare mode, join subtitle parts into one line
+        # subtitle
         time_str, location_str = get_chart_subtitle(
             dt_local, dt_utc, lat, lng, args, approx_locale
         )
@@ -187,11 +192,13 @@ def format_chart(
 
     else:
         colors = Colors()
+
         # print warnings in yellow
         warnings = get_warnings(args, approx_time, approx_locale, config_locale)
         for warning in warnings:
             console.print(Text(warning, style="yellow"))
 
+        # title and subtitle
         chart_title = get_chart_title(title, approx_time, approx_locale, offset)
         time_str, location_str = get_chart_subtitle(
             dt_local, dt_utc, lat, lng, args, approx_locale
@@ -205,6 +212,7 @@ def format_chart(
         console.print(Text(f" {subtitle_line}", style="bold"))
         console.print()
 
+        # build table
         table = Table(show_header=False, box=None, pad_edge=True)
         if args.ascii:
             table.add_column("Object", justify="left", style="bold")
@@ -214,17 +222,16 @@ def format_chart(
 
         spheres = get_spheres(horoscope, args, planets, approx_time, approx_locale)
         for key, color in spheres:
-            data = horoscope.get(key, {})
+            position = horoscope.get(key)
+            if not position:
+                continue
 
             if args.ascii:
-                obj_name = data.get("obj_name") or key
-                placement = f"{data.get('deg', 0):>2} {data.get('sign_trunc', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}{' r' if data.get('rx') else ''}"
+                obj_name = position.obj.name
+                placement = position.short
             else:
-                obj_name = data.get("obj_glyph") or key.upper()
-                placement = f"{data.get('deg', 0):>2} {data.get('sign', '???')} {data.get('mnt', 0):02d} {data.get('sec', 0):02d}{' r' if data.get('rx') else ''}"
-
-            obj_name = str(obj_name)
-            placement = str(placement)
+                obj_name = position.obj.glyph
+                placement = position.full
 
             if colors and color:
                 obj_name = colors.colorize(obj_name, color)
